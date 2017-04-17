@@ -6,7 +6,7 @@ let rec f x = if x = 0 then x else false;;
 
 (* 浮動小数で表現された円の半径 r をとり，その面積を求める関数
    circle_area を書け *)
-let pi = 3.141592653589793238642643383279;;
+let pi = 3.141592653589793238462643383279;;
 let circle_area r =
   pi *. r *. r
 ;;
