@@ -9,9 +9,9 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 |4/24|休講（別途補講予定）||
 |5/1|ML1インタプリタ|[教科書3章のはじめから3.2.4節まで](textbook/IoPLTextbook.pdf)|
 |5/8|ML2，ML3インタプリタ||
-|5/15|ML4インタプリタ，ML2の型推論||
-|5/22|ML3，ML4の型推論||
-|5/29|多相型||
+|5/15|ML3，ML4インタプリタ||
+|5/22|ML2，ML3の型推論||
+|5/29|ML4の型推論，多相型||
 |6/5|中間試験？，コンパイラ||
 |6/12|コンパイラ||
 |6/19|コンパイラ||
