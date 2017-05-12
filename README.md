@@ -12,7 +12,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 |5/15|ML3，ML4インタプリタ|[教科書3.5節のおわりまで（予定）](textbook/IoPLTextbook.pdf)||
 |5/22|ML2，ML3の型推論|||
 |5/29|ML4の型推論，多相型|||
-|6/5|中間試験？，コンパイラ|||
+|6/5|_中間試験_，コンパイラ|||
 |6/12|コンパイラ|||
 |6/19|コンパイラ|||
 |6/26|字句解析|||
