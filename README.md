@@ -10,9 +10,9 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 |5/1|ML1インタプリタ|[教科書3章のはじめから3.2.4節のおわりまで](textbook/IoPLTextbook.pdf)||
 |5/8|ML1，ML2インタプリタ|[教科書3.3節のおわりまで](textbook/IoPLTextbook.pdf)|<s>次回講義範囲を読みPandAの予習クイズに解答</s>|
 |5/15|ML3，ML4インタプリタ|[教科書3.5節のおわりまで](textbook/IoPLTextbook.pdf)|次回講義範囲を読みPandAの予習クイズに解答|
-|5/22|ML2，ML3の型推論|[教科書4.1節から4.3節のおわりまで](textbook/IoPLTextbook.pdf)|次回講義範囲を読みPandAの予習クイズに解答|
-|5/29|ML4の型推論，多相型|||
-|6/5|_中間試験_，コンパイラ|||
+|5/22|ML2の型推論|[教科書4.1節から4.2節のおわりまで](textbook/IoPLTextbook.pdf)|次回講義範囲を読みPandAの予習クイズに解答|
+|5/29|ML3の型推論|[教科書4.3節](textbook/IoPLTextbook.pdf)|次回講義範囲を読み（前回解答していなかった人は）PandAの予習クイズに解答|
+|6/5|_中間試験_，多相型|||
 |6/12|コンパイラ|||
 |6/19|コンパイラ|||
 |6/26|字句解析|||
