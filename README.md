@@ -17,7 +17,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 |5/22|ML2の型推論|[教科書4.1節から4.2節のおわりまで](textbook/IoPLTextbook.pdf)|次回講義範囲を読みPandAの予習クイズに解答|
 |5/29|ML3の型推論|[教科書4.3.2節のおわりまで](textbook/IoPLTextbook.pdf)|次回講義範囲を読み（前回解答していなかった人は）PandAの予習クイズに解答|
 |6/5|_中間試験_，ML3の型推論|[教科書4.3節のおわりまで](textbook/IoPLTextbook.pdf)|中間試験の勉強|
-|6/12|多相型，コンパイラ|||
+|6/12|<s>多相型</s>，コンパイラ||多相型のところは読んでおいて下さい．|
 |6/19|コンパイラ|||
 |6/26|字句解析|||
 |7/3|LL(1)構文解析|||
