@@ -27,7 +27,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 ## 講義予定
 |日付|内容|対応する教科書中の場所|予習課題|
 |-----------|------------|------------|------------|
-|4/9|オリエンテーション，イントロダクション，OCaml入門|[オリエンテーション資料](misc/orientation.pdf), [教科書1〜2章](textbook/IoPLTextbook.pdf), [OCaml入門テキスト](textbook/mltext.pdf)||
+|4/9|オリエンテーション，イントロダクション，OCaml入門|[オリエンテーション資料](misc/orientation.pdf), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf)||
 |4/16||||
 |4/23||||
 |5/ 7||||
