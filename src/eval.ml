@@ -1,7 +1,12 @@
 open Syntax 
 
-type exval = 
-    IntV of int
+(* 値の定義 *)
+
+(* exval は式を評価して得られる値．dnval は変数と紐付けられる値．今回
+   の言語ではこの両者は同じになるが，この2つが異なる言語もある．教科書
+   参照． *)
+type exval =
+  | IntV of int
   | BoolV of bool
 and dnval = exval
 
