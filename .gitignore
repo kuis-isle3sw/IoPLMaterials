@@ -1,0 +1,11 @@
+*.cmi
+*.cmx
+*.o
+*~
+parser.ml
+parser.mli
+lexer.ml
+._d
+._ncdi
+src/miniml
+src/parser.automaton
