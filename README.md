@@ -24,6 +24,10 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 - 4月2日: 2018年の講義資料ページを作りました．
 
+## リンク（集）
+
+- http://www.fos.kuis.kyoto-u.ac.jp/~umatani/le3b/index.html
+
 ## 講義予定
 |日付|内容|対応する教科書中の場所|予習課題|
 |-----------|------------|------------|------------|
