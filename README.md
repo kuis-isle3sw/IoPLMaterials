@@ -34,10 +34,10 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 |4/9|オリエンテーション，イントロダクション，OCaml入門|[オリエンテーション資料](misc/orientation.pdf), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf)|
 |4/16|OCaml入門|[OCaml入門テキスト](textbook/mltext.pdf)，[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)|
 |4/23|ML1インタプリタ|[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)|
-|5/ 7|ML2インタプリタ|[教科書3章 (ML2インタプリタ)](textbfook/chap03-2.pdf)|
-|5/14|ML3インタプリタ，ML4インタプリタ，ML2の型推論|, [教科書3章 (ML3インタプリタ)](textbfook/chap03-3.pdf)，[教科書3章 (ML4インタプリタ)](textbfook/chap03-4.pdf)|
+|5/ 7|ML2インタプリタ|[教科書3章 (ML2インタプリタ)](textfook/chap03-2.pdf)|
+|5/14|ML3インタプリタ，ML4インタプリタ，ML2の型推論|, [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf)，[教科書3章 (ML4インタプリタ)](textbook/chap03-4.pdf)|
 |5/21|休講予定||
-|5/28|ML2の型推論，ML3の型推論|[教科書4章 (ML2の型推論)](textbfook/chap04-1.pdf)|
+|5/28|ML2の型推論，ML3の型推論|[教科書4章 (ML2の型推論)](textbook/chap04-1.pdf)|
 |6/ 4|中間試験，コンパイラ||
 |6/11|コンパイラ||
 |6/20|コンパイラ||
