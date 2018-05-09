@@ -29,23 +29,23 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 - http://www.fos.kuis.kyoto-u.ac.jp/~umatani/le3b/index.html
 
 ## 講義予定
-|日付|内容|対応する教科書中の場所|予習課題|
-|-----------|------------|------------|------------|
-|4/9|オリエンテーション，イントロダクション，OCaml入門|[オリエンテーション資料](misc/orientation.pdf), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf)||
-|4/16|OCaml入門|[OCaml入門テキスト](textbook/mltext.pdf)，[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)||
-|4/23|ML1インタプリタ|[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)||
-|5/ 7|ML2インタプリタ，ML3インタプリタ|[教科書3章 (ML2インタプリタ)](textbfook/chap03-2.pdf), [教科書3章 (ML3インタプリタ)](textbfook/chap03-3.pdf)||
-|5/14|ML4インタプリタ，ML2の型推論|[教科書3章 (ML4インタプリタ)](textbfook/chap03-4.pdf)||
-|5/21|休講予定|||
-|5/28|ML3の型推論，多相型|||
-|6/ 4|中間試験，コンパイラ|||
-|6/11|コンパイラ|||
-|6/20|コンパイラ|||
-|6/25|字句解析|||
-|7/ 2|LL構文解析|||
-|7/ 9|LR構文解析|||
-|7/17|LR構文解析|||
-|7/23|予備日|||
+|日付|内容|対応する教科書中の場所|
+|-----------|------------|------------|
+|4/9|オリエンテーション，イントロダクション，OCaml入門|[オリエンテーション資料](misc/orientation.pdf), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf)|
+|4/16|OCaml入門|[OCaml入門テキスト](textbook/mltext.pdf)，[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)|
+|4/23|ML1インタプリタ|[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)|
+|5/ 7|ML2インタプリタ，ML3インタプリタ|[教科書3章 (ML2インタプリタ)](textbfook/chap03-2.pdf), [教科書3章 (ML3インタプリタ)](textbfook/chap03-3.pdf)|
+|5/14|ML4インタプリタ，ML2の型推論|[教科書3章 (ML4インタプリタ)](textbfook/chap03-4.pdf)|
+|5/21|休講予定||
+|5/28|ML3の型推論，多相型||
+|6/ 4|中間試験，コンパイラ||
+|6/11|コンパイラ||
+|6/20|コンパイラ||
+|6/25|字句解析||
+|7/ 2|LL構文解析||
+|7/ 9|LR構文解析||
+|7/17|LR構文解析||
+|7/23|予備日||
 
 <!-- 2017 年 -->
 <!-- |日付|内容|対応する教科書中の場所|予習課題| -->
