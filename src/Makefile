@@ -10,6 +10,7 @@ RESULT=miniml
 YFLAGS=-v
 OCAMLYACC=menhir
 
+
 all: nc
 
 include OCamlMakefile

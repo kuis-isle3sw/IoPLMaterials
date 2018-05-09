@@ -5,6 +5,7 @@ open Syntax
 %token LPAREN RPAREN SEMISEMI
 %token PLUS MULT LT
 %token IF THEN ELSE TRUE FALSE
+%token LET IN EQ
 
 %token <int> INTV
 %token <Syntax.id> ID
@@ -19,6 +20,10 @@ toplevel :
 Expr :
     e=IfExpr { e }
   | e=LTExpr { e }
+  | e=LetExpr { e }
+
+LetExpr :
+   LET x=ID EQ e1=Expr IN e2=Expr { LetExpr(x,e1,e2) }
 
 LTExpr : 
     l=PExpr LT r=PExpr { BinOp (Lt, l, r) }

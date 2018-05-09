@@ -14,6 +14,7 @@ type exp =
            ILit 3, 
            Var "x") --> 
      if x<4 then 3 else x *)
+  | LetExpr of id * exp * exp
 
 type program = 
     Exp of exp

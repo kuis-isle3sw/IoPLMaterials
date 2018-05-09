@@ -1,3 +1,5 @@
+(* t は環境を表す型．
+   'a は変数が束縛される先の値の型． *)
 type 'a t
 
 exception Not_bound
