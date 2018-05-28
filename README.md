@@ -37,7 +37,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 |5/ 7|ML2インタプリタ|[教科書3章 (ML2インタプリタ)](textfook/chap03-2.pdf)|
 |5/14|ML3インタプリタ，ML4インタプリタ，ML2の型推論|[教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf)，[教科書3章 (ML4インタプリタ)](textbook/chap03-4.pdf)|
 |5/21|休講予定||
-|5/28|ML2の型推論，ML3の型推論|[教科書4章 (ML2の型推論)](textbook/chap04-1.pdf)，[教科書4章 (ML3の型推論)](textbook/chap04-2.pdf)，[教科書4章 (Let多相)](textbook/chap04-3.pdf)|
+|5/28|ML2の型推論，ML3の型推論，let多相|[教科書4章 (ML2の型推論)](textbook/chap04-1.pdf)，[教科書4章 (ML3の型推論)](textbook/chap04-2.pdf)，[教科書4章 (Let多相)](textbook/chap04-3.pdf)|
 |6/ 4|中間試験，コンパイラ||
 |6/11|コンパイラ||
 |6/20|コンパイラ||
