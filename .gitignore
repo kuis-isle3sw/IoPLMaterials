@@ -7,5 +7,8 @@ parser.mli
 lexer.ml
 ._d
 ._ncdi
-src/miniml
-src/parser.automaton
+.DS_Store
+interpreter/miniml
+interpreter/parser.automaton
+compiler/src/_build
+compiler/src/main
