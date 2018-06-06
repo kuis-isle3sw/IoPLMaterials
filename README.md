@@ -22,6 +22,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## お知らせ
 
+- 6月6日: [教科書5.1--5.4](textbook/chap05-1.pdf)の bugfix をしました．図5.1が修正されています．
 - 4月2日: 2018年の講義資料ページを作りました．
 
 ## リンク（集）
@@ -29,23 +30,23 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 - http://www.fos.kuis.kyoto-u.ac.jp/~umatani/le3b/index.html
 
 ## 講義予定
-|日付|内容|対応する教科書中の場所|
-|-----------|------------|------------|
-|4/9|オリエンテーション，イントロダクション，OCaml入門|[オリエンテーション資料](misc/orientation.pdf), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf)|
-|4/16|OCaml入門|[OCaml入門テキスト](textbook/mltext.pdf)，[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)|
-|4/23|ML1インタプリタ|[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)|
-|5/ 7|ML2インタプリタ|[教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf)|
-|5/14|ML3インタプリタ，ML4インタプリタ，ML2の型推論|[教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf)，[教科書3章 (ML4インタプリタ)](textbook/chap03-4.pdf)|
-|5/21|休講予定||
-|5/28|ML2の型推論，ML3の型推論，let多相|[教科書4章 (ML2の型推論)](textbook/chap04-1.pdf)，[教科書4章 (ML3の型推論)](textbook/chap04-2.pdf)，[教科書4章 (Let多相)](textbook/chap04-3.pdf)|
-|6/ 4|中間試験，コンパイラ(ソース言語，中間言語C，ソース言語から中間言語への変換)|[教科書5章 (ソース言語，中間言語C，ソース言語から中間言語への変換)](textbook/chap05-1.pdf)|
-|6/11|コンパイラ||
-|6/20|コンパイラ||
-|6/25|字句解析||
-|7/ 2|LL構文解析||
-|7/ 9|LR構文解析||
-|7/17|LR構文解析||
-|7/23|予備日||
+| 日付 | 内容                                                                        | 対応する教科書中の場所                                                                                                                                       |
+|------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 4/9  | オリエンテーション，イントロダクション，OCaml入門                           | [オリエンテーション資料](misc/orientation.pdf), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf) |
+| 4/16 | OCaml入門                                                                   | [OCaml入門テキスト](textbook/mltext.pdf)，[教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)                                                               |
+| 4/23 | ML1インタプリタ                                                             | [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)                                                                                                         |
+| 5/ 7 | ML2インタプリタ                                                             | [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf)                                                                                                         |
+| 5/14 | ML3インタプリタ，ML4インタプリタ，ML2の型推論                               | [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf)，[教科書3章 (ML4インタプリタ)](textbook/chap03-4.pdf)                                                   |
+| 5/21 | 休講予定                                                                    |                                                                                                                                                              |
+| 5/28 | ML2の型推論，ML3の型推論，let多相                                           | [教科書4章 (ML2の型推論)](textbook/chap04-1.pdf)，[教科書4章 (ML3の型推論)](textbook/chap04-2.pdf)，[教科書4章 (Let多相)](textbook/chap04-3.pdf)             |
+| 6/ 4 | 中間試験，コンパイラ(ソース言語，中間言語C，ソース言語から中間言語への変換) | [教科書5.1--5.4](textbook/chap05-1.pdf)，[スライド](textbook/CompilerIntro.pptx)                                                                             |
+| 6/11 | コンパイラ (ソース言語から中間言語への変換，仮想マシンコード)               | [教科書5.1--5.4](textbook/chap05-1.pdf)，[教科書5.5](textbook/chap05-2.pdf)                                                                                  |
+| 6/20 | コンパイラ                                                                  |                                                                                                                                                              |
+| 6/25 | 字句解析                                                                    |                                                                                                                                                              |
+| 7/ 2 | LL構文解析                                                                  |                                                                                                                                                              |
+| 7/ 9 | LR構文解析                                                                  |                                                                                                                                                              |
+| 7/17 | LR構文解析                                                                  |                                                                                                                                                              |
+| 7/23 | 予備日                                                                      |                                                                                                                                                              |
 
 <!-- 2017 年 -->
 <!-- |日付|内容|対応する教科書中の場所|予習課題| -->
