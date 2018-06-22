@@ -22,6 +22,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## お知らせ
 
+- 6月22日: [教科書4.4](textbook/chap04-3.pdf)は GitHub 上のビューアで見ると何故か文字化けするみたいです．ダウンロードして自分の PC 等で見てください．すみません．
 - 6月6日: [教科書5.5](textbook/chap05-2.pdf)の bugfix をしました．図5.1が修正されています．
 - 6月6日: [教科書5.1--5.4](textbook/chap05-1.pdf)の bugfix をしました．図5.1が修正されています．
 - 4月2日: 2018年の講義資料ページを作りました．
