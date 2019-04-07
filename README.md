@@ -32,3 +32,28 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## OCaml の設定方法
 
+OCaml のパッケージシステムである OPAM を用いてインストールするのが簡単である．
+https://opam.ocaml.org/doc/Install.html を読んでインストールすること．
+以下は簡便のために抜粋したものであるが，最新の情報ではないかもしれないので，できれば上記ページを読むこと．
+
+- `sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)`
+  - `curl` 関係のエラーが出る場合は https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh のスクリプトをダウンロードして `sh install.sh` を実行．
+  - 各自のパッケージ管理システム（Mac なら homebrew や macport，Linux なら yum や apt 等）を用いて opam をインストールしてもよい．
+- `opam init` を実行
+  - 途中設定ファイルに opam が書き込んでよいか聞かれる．全部 `y` にしておくと楽は楽である．
+- ``eval `opam init` ``を実行
+- ``eval `opam env` ``を実行
+- `opam switch create 4.07.1`を実行
+- ``eval `opam env` ``を実行
+
+演習にはいくつかのパッケージが必要である．OPAM が入った状態であれば，以下のコマンドを実行することでこれらのパッケージを導入できる．
+
+- `opam install menhir dune ounit`
+
+便利情報がいくつかある．
+
+- Emacs を使う人は tuareg-mode を使うとよい．`opam install tuareg` のあとに `opam user-setup install` を実行．
+- emacs と vim では merlin https://ocaml.github.io/merlin/ が便利である．これがあるとエディタが IDE になる．`opam install merlin` のあとに `opam user-setup install` を実行．
+  - Sublime-Text バージョンもベータ版として提供されている https://github.com/let-def/sublime-text-merlin
+- VSCode で OCaml を使う方法がいくつかあるらしい．（調べた人は情報ください．）
+  
