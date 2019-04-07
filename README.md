@@ -32,4 +32,3 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## OCaml の設定方法
 
-https://github.com/kuis-isle3sw/IoPLPrivate/edit/master/minimlInterp/README.md を参照されたい．
