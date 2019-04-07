@@ -11,8 +11,6 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 - 専門科目「プログラミング言語」ホームページ: https://github.com/aigarashi/PL-LectureNotes
 
 ## 講義予定
-
-
    
 | 日付 | 内容 | 対応する教科書中の場所 |
 |------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -31,3 +29,6 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 | 7/ 8 | | |
 | 7/22 | | |
 | ?/?? | | |
+
+## OCaml の設定方法
+
