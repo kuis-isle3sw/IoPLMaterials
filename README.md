@@ -12,6 +12,13 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
   - の中の OCaml のページ（最低このくらいはわかってないとキツイ）: http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html
   - の中の OCaml で二分探索木を書くページ（これもわかってないとキツイ）: http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html
 
+## 講義に関する情報
+
+- 講義をする人: 末永幸平（@ksuenaga, https://researchmap.jp/ksuenaga/）
+- 講義が行われる時間: 月曜2限
+- 講義が行われる場所: （多分）総合研究7号館講義室1
+- Language used in the class: Japanese
+
 ## 講義予定
    
 | 日付 | 内容 | 対応する教科書中の場所 |
