@@ -3,6 +3,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## お知らせ
 
+- 4月11日: [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)を一部修正しました．
 - 4月5日: 2019年の講義資料ページを作りました．
 
 ## リンク集
