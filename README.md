@@ -9,13 +9,24 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 - 実験3ホームページ: 未定
 - 専門科目「プログラミング言語」ホームページ: https://github.com/aigarashi/PL-LectureNotes
+  - の中の OCaml のページ（最低このくらいはわかってないとキツイ）: http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html
+  - の中の OCaml で二分探索木を書くページ（これもわかってないとキツイ）: http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html
+
+## 講義に関する情報
+
+- 講義をする人: 末永幸平（@ksuenaga, https://researchmap.jp/ksuenaga/）
+- 講義が行われる時間: 月曜2限
+- 講義が行われる場所: （多分）総合研究7号館講義室1
+- Language used in the class: Japanese
 
 ## 講義予定
+
+一部の資料と過去問は PandA で配布するので，PandA を見られる状態にしておくこと．
    
 | 日付 | 内容 | 対応する教科書中の場所 |
 |------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 4/8 | オリエンテーション，イントロダクション，OCaml入門 | [オリエンテーション資料](misc/orientation.md), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf) |
-| 4/15 | | |
+| 4/15 | OCaml入門, ML1インタプリタ | [OCaml入門テキスト](textbook/mltext.pdf), [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)|
 | 4/22 | | |
 | 5/ 7 | | |
 | 5/13 | | |
