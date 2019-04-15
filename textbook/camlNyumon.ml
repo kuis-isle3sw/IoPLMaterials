@@ -28,11 +28,25 @@ let rec fact2 n =
 ;;
 
 (* 階乗（末尾再帰 tail recursion）*)
+let rec fact_iter r n=
+   if n=1 then r
+   else fact (r*n n-1)
+;;
+let rec fact3 n=fact_iter(1 n);;
 
 (* 整数のリスト l を受け取り，その要素の和を求める関数 sum を書け *)
+let rec sum l=
+   match l with
+   | [] -> 0
+   | hd::tl -> hd + (sum tl)
+;;
 
 (* 整数のリスト l と整数から整数への関数 f を受け取り，f を l の要素そ
    れぞれに適用して得られるリストを返す関数 map を書け *)
-
+let rec map f l=
+   match l with
+   | [] -> []
+   | hd::tl -> (f hd) ::(map f tl)
+;;
 (* 教科書の Exercise 1.0.2 *)
 
