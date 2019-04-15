@@ -49,4 +49,17 @@ let rec map f l=
    | hd::tl -> (f hd) ::(map f tl)
 ;;
 (* 教科書の Exercise 1.0.2 *)
-
+type bt=
+   | Leaf
+   | Node of int * bt *bt
+;;
+let rec sumtree t=
+   match t with
+   | Leaf -> 0
+   | Node(n,bt1,bt2) -> n + (sumtree bt1) +(sumtree bt2)
+;;
+let rec maptree f t=
+   match t with
+   | Leaf -> Leaf
+   | Node(n,bt1,bt2) -> Node(f n,maptree f bt1,maptree f bt2)
+;;
