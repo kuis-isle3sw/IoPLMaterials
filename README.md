@@ -3,6 +3,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## お知らせ
 
+- 4月15日: [インタプリタのソースコード](interpreter)をアップロードしましたが，今後修正する可能性があるので参考程度に見てください．
 - 4月11日: [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)を一部修正しました．
 - 4月5日: 2019年の講義資料ページを作りました．
 
@@ -27,8 +28,8 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 | 日付 | 内容 | 対応する教科書中の場所 |
 |------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 4/8 | オリエンテーション，イントロダクション，OCaml入門 | [オリエンテーション資料](misc/orientation.md), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf) |
-| 4/15 | OCaml入門, ML1インタプリタ | [OCaml入門テキスト](textbook/mltext.pdf), [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)|
-| 4/22 | | |
+| 4/15 | OCaml入門 | [OCaml入門テキスト](textbook/mltext.pdf) |
+| 4/22 | ML1インタプリタ，ML2インタプリタ | [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf), [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf) |
 | 5/ 7 | | |
 | 5/13 | | |
 | 5/20 | | |
