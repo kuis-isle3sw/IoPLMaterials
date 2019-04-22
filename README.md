@@ -56,7 +56,6 @@ https://opam.ocaml.org/doc/Install.html を読んでインストールするこ�
 - _以下では実行ログの最後に`eval $(opam env)`を実行せよと書いてあることがあるので，その時は次の作業に移る前に `eval $(opam env)` を実行すること．_
 - `opam init` を実行
   - 途中設定ファイルに opam が書き込んでよいか聞かれる．全部 `y` にしておくと楽は楽である．
-- `opam init`を実行
 - `opam switch create 4.07.1`を実行
 - `opam install depext`
 - `opam install user-setup`
