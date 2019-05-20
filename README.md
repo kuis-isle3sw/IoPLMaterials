@@ -3,6 +3,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## お知らせ
 
+- 5月20日: [教科書4章 (多相型)](textbook/chap04-3.pdf) は GitHub 上のビューアでは文字化けして見えますが，ダウンロードして見ると正しく読めるはずです．
 - 5月7日: [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf)が今朝まで not found になっていました．ごめん．
 - 4月22日: [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)を更新しました．もう一度 pull してください．
 - 4月16日: OCaml の設定方法の節を更新しました．
