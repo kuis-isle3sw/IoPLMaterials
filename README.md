@@ -37,7 +37,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 | 5/ 7 | ML1インタプリタ，ML2インタプリタ，ML3インタプリタ | [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf), [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf), [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf) |
 | 5/13 | ML3インタプリタ，ML4インタプリタ，ML2の型推論 | [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf), [教科書3章 (ML4インタプリタ)](textbook/chap03-4.pdf), [教科書4章 (ML2型推論)](textbook/chap04-1.pdf) |
 | 5/20 | ML2の型推論，ML3の型推論，多相型の型推論 | [教科書4章 (ML2型推論)](textbook/chap04-1.pdf), [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
-| 5/27 | | |
+| 5/27 | ML2の型推論，ML3の型推論，多相型の型推論 | [教科書4章 (ML2型推論)](textbook/chap04-1.pdf), [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
 | 6/ 3 | 中間試験 | |
 | 6/10 | | |
 | 6/17 | | |
