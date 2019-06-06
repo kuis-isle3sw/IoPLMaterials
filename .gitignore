@@ -2,13 +2,14 @@
 *.cmx
 *.o
 *~
+*.install
+dune-project
 parser.ml
 parser.mli
 lexer.ml
 ._d
 ._ncdi
 .DS_Store
-interpreter/miniml
-interpreter/parser.automaton
+interpreter/_build
 compiler/src/_build
 compiler/src/main
