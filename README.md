@@ -40,7 +40,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 | 5/27 | ML2の型推論，ML3の型推論，多相型の型推論 | [教科書4章 (ML2型推論)](textbook/chap04-1.pdf), [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
 | 6/ 3 | 中間試験 | |
 | 6/10 | ML3の型推論，多相型の型推論 | [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
-| 6/17 | | |
+| 6/17 | 字句解析 | PandA で配布しているスライド |
 | 6/24 | | |
 | 7/ 1 | | |
 | 7/ 8 | | |
