@@ -42,9 +42,9 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 | 6/ 3 | 中間試験 | |
 | 6/10 | ML3の型推論，多相型の型推論 | [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
 | 6/17 | 字句解析 | PandA で配布しているスライド |
-| 6/24 | | |
-| 7/ 1 | | |
-| 7/ 8 | | |
+| 6/24 | 構文解析 (LL(1)) | PandA で配布しているスライド |
+| 7/ 1 | 構文解析 (LL(1), LR(0)) | PandA で配布しているスライド |
+| 7/ 8 | 構文解析 (LR(0), SLR, LR(1))，コンパイラの導入，MIPSアセンブリ入門 | PandA で配布しているスライド，[MIPSアセンブリ入門](textbook/MIPS.pptx) |
 | 7/22 | | |
 | ?/?? | | |
 
