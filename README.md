@@ -45,7 +45,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 | 6/24 | 構文解析 (LL(1)) | PandA で配布しているスライド |
 | 7/ 1 | 構文解析 (LL(1), LR(0)) | PandA で配布しているスライド |
 | 7/ 8 | 構文解析 (LR(0), SLR, LR(1))，コンパイラの導入，MIPSアセンブリ入門 | PandA で配布しているスライド，[MIPSアセンブリ入門](textbook/MIPS.pptx) |
-| 7/22 | | |
+| 7/22 | コンパイラ | [MIPSアセンブリ入門](textbook/MIPS.pptx)，[教科書5章](textbook/chap05.pdf)|
 | ?/?? | | |
 
 ## OCaml の設定方法
