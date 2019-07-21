@@ -3,6 +3,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## お知らせ
 
+- 7月22日: 期末試験の範囲についての情報を出しました．
 - 6月17日: [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf)の節番号がずれていました．すみません．
 - 5月20日: [教科書4章 (多相型)](textbook/chap04-3.pdf) は GitHub 上のビューアでは文字化けして見えますが，ダウンロードして見ると正しく読めるはずです．
 - 5月7日: [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf)が今朝まで not found になっていました．ごめん．
