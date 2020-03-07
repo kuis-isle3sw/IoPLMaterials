@@ -27,9 +27,9 @@ Error: This expression has type bool but an expression was expected of type int.
 
 ### Exercise 1.3
 
-- (1) 各ノードに`int`型の値を保持する二分木を表すユーザ定義型`bt`を，ヴァリアント型を用いて定義せよ．
-- `bt`型の値`t`を受け取り，`t`中に現れるすべての値の和を求める関数`sumtree`を書け．`sumtree`の型は`bt -> int`となる．
-- `bt`型の値`t`と`int -> int`型の関数`f`とを受け取り，`t`中に現れるすべての値に`f`を適用して得られる木を求める関数`mapTree`を書け．`mapTree`の型は`(int -> int) -> bt -> bt`となる．
+1. 各ノードに`int`型の値を保持する二分木を表すユーザ定義型`bt`を，ヴァリアント型を用いて定義せよ．
+2. `bt`型の値`t`を受け取り，`t`中に現れるすべての値の和を求める関数`sumtree`を書け．`sumtree`の型は`bt -> int`となる．
+3. `int -> int`型の関数`f`と`bt`型の値`t`とを受け取り，`t`中に現れるすべての値に`f`を適用して得られる木を求める関数`mapTree`を書け．`mapTree`の型は`(int -> int) -> bt -> bt`となる．
 
 ## OCaml のインストールと設定
 
