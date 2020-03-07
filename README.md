@@ -1,5 +1,4 @@
-# IoPLMaterials
-Materials for the class "Implementation of Programming Languages" in Kyoto University.
+# 京都大学工学部専門科目「プログラミング言語処理系」講義資料
 
 ## お知らせ
 
@@ -10,16 +9,17 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 （鋭意 Markdown 化中．）
 
 - [オリエンテーション資料](misc/orientation.md)
-- [OCaml入門テキスト](textbook/mltext.pdf)
-- [1章](textbook/chap01.md)
-- [2章](textbook/chap02.md)
+- [OCaml入門テキスト by 五十嵐淳](textbook/mltext.pdf)
+- プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平
+  - [1章](textbook/chap01.md)
+  - [2章](textbook/chap02.md)
 
 ## リンク集
 
-- 実験3ホームページ: https://kuis-isle3sw.github.io/kuis-isle3sw-portal/
-- 専門科目「プログラミング言語」ホームページ: https://github.com/aigarashi/PL-LectureNotes
-  - の中の OCaml のページ（最低このくらいはわかってないとキツイ）: http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html
-  - の中の OCaml で二分探索木を書くページ（これもわかってないとキツイ）: http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html
+- [実験3ホームページ](https://kuis-isle3sw.github.io/kuis-isle3sw-portal/)
+- [専門科目「プログラミング言語」ホームページ](https://github.com/aigarashi/PL-LectureNotes)
+  - [の中の OCaml のページ（最低このくらいはわかってないとキツイ）](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html)
+  - [の中の OCaml で二分探索木を書くページ（これもわかってないとキツイ）](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html)
 
 ## 講義に関する情報
 
