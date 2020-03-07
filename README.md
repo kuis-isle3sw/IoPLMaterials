@@ -3,15 +3,7 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## お知らせ
 
-- 7月22日: 期末試験の範囲についての情報を出しました．
-- 6月17日: [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf)の節番号がずれていました．すみません．
-- 5月20日: [教科書4章 (多相型)](textbook/chap04-3.pdf) は GitHub 上のビューアでは文字化けして見えますが，ダウンロードして見ると正しく読めるはずです．
-- 5月7日: [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf)が今朝まで not found になっていました．ごめん．
-- 4月22日: [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)を更新しました．もう一度 pull してください．
-- 4月16日: OCaml の設定方法の節を更新しました．
-- 4月15日: [インタプリタのソースコード](interpreter)をアップロードしましたが，今後修正する可能性があるので参考程度に見てください．
-- 4月11日: [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf)を一部修正しました．
-- 4月5日: 2019年の講義資料ページを作りました．
+- 3月4日: 2020年の講義資料ページを作りました．
 
 ## リンク集
 
@@ -22,29 +14,10 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 ## 講義に関する情報
 
-- 講義をする人: 末永幸平（@ksuenaga, https://researchmap.jp/ksuenaga/）
+- 講義をする人: 末永幸平（[@ksuenaga](http://www.twitter.com/ksuenaga/), https://researchmap.jp/ksuenaga/）
 - 講義が行われる時間: 月曜2限
-- 講義が行われる場所: （多分）総合研究7号館講義室1
+- 講義が行われる場所: 総合研究7号館講義室1
 - Language used in the class: Japanese
-
-## 期末試験について
-
-### 出題範囲と配点
-- インタプリタ (25%)
-- 型推論 (25%)
-- コンパイラにおける関数呼び出しの実装について (25%)
-- 字句解析・LL構文解析・LR構文解析 (25%)
-
-### 形式
-- 試験時間: 90分
-- 持ち込み: 不可
-- 試験日時と場所: KULASIS から確認のこと
-
-### その他のお知らせ
-- 知識の丸暗記が必要な問題はできるだけ出さない予定です．アルゴリズムや型付け規則の丸暗記に時間を浪費することの無いようにしてください．むしろ，各定義がなぜそのようになっているかをしっかりと理解して下さい．
-- _コンパイラにおける関数呼び出しの実装については，PandAで配布している過去問をしっかり予習しておいてください．_
-- 中間試験と期末試験の結果を勘案して最終成績を出します．
-- 救済レポート等は出しません．単位や良い成績が必要な人はしっかりと勉強してください．
 
 ## 講義予定
 
@@ -52,21 +25,21 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
    
 | 日付 | 内容 | 対応する教科書中の場所 |
 |------|-----------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 4/8 | オリエンテーション，イントロダクション，OCaml入門 | [オリエンテーション資料](misc/orientation.md), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf) |
-| 4/15 | OCaml入門 | [OCaml入門テキスト](textbook/mltext.pdf) |
-| 4/22 | ML1インタプリタ，ML2インタプリタ | [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf), [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf) |
-| 5/ 7 | ML1インタプリタ，ML2インタプリタ，ML3インタプリタ | [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf), [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf), [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf) |
-| 5/13 | ML3インタプリタ，ML4インタプリタ，ML2の型推論 | [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf), [教科書3章 (ML4インタプリタ)](textbook/chap03-4.pdf), [教科書4章 (ML2型推論)](textbook/chap04-1.pdf) |
-| 5/20 | ML2の型推論，ML3の型推論，多相型の型推論 | [教科書4章 (ML2型推論)](textbook/chap04-1.pdf), [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
-| 5/27 | ML2の型推論，ML3の型推論，多相型の型推論 | [教科書4章 (ML2型推論)](textbook/chap04-1.pdf), [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
-| 6/ 3 | 中間試験 | |
-| 6/10 | ML3の型推論，多相型の型推論 | [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
-| 6/17 | 字句解析 | PandA で配布しているスライド |
-| 6/24 | 構文解析 (LL(1)) | PandA で配布しているスライド |
-| 7/ 1 | 構文解析 (LL(1), LR(0)) | PandA で配布しているスライド |
-| 7/ 8 | 構文解析 (LR(0), SLR, LR(1))，コンパイラの導入，MIPSアセンブリ入門 | PandA で配布しているスライド，[MIPSアセンブリ入門](textbook/MIPS.pptx) |
-| 7/22 | コンパイラ | [MIPSアセンブリ入門](textbook/MIPS.pptx)，[教科書5章](textbook/chap05.pdf)|
-| ?/?? | | |
+| 4/13 | オリエンテーション，イントロダクション，OCaml入門 | [オリエンテーション資料](misc/orientation.md), [教科書1章](textbook/chap01.pdf), [教科書2章](textbook/chap02.pdf), [OCaml入門テキスト](textbook/mltext.pdf) |
+| 4/20 | OCaml入門 | [OCaml入門テキスト](textbook/mltext.pdf) |
+| 4/27 | ML1インタプリタ，ML2インタプリタ | [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf), [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf) |
+| 5/11 | ML1インタプリタ，ML2インタプリタ，ML3インタプリタ | [教科書3章 (ML1インタプリタ)](textbook/chap03-1.pdf), [教科書3章 (ML2インタプリタ)](textbook/chap03-2.pdf), [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf) |
+| 5/18 | ML3インタプリタ，ML4インタプリタ，ML2の型推論 | [教科書3章 (ML3インタプリタ)](textbook/chap03-3.pdf), [教科書3章 (ML4インタプリタ)](textbook/chap03-4.pdf), [教科書4章 (ML2型推論)](textbook/chap04-1.pdf) |
+| 5/25 | ML2の型推論，ML3の型推論，多相型の型推論 | [教科書4章 (ML2型推論)](textbook/chap04-1.pdf), [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
+| 6/1 | ML2の型推論，ML3の型推論，多相型の型推論 | [教科書4章 (ML2型推論)](textbook/chap04-1.pdf), [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
+| 6/8 | 中間試験 | |
+| 6/15 | ML3の型推論，多相型の型推論 | [教科書4章 (ML3,4型推論)](textbook/chap04-2.pdf), [教科書4章 (多相型)](textbook/chap04-3.pdf) |
+| 6/22 | 字句解析 | PandA で配布しているスライド |
+| 6/29 | 構文解析 (LL(1)) | PandA で配布しているスライド |
+| 7/6 | 構文解析 (LL(1), LR(0)) | PandA で配布しているスライド |
+| 7/13 | 構文解析 (LR(0), SLR, LR(1))，コンパイラの導入，MIPSアセンブリ入門 | PandA で配布しているスライド，[MIPSアセンブリ入門](textbook/MIPS.pptx) |
+| 7/20 | コンパイラ | [MIPSアセンブリ入門](textbook/MIPS.pptx)，[教科書5章](textbook/chap05.pdf)|
+| ?/?? | 期末試験 | |
 
 ## OCaml の設定方法
 
