@@ -5,6 +5,15 @@ Materials for the class "Implementation of Programming Languages" in Kyoto Unive
 
 - 3月4日: 2020年の講義資料ページを作りました．
 
+## 教科書
+
+（鋭意 Markdown 化中．）
+
+- [オリエンテーション資料](misc/orientation.md)
+- [OCaml入門テキスト](textbook/mltext.pdf)
+- [1章](textbook/chap01.md)
+- [2章](textbook/chap02.md)
+
 ## リンク集
 
 - 実験3ホームページ: https://kuis-isle3sw.github.io/kuis-isle3sw-portal/
