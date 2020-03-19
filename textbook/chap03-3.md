@@ -1,52 +1,43 @@
 
-\subsection{`Parser`モジュール，`Lexer`モジュール：字句解析と構文解析}
+# `Parser`モジュール，`Lexer`モジュール
 
 この節では`Parser`モジュールと`Lexer`モジュールの機能
-と`parser.mly`と`lexer.mll`の構成について説明する．字句解析と構文解析に
-ついて後回しにしたい場合は，とりあえず読み飛ばしても構わない．
+と`parser.mly`と`lexer.mll`の構成について説明する．字句解析と構文解析を行うための具体的なアルゴリズムは講義の終盤で扱うが，ここではツールを使って（具体的なアルゴリズムがわからなくても）とりあえずこれらのモジュールを作る方法を説明する．
+
+この節は[parser.mly](../interpreter/src/parser.mly)と[lexer.mll](../interpreter/src/lexer.mll)とを見ながら読むと良い．
 
 `Parser`と`Lexer`はそれぞれ構文解析と字句解析を行うモジュールである．
-`Parser`モジュールは Menhir というツールを用いて\texttt{parser.mly}とい
-うファイルから，`Lexer`モジュールは ocamllex というツールを用いて
-\texttt{lexer.mll}というファイルからそれぞれ自動生成される．
+`Parser`モジュールは [Menhir](http://gallium.inria.fr/~fpottier/menhir/) というツールを用いて`parser.mly`とい
+うファイルから，`Lexer`モジュールは [ocamllex](https://caml.inria.fr/pub/docs/manual-ocaml/lexyacc.html) というツールを用いて
+`lexer.mll`というファイルからそれぞれ自動生成される．
 
-Menhir は\intro{LR(1)構文解析}{LR(1) parsing}という手法を用いて，BNFっぽ
-く書かれた文法定義（ここでは\texttt{parser.mly}）から，構文解析を行う
-OCaml のプログラム（ここでは\texttt{parser.ml}と\texttt{parser.mli}）を
-自動生成する．また，ocamllex は\intro{正則表現}{regular expression}を使っ
-て書かれたトークンの定義（ここでは\texttt{lexer.mll}）から，字句解析を行
-う OCaml のプログラム（ここでは\texttt{lexer.ml}）を自動生成する．生成さ
+Menhir は _LR(1)構文解析 (LR(1) parsing)_ という手法を用いて，BNFっぽく書かれた文法定義（ここでは`parser.mly`に書かれている文法定義）から，構文解析を行う OCaml のプログラム（ここでは`parser.ml`と`parser.mli`）を
+自動生成する．また，ocamllex は _正則表現 (regular expression)_ を使って書かれたトークンの定義（ここでは`lexer.mll`）から，字句解析を行
+う OCaml のプログラム（ここでは`lexer.ml`）を自動生成する．生成さ
 れたプログラムがどのように字句解析や構文解析を行うかはこの講義の後半で触
 れる．そのような仕組みの部分を抜きにして，ここでは`.mly`ファイルや`.mll`
 ファイルの書き方を説明する．
 
-% Menhir は，yacc と同様に，LR(1) の文法を定義したファイルから構文解析プロ
-% グラムを生成するツールである．ここでは，LR(1) 文法や構文解析アルゴリズム
-% などに関しての説明などは割愛し(コンパイラの教科書などを参照のこと)，文法
-% 定義ファイルの説明を `parser.mly` を具体例として行う．
-
-\subsubsection*{文法定義ファイルの書き方}
+## `.mly`ファイルの書き方
 
 拡張子`.mly`文法定義ファイルは一般に，以下のように4つの部分から構成される．
-%
-#{&}
-%\{
-  \metasym{ヘッダ}
-%\}
-  \metasym{宣言}
+```
+{
+  ヘッダ部
+}
+  宣言部
 %%
-  \metasym{文法規則}
+  文法規則部
 %%
-  \metasym{トレイラ}
-#{`}
-%
-\metasym{ヘッダ}, \metasym{トレイラ} は OCaml のプログラムを書く部分
-で，Menhir が生成する `parser.ml` の，それぞれ先頭・末尾にそのまま埋め込
-まれる．\metasym{宣言}はトークン(終端記号)や，開始記号，優先度などの宣言
-を行う．`parser.mly` では演習を通して，開始記号とトークンの宣言のみを使
-用する．\metasym{文法規則}には文法記述と還元時のアクションを記述する．コ
-メントは OCaml と同様 `(* ... *)` である．\footnote{ヘッダ部分とトレ
-イラ部分以外では`/* ... */`と`//...`が使えるらしい．}
+  トレイラ部
+```
++ ヘッダ部とトレイラ部は OCaml のプログラムを書く部分で，Menhir が生成する `parser.ml`の，それぞれ先頭・末尾にそのまま埋め込まれる．ヘッダ部で`Parser`モジュールの中だけで使用する補助関数を定義したり，トレイラ部で`Parser`モジュールが初めて読み込まれたときに実行すべきプログラムを書いたりする，というように使う．
++ 宣言部はトークン(終端記号)や，開始記号，優先度などの宣言を行う．`parser.mly` では演習を通して，開始記号とトークンの宣言のみを使用する．
++ 文法規則部には文法記述とアクションを記述する．
+
+<!-- コメントは OCaml と同様 `(* ... *)` である．\footnote{ヘッダ部分とトレイラ部分以外では`/* ... */`と`//...`が使えるらしい．} -->
+
+TODO: ここまでかいた
 
 それでは `parser.mly` を見てみよう(図\ref{fig:parser.mly})．\footnote{以
 降の話は結構ややこしいかもしれないので，全部理解しようとせずに，

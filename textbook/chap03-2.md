@@ -143,7 +143,7 @@ TODO: 「次節以降」にリンクをはる．
 
 <!-- に，`parser.mly` (の `%start`)で宣言された非終端記号の名前 `toplevel` が関数 `Parser.toplevel` に対応している．これらの関数はそれぞれ ocamllex と Menhir によって自動生成された関数である． -->
 
-#### 標準ライブラリ
+#### 標準ライブラリ <a name="#standardLib"></a>
 [OCamlの標準ライブラリのドキュメント](https://caml.inria.fr/pub/docs/manual-ocaml/stdlib.html)を読むと，標準ライブラリの使い方が分かる．
 + また，OCaml の処理系であらかじめ使える関数群は[Stdlib](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Stdlib.html)に定義されている．これは目を通しておくとよいだろう．
 + [List](https://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html), [Map](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Map.html), [Set](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Set.html), [Hashtbl](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Hashtbl.html)は，リスト操作，写像操作，集合操作，ハッシュマップ操作のためのライブラリである．これらは読んでおくとよい．
