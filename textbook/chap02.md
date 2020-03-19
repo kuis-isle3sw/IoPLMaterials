@@ -1,3 +1,5 @@
+{% include head.html %}
+
 # Chapter 2: 概論的な話
 
 ## プログラミング言語を定義する

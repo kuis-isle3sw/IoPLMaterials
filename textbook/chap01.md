@@ -1,3 +1,5 @@
+{% include head.html %}
+
 # Chapter 1
 
 ## はじめに

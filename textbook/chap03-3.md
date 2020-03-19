@@ -1,3 +1,4 @@
+{% include head.html %}
 
 # `Parser`モジュール，`Lexer`モジュール
 
