@@ -36,15 +36,7 @@ Menhir は _LR(1)構文解析 (LR(1) parsing)_ という手法を用いて，BNF
 + 宣言部はトークン(終端記号)や，開始記号，優先度などの宣言を行う．`parser.mly` では演習を通して，開始記号とトークンの宣言のみを使用する．
 + 文法規則部には文法記述とアクションを記述する．
 
-<!-- コメントは OCaml と同様 `(* ... *)` である．\footnote{ヘッダ部分とトレイラ部分以外では`/* ... */`と`//...`が使えるらしい．} -->
-
-TODO: ここまでかいた
-
 それでは `parser.mly` を見てみよう．
-<!-- \footnote{以
-降の話は結構ややこしいかもしれないので，全部理解しようとせずに，
-`parser.mly`と`lexer.mll`を適当にいじって遊ぶ，くらいの気楽なスタンスの
-ほうがよいかもしれない．} -->
 {% highlight ocaml %}
 {% include_relative interpreter/src/parser.mly %}
 {% endhighlight %}

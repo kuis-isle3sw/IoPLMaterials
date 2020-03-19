@@ -17,6 +17,7 @@
     - [3.1: MiniML1 のシンタックス](textbook/chap03-1.md)
     - [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md)
     - [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md)
+    - [3.4: MiniML2: 定義の導入](textbook/chap03-4.md)
 
 <!--
 ## 教科書

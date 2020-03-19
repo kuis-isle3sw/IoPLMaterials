@@ -48,13 +48,13 @@
 MiniML1 の場合，式の値 expressed value の集合は$\{\dots, -2, -1, 0, 1, 2, 3, \ldots\} \oplus \mbox{真偽値の集合}$であり，denoted value の集合は expressed value の集合に等しい．ここで，$\oplus$ は直和を示している．
 
 `eval.ml`には値を表す OCaml の型である`exval`と`dnval`が定義されている．インタプリタ内では，MiniML の値をこれらの形の（OCamlの）値として表すことになる．型宣言は，初めは以下の通りになっている．
-```
+{% highlight ocaml %}
 (* Expressed values *)
 type exval = 
     IntV of int
   | BoolV of bool
 and dnval = exval
-```
+{% endhighlight %}
 `exval`がexpressed valueの型，`dnval`がdenoted valueの型である．
 
 ### 環境
