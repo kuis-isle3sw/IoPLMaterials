@@ -15,3 +15,5 @@ compiler/src/main
 Gemfile.lock
 vendor/
 _site/
+.bundle/
+.vscode/
