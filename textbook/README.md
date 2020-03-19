@@ -10,3 +10,5 @@
   - 3章
     - [3.1: MiniML1 のシンタックス](textbook/chap03-1.md)
     - [3.2: 各モジュールの機能 (1)](textbook/chap03-2.md)
+
+[PDF]({{ page.pdf_url }})

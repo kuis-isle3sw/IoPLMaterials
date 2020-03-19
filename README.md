@@ -4,6 +4,9 @@
 
 - 3月4日: 2020年の講義資料ページを作りました．
 
+{% include_relative textbook/README.md %}
+
+<!--
 ## 教科書
 
 （鋭意 Markdown 化中．）
@@ -16,6 +19,7 @@
   - 3章
     - [3.1: MiniML1 のシンタックス](textbook/chap03-1.md)
     - [3.2: 各モジュールの機能 (1)](textbook/chap03-2.md)
+-->
 
 ## リンク集
 

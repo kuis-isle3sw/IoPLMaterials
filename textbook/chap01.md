@@ -1,3 +1,7 @@
+---
+pdf: true
+---
+
 {% include head.html %}
 
 # Chapter 1

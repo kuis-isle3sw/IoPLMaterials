@@ -1,2 +1,9 @@
 # theme: jekyll-theme-minimal
 # theme: jekyll-theme-cayman
+
+# gems:
+#   - jekyll-pdf
+
+# defaults:
+#   -
+#     pdf:  true

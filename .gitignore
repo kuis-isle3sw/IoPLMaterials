@@ -12,3 +12,6 @@ interpreter/miniml
 interpreter/parser.automaton
 compiler/src/_build
 compiler/src/main
+Gemfile.lock
+vendor/
+_site/
