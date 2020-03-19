@@ -1,0 +1,12 @@
+(executables
+  (names main)
+  (libraries
+    miniml
+  )
+  (public_names miniml))
+
+(env
+  (dev
+    (flags
+      (:standard -warn-error -A -w -39)
+    )))
