@@ -43,8 +43,8 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
     - [3.5: MiniML3: 関数の導入](textbook/chap03-5.md)
     - [3.6: MiniML4: 再帰関数](textbook/chap03-6.md)
     - [3.7: MiniML5 and beyond: やりこみのための演習問題](textbook/chap03-7.md)
-  - 4章: 型推論機能付き MiniML インタプリタの実装
-    - [4.1](textbook/chap04-1.md)
+  - 4章: 型推論機能付き MiniML インタプリタの実装（あるいは，型システムを用いた形式検証の初歩）
+    - [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md)
 
 <!--
 ## 教科書
