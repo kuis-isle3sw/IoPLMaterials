@@ -24,7 +24,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 
 （鋭意 Markdown 化中．）
 
-- [オリエンテーション資料](../misc/orientation.md)
+- [オリエンテーション資料](misc/orientation.md)
 - [OCaml入門テキスト by 五十嵐淳](textbook/mltext.pdf)
 - プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平
   - [1章: イントロダクション](textbook/chap01.md)
