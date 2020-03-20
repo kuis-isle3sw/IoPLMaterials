@@ -1,3 +1,5 @@
+{% include head.html %}
+
 # 京都大学工学部専門科目「プログラミング言語処理系」講義資料
 
 ## お知らせ
@@ -20,6 +22,7 @@
     - [3.4: MiniML2: 定義の導入](textbook/chap03-4.md)
     - [3.5: MiniML3: 関数の導入](textbook/chap03-5.md)
     - [3.6: MiniML4: 再帰関数](textbook/chap03-6.md)
+    - [3.7: MiniML5 and beyond: やりこみのための演習問題](textbook/chap03-7.md)
 
 <!--
 ## 教科書
