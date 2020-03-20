@@ -30,7 +30,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
   - [OCaml で二分探索木を書く by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html)
   - [この資料の「多相二分木 in OCaml」のところ](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/09-polymorphism.html)
   - [高階関数 (OCamlに関するところのみ)](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/10-hofuns.html)
-- もう少しちゃんとした OCaml のテキスト: [OCaml入門テキスト by 五十嵐淳](textboo/kmltext.pdf)
+- もう少しちゃんとした OCaml のテキスト: [OCaml入門テキスト by 五十嵐淳](textboo/mltext.pdf)
   - _1章は古くなっているので，2章から読むこと_
 - プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平
   - [1章: イントロダクション](textbook/chap01.md)
@@ -45,6 +45,8 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
     - [3.7: MiniML5 and beyond: やりこみのための演習問題](textbook/chap03-7.md)
   - 4章: 型推論機能付き MiniML インタプリタの実装（あるいは，型システムを用いた形式検証の初歩）
     - [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md)
+    - [4.2: MiniML2 のための型推論](textbook/chap04-2.md)
+
 
 <!--
 ## 教科書
