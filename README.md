@@ -19,6 +19,7 @@
     - [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md)
     - [3.4: MiniML2: 定義の導入](textbook/chap03-4.md)
     - [3.5: MiniML3: 関数の導入](textbook/chap03-5.md)
+    - [3.6: MiniML4: 再帰関数](textbook/chap03-6.md)
 
 <!--
 ## 教科書
