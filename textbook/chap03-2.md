@@ -4,7 +4,7 @@
 
 実装するインタプリタは6つのモジュール<sup>[注](#module)</sup>から構成される．本節ではそれぞれのモジュールについて簡単に説明する．
 
-<a name="#module">モジュールについて</a>: OCamlを含め多くのプログラミング言語には， _モジュールシステム (module system)_ と呼ばれる，プログラムを部分的な機能（_モジュール (module)_）ごとに分割するための機構が備わっている．この機構は，プログラムが大規模化している現代的なプログラミングにおいて不可欠な機構であるが，その解説は本書の範囲を超える．[OCaml入門](mltext.pdf)の該当する章を参照されたい．さしあたって理解しておくべきことは，
+<a name="module">モジュールについて</a>: OCamlを含め多くのプログラミング言語には， _モジュールシステム (module system)_ と呼ばれる，プログラムを部分的な機能（_モジュール (module)_）ごとに分割するための機構が備わっている．この機構は，プログラムが大規模化している現代的なプログラミングにおいて不可欠な機構であるが，その解説は本書の範囲を超える．[OCaml入門](mltext.pdf)の該当する章を参照されたい．さしあたって理解しておくべきことは，
 - OCaml プログラムを幾つかのファイルに分割して開発すると，ファイル名に対応したモジュールが生成されること（例えば，`foo.ml`というファイルからは`Foo`というモジュールが生成される）
 - モジュール内で定義されている変数や関数をそのモジュールの外から参照するにはモジュール名を前に付けなければならないこと（例えばモジュール`Foo`の中で定義された`x`という変数を`Foo`以外のモジュールから参照するには`Foo.x`と書く）
 の二点である．
@@ -108,7 +108,7 @@ let initial_env =
 
 `environment.mli`)と`environment.ml`の関係を理解しておくのはとても重要なので，ここで少し説明しておこう．どちらも`Environment`モジュールを定義するために用いられるファイルなのだが，`environment.ml`は `Environment`モジュールがどう動作するかを決定する _実装 (implementation)_ を定義し，`environment.mli`はこのモジュールがどのように使われてよいかを決定する _インターフェイス (interface)_ を宣言する．<sup>[2](#interface)</sup> 中身を見てみると，`environment.ml`には`Environment`モジュールがどう動作するかが記述されており，`environment.mli`は，このモジュールの使われ方が型によって表現されている．
 
-<a name="#interface">2</a>: 一般にインターフェイスとは，2つ以上のシステムが相互に作用する場所のことを言う．`Environment`モジュールの内部動作と外部仕様との相互作用を`environment.mli`が決めているわけである．
+<a name="interface">2</a>: 一般にインターフェイスとは，2つ以上のシステムが相互に作用する場所のことを言う．`Environment`モジュールの内部動作と外部仕様との相互作用を`environment.mli`が決めているわけである．
 
 これを頭に入れて，`environment.ml`と`environment.mli`を見返してみよう．`environment.ml`は型`'a t`を連想リスト`(Syntax.id * 'a) list`型として定義し，`'a t`型の値を操作する関数を定義している．これに対して，`environment.mli`は (1) なんらかの多相型`'a t`が _存在する_ ことのみを宣言しており，この型の実体が何であるかには言及しておらず，(2) 各関数の型を`'a t`を用いて宣言している．（`.mli`ファイル中の各関数の型宣言は`'a t`の実体が`(Syntax.id * 'a) list`であることには言及していないことに注意．）
 
@@ -150,7 +150,7 @@ Parser.toplevel Lexer.main (Lexing.from_channel stdin)
 
 <!-- に，`parser.mly` (の `%start`)で宣言された非終端記号の名前 `toplevel` が関数 `Parser.toplevel` に対応している．これらの関数はそれぞれ ocamllex と Menhir によって自動生成された関数である． -->
 
-#### 標準ライブラリ <a name="#standardLib"></a>
+#### 標準ライブラリ <a name="standardLib"></a>
 [OCamlの標準ライブラリのドキュメント](https://caml.inria.fr/pub/docs/manual-ocaml/stdlib.html)を読むと，標準ライブラリの使い方が分かる．
 + また，OCaml の処理系であらかじめ使える関数群は[Stdlib](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Stdlib.html)に定義されている．これは目を通しておくとよいだろう．
 + [List](https://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html), [Map](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Map.html), [Set](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Set.html), [Hashtbl](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Hashtbl.html)は，リスト操作，写像操作，集合操作，ハッシュマップ操作のためのライブラリである．これらは読んでおくとよい．

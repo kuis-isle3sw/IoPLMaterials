@@ -67,7 +67,7 @@ let reservedWords = [
 | "->" { Parser.RARROW } (* New! *)
 {% endhighlight %}
 
-## 評価器の拡張: 関数値の表現の仕方<a name="#closure"></a>
+## 評価器の拡張: 関数値の表現の仕方<a name="closure"></a>
 
 さて，関数値をどのようなデータで表現すればよいか，すなわち`fun x -> e`という関数式を評価した結果をどう表現すればよいかを考えよう．この式を評価して得られる関数値は，何らかの値に適用されると，仮引数`x`を受け取った値に束縛し，関数本体の式`e`を評価する．したがって，関数値は少なくともパラメータの名前と，本体の式の情報を含んでいなければならない．であれば，以下のように`exval`を拡張して関数値のためのコンストラクタ`ProcV`を定義することが考えられる．
 {% highlight ocaml %}
@@ -160,7 +160,7 @@ let f x1 ... xn = ...
 {% endhighlight %}
 といった簡略記法をサポートせよ．
 
-### Exercise ___ [*] <a name="#selfapplication"></a>
+### Exercise ___ [*] <a name="selfapplication"></a>
 以下は，加算を繰り返して 4 による掛け算を実現している MiniML3 プログラムである．これを改造して，階乗を計算するプログラムを書け．
 {% highlight ocaml %}
 let makemult = fun maker -> fun x ->
@@ -169,7 +169,7 @@ let times4 = fun x -> makemult makemult x in
   times4 3
 {% endhighlight %}
 
-### Exercise ___ [*] <a name="#dfun"></a>
+### Exercise ___ [*] <a name="dfun"></a>
 静的束縛とは対照的な概念として _動的束縛 (dynamic binding)_ があ  る．動的束縛の下では，関数本体は，関数式を評価した時点ではなく，関数呼び出しがあった時点での環境をパラメータ・実引数で拡張した環境下で評価される．インタプリタを改造し，`fun` の代わりに `dfun` を使った関数は動的束縛を行うようにせよ．例えば，
 {% highlight ocaml %}
 let a = 3 in
