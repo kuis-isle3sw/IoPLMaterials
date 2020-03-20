@@ -57,7 +57,7 @@ and dnval = exval
 {% endhighlight %}
 `exval`がexpressed valueの型，`dnval`がdenoted valueの型である．
 
-### 環境
+### <a name="environment">環境</a>
 
 解釈部を構成する上では，式を評価する際に，各変数の値が何であるかを管理することが重要である．そのためにもっとも簡単な解釈部の構成法のひとつは，抽象構文木と _環境 (environment)_ と呼ばれるデータ構造を受け取り，抽象構文木が表す式の評価結果を計算する _環境渡しインタプリタ (environment passing interpreter)_ という方法である．
 
