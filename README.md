@@ -25,11 +25,17 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 （鋭意 Markdown 化中．）
 
 - [オリエンテーション資料](misc/orientation.md)
-- [OCaml入門テキスト by 五十嵐淳](textbook/mltext.pdf)
+- OCaml あまり知らない人向け: 前提となる OCaml の知識を身に付ける．
+  - [OCaml 爆速入門 by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html)
+  - [OCaml で二分探索木を書く by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html)
+  - [この資料の「多相二分木 in OCaml」のところ](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/09-polymorphism.html)
+  - [高階関数 (OCamlに関するところのみ)](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/10-hofuns.html)
+- もう少しちゃんとした OCaml のテキスト: [OCaml入門テキスト by 五十嵐淳](textboo/kmltext.pdf)
+  - _1章は古くなっているので，2章から読むこと_
 - プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平
   - [1章: イントロダクション](textbook/chap01.md)
   - [2章: 概論的な話](textbook/chap02.md)
-  - 3章
+  - 3章: 型無し MiniML インタプリタの実装
     - [3.1: MiniML1 のシンタックス](textbook/chap03-1.md)
     - [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md)
     - [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md)
@@ -37,6 +43,8 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
     - [3.5: MiniML3: 関数の導入](textbook/chap03-5.md)
     - [3.6: MiniML4: 再帰関数](textbook/chap03-6.md)
     - [3.7: MiniML5 and beyond: やりこみのための演習問題](textbook/chap03-7.md)
+  - 4章: 型推論機能付き MiniML インタプリタの実装
+    - [4.1](textbook/chap04-1.md)
 
 <!--
 ## 教科書
