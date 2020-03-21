@@ -71,7 +71,7 @@ $\Gamma(x_1)=\tau_1,\dots,\Gamma(x_n)=\tau_n$を満たし，それ以外の変�
 
 式$\Gamma \vdash e : \tau$が成り立つような$\Gamma$と$\tau$が存在するときに，$e$に _型がつく (well-typed)_，あるいは$e$は _型付け可能 (typable)_ という．逆にそのような$\Gamma$と$\tau$が存在しないときに，$e$は _型がつかない (ill-typed)_，あるいは$e$は _型付け不能 (untypable)_ という．
 
-### 型付け規則
+## 型付け規則
 
 型判断を導入したからには「正しい型判断」を定義しなければならない．これには _型付け規則 (typing rule)_ を使うのが定石である．これは，記号論理学の証明規則に似た「正しい型判断」の導出規則で
 
@@ -83,10 +83,18 @@ $\Gamma(x_1)=\tau_1,\dots,\Gamma(x_n)=\tau_n$を満たし，それ以外の変�
 
 という形をしている．横線の上の`<型判断>1 ... <型判断>n`を規則の _前提 (premise)_，下にある `<型判断>` を規則の _結論 (conclusion)_ と呼ぶ．例えば，以下は加算式の型付け規則である．
 
->
-$\Gamma \vdash e_1 : \mathbf{int}$ $\quad$ $\Gamma \vdash e_2 : \mathbf{int}$ <br />
+<!-- $\Gamma \vdash e_1 : \mathbf{int}$ $\quad$ $\Gamma \vdash e_2 : \mathbf{int}$ <br />
 --------------------------------------------- \<T-Plus\> <br />
-$\Gamma \vdash e_1 + e_2 : \mathbf{int}$
+$\Gamma \vdash e_1 + e_2 : \mathbf{int}$ -->
+
+$$
+\begin{array}{c}
+\Gamma \vdash e_1 : \mathbf{int} \quad \Gamma \vdash e_2 : \mathbf{int}\\
+\rule{6cm}{1pt}\\
+\Gamma \vdash e_1 + e_2 : \mathbf{int}
+\end{array}
+\textrm{T-Plus}
+$$
 
 この，型付け規則の直感的な意味（読み方）は，
 _前提の型判断が全て導出できたならば，結論の型判断を導出してよい_
@@ -94,132 +102,168 @@ _前提の型判断が全て導出できたならば，結論の型判断を導�
 
 <a name="derivation">導出規則についての注</a>（この脚注は意味がわからなければ飛ばして良い．）厳密には規則 `T-Plus` はメタ変数$e_1,e_2,\Gamma$を具体的な式や型環境に置き換えて得られる（無限個の）導出規則の集合を表したものである．例えば，$\emptyset \p 1 : \mathbf{int}$ という型判断が既に導出されていたとしよう．`T-Plus`の $\Gamma$ を $\emptyset$ に，$e_1$, $e_2$ をともに，$1$に具体化することによって，規則の _インスタンス (instance)_
 
->
-$\emptyset \vdash 1 : \mathbf{int}$ $\quad$ $\emptyset \vdash 1 : \mathbf{int}$ <br />
+$$
+\begin{array}{c}
+\emptyset \vdash 1 : \mathbf{int} \quad
+\emptyset \vdash 1 : \mathbf{int}\\
+\rule{8cm}{1pt}\\
+\emptyset \vdash 1 + 1 : \mathbf{int}
+\end{array}
+\textrm{Instantiated T-Plus}\\
+$$
+
+<!-- $\emptyset \vdash 1 : \mathbf{int}$ $\quad$ $\emptyset \vdash 1 : \mathbf{int}$ <br />
 --------------------------------------------------- \< Instantiated T-Plus\> <br />
-$\emptyset \vdash 1 + 1 : \mathbf{int}$
+$\emptyset \vdash 1 + 1 : \mathbf{int}$ -->
 
 が得られる．この具体化された規則を使うと，型判断$\emptyset \vdash 1 + 1 : \mathbf{int}$が導出できる．
 
-TODO: ここまで書いた．型付け規則辛い．
+以下に，MiniML2 の型付け規則を，その背後にある直観とともに示す．（付言するが，ここでの説明は，あくまで理解の助けにするための型付け規則の背後にある直観であって，型付け規則自体ではない．）
 
-以下に，\miniML{2}の型付け規則を示す．
-%
-\infrule[T-Var]{
-  (\Gamma(x) = \tau)
-}{
-  \Gp x : \tau
-}
-\infrule[T-Int]{
-}{
-  \Gp n : \mathbf{int}
-}
-\infrule[T-Bool]{
-  (b = @true@ \mbox{ または } b = @false@)
-}{
-  \Gp b : \mathbf{bool}
-}
-\infrule[T-Plus]{
-  \Gp e_1 : \mathbf{int} \andalso
-  \Gp e_2 : \mathbf{int}
-}{
-  \Gp e_1 \ML{ + } e_2 : \mathbf{int}
-}
-\infrule[T-Mult]{
-  \Gp e_1 : \mathbf{int} \andalso
-  \Gp e_2 : \mathbf{int}
-}{
-  \Gp e_1 \ML{ * } e_2 : \mathbf{int}
-}
-\infrule[T-Lt]{
-  \Gp e_1 : \mathbf{int} \andalso
-  \Gp e_2 : \mathbf{int}
-}{
-  \Gp e_1 \ML{ < } e_2 : \mathbf{bool}
-}
-\infrule[T-If]{
-  \Gp e_1 : \mathbf{bool} \andalso
-  \Gp e_2 : \tau \andalso
-  \Gp e_3 : \tau
-}{
-  \Gp \ML{if}\ e_1\ \ML{then}\ e_2\ \ML{else}\ e_3 : \tau
-}
-\infrule[T-Let]{
-  \Gp e_1 : \tau_1 \andalso
-  \Gamma, x:\tau_1 \p e_2 : \tau_2
-}{
-  \Gp \ML{let}\ x\ \ML{=}\ e_1\ \ML{in}\ e_2 : \tau_2
-}
-%
+### 変数に関する規則
 
-規則\rn{T-Let}に現れる $\Gamma, x:\tau$ は $\Gamma$ に $x$ は
-$\tau$ であるという情報を加えた拡張された型環境で，より厳密な定義と
-しては，
-\begin{gather*}
-\dom(\Gamma, x:\tau) = \dom(\Gamma) \cup \set{x} \\
+$$
+\begin{array}{c}
+\Gamma(x) = \tau\\
+\rule{5cm}{1pt}\\
+\Gamma \vdash x : \tau
+\end{array}
+\textrm{T-Var}
+$$
+
+$\Gamma(x) = \tau$であれば，$\Gamma$のもとで式$x$が型$\tau$を持つという判断を導出してよい．$\Gamma$が式の中の自由変数の型を決めているということを表現している．
+
+### 整数リテラルに関する規則
+
+$$
+\begin{array}{c}
+\rule{5cm}{1pt}\\
+\Gamma \vdash n : \mathbf{int}
+\end{array}
+\textrm{T-Int}
+$$
+
+整数リテラル$n$は，いかなる型環境の下でも型$\mathbf{int}$を持つ．そりゃそうですね．
+
+### 真偽値リテラルに関する規則
+
+$$
+\begin{array}{c}
+b = \mathbf{true} \mbox{ or } b = \mathbf{false}\\
+\rule{5cm}{1pt}\\
+\Gamma \vdash b : \mathbf{bool}
+\end{array}
+\textrm{T-Bool}
+$$
+
+また，式`true`と式`false`は，いかなる型環境の下でも型$\mathbf{bool}$を持つ．これらは直観的に理解できると思う．
+
+### 加算に関する規則
+
+$$
+\begin{array}{c}
+\Gamma \vdash e_1 : \mathbf{int} \quad
+\Gamma \vdash e_2 : \mathbf{int}\\
+\rule{6cm}{1pt}\\
+\Gamma \vdash e_1 + e_2 : \mathbf{int}
+\end{array}
+\textrm{T-Plus}
+$$
+
+型環境$\Gamma$の下で式$e_1$と式$e_2$が型$\mathbf{int}$を持つことが導出できたならば，$\Gamma$の下で式$e_1 + e_2$が$\mathbf{int}$を持つことを導出してよい．加算が整数の上の演算であることからこのような規則になっている．
+
+### 乗算に関する規則
+
+$$
+\begin{array}{c}
+\Gamma \vdash e_1 : \mathbf{int} \quad
+\Gamma \vdash e_2 : \mathbf{int}\\
+\rule{6cm}{1pt}\\
+\Gamma \vdash e_1 * e_2 : \mathbf{int}
+\end{array}
+\textrm{T-Mult}
+$$
+
+式$e_1 * e_2$も同様に整数の上の演算なので，型環境$\Gamma$の下で式$e_1$と式$e_2$が型$\mathbf{int}$を持つことが導出できたならば，$\Gamma$の下で式$e_1 * e_2$が$\mathbf{int}$を持つことを導出してよい．
+
+### 比較演算に関する規則
+
+$$
+\begin{array}{c}
+\Gamma \vdash e_1 : \mathbf{int} \quad
+\Gamma \vdash e_2 : \mathbf{int}\\
+\rule{6cm}{1pt}\\
+\Gamma \vdash e_1 < e_2 : \mathbf{bool}
+\end{array}
+\textrm{T-Lt}
+$$
+
+型環境$\Gamma$の下で式$e_1$と式$e_2$が型$\mathbf{int}$を持つことが導出できたならば，$\Gamma$の下で式$e_1 < e_2$が$\mathbf{bool}$を持つことを導出してよい．これらは式$e_1\ML{<}e_2$が整数の比較演算で，返り値がブール値であることから設けられた規則である．
+
+### `if`式に関する規則
+
+$$
+\begin{array}{c}
+\Gamma \vdash e : \mathbf{bool \quad}
+\Gamma \vdash e_1 : \tau \quad
+\Gamma \vdash e_2 : \tau\\
+\rule{10cm}{1pt}\\
+\Gamma \vdash \mathbf{if}\ e\ \mathbf{then}\ e_1\ \mathbf{else}\ e_2 : \tau
+\end{array}
+\textrm{T-If}
+$$
+
+型環境$\Gamma$の下で式$e$が$\mathbf{bool}$を持ち，式$e_1$と式$e_2$が\emph{同一の}型$\tau$を持つならば，$\mathbf{if}\ e\ \mathbf{then}\ e_1\ \mathbf{else}\ e_2$がその型$\tau$を持つことを導出してよい．式$e$は$\mathbf{if}$式の条件部分なので，型$\mathbf{bool}$を持つべきであることは容易に納得できるであろう．
+
+式$e_2$と式$e_3$が同一の型$\tau$を持つべきとされていること，`if`式全体としてその型$\tau$を持つとされていることについては少し注意が必要である．これは，条件式$e_1$が`true`と`false`のどちらに評価されても実行時型エラーが起こらないようにするために設けられている条件である．これにより，_実際は絶対に実行時型エラーが起こらないのに型付け可能ではないプログラムが生じる．_ たとえば，
+{% highlight ocaml %}
+(if true then 1 else false) + 3
+{% endhighlight %}
+というプログラムを考えてみよう．このプログラムは，`if`式が必ず`1`に評価されるため，実行時型エラーは起こらない．しかし，この`if`式の`then`節の式`1`には型$\mathbf{int}$がつき，`else`節の式`false`には型$\mathbf{bool}$がつくので，`if`式は型付け不能である．<sup>[「型付け不能」についての注](#untypable)</sup>
+
+<a name="untypable">「型付け不能」について</a>: ある式$e$が型付け不能であることを言うには，_いかなる$\Gamma$と$\tau$をもってきても_，$\Gamma \vdash e \COL \tau$を導けないことを言わなければならないので，この説明は厳密には不十分である．
+
+### `let`式に関する規則
+
+$$
+\begin{array}{c}
+\Gamma \vdash e_1 : \tau_1 \quad
+\Gamma, x:\tau_1 \vdash e_2 : \tau_2\\
+\rule{10cm}{1pt}\\
+\Gamma \vdash \mathbf{let}\ x = e_1\ \mathbf{in}\ e_2 : \tau_2
+\end{array}
+\textrm{T-Let}
+$$
+
+まず，この規則に現れる $\Gamma, x:\tau$ は $\Gamma$ に $x$ は $\tau$ であるという情報を加えた拡張された型環境で，より厳密には，
+
+$$
+\begin{array}{c}
  (\Gamma, x:\tau)(y) = \left\{
-   \begin{array}{cp{10em}}
-     \tau & (if $x=y$) \\
-     \Gamma(y) & (otherwise)
+   \begin{array}{l}
+     \tau & (if x=y) \\
+     \Gamma(y) & \textit{(otherwise)}
    \end{array}\right.
-\end{gather*}
-と書くことができる．（$\dom(\Gamma)$は$\Gamma$の定義域を表す．）規
-則の前提として括弧内に書かれているのは\mathbf{int}ro{付帯条件}{side condition}
-と呼ばれるもので，規則を使う際に成立していなければならない条件を示して
-いる．
+\end{array}
+$$
 
-各々の型付け規則がなぜそのように定義されているか，少しずつ説明を加える．
-\footnote{一応書いておくと，ここで説明するのはあくまで理解の助けにする
-  ための，型付け規則の背後にある直観であって，型付け規則自体ではない．}
-\begin{description}
-  \item[\rn{T-Var}:] $\Gamma(x) = \tau$であれば，$\Gamma$のもとで式$x$
-    が型$\tau$を持つという判断を導出してよい．$\Gamma$が式の中の自由変
-    数の型を決めているという上述の説明から理解できるはずである．
-  \item[\rn{T-Int},\rn{T-Bool}:] 整数定数$n$は，いかなる型環境の下でも
-    型$\mathbf{int}$を持つ．また，式@true@と式@false@は，いかなる型環境の下で
-    も型$\mathbf{bool}$を持つ．これらは直観的に理解できると思う．
-  \item[\rn{T-Plus},\rn{T-Mult}:] 型環境$\Gamma$の下で式$e_1$と式$e_2$
-    が型$\mathbf{int}$を持つことが導出できたならば，$\Gamma$の下で式
-    $e_1\ML{+}e_2$が$\mathbf{int}$を持つことを導出してよい．式$e_1\ML{*}e_2$も
-    同様である．これらは式$e_1\ML{+}e_2$と$e_1\ML{*}e_2$が，それぞれ整
-    数の上の演算であることから設けられた規則である．
-  \item[\rn{T-Lt}:] 型環境$\Gamma$の下で式$e_1$と式$e_2$が型$\mathbf{int}$を持
-    つことが導出できたならば，$\Gamma$の下で式$e_1\ML{<}e_2$が$\mathbf{bool}$
-    を持つことを導出してよい．これらは式$e_1\ML{<}e_2$が整数の比較演算
-    で，返り値がブール値であることから設けられた規則である．
-  \item[\rn{T-If}:] 型環境$\Gamma$の下で式$e_1$が$\mathbf{bool}$を持ち，式
-    $e_2$と式$e_3$が\emph{同一の}型$\tau$を持つならば，
-    $\ML{if}\ e_1\ \ML{then}\ e_2\ \ML{else}\ e_3$がその型$\tau$を持つ
-    ことを導出してよい．式$e_1$は$\ML{if}$式の条件部分なので，型
-    $\mathbf{bool}$を持つべきであることは良いであろう．式$e_2$と式$e_3$が同一
-    の型$\tau$を持つべきとされていること，$\ML{if}$式全体としてその型
-    $\tau$を持つとされていることについては少し注意が必要である．これは，
-    条件式$e_1$が\ML{true}と\ML{false}のどちらに評価されても実行時型エ
-    ラーが起こらないようにするために設けられている条件である．これによ
-    り，\emph{実際は絶対に実行時型エラーが起こらないのに型付け可能では
-      ないプログラムが生じる．}たとえば，\ML{(if true then 1 else
-      false) + 3}というプログラムを考えてみよう．このプログラムは，
-    \ML{if}式が必ず\ML{1}に評価されるため，実行時型エラーは起こらない．
-    しかし，この\ML{if}式の\ML{then}節の式\ML{1}には型$\mathbf{int}$がつき，
-    \ML{else}節の式\ML{false}には型$\mathbf{bool}$がつくので，\ML{if}式は型付
-    け不能である．\footnote{ある式$e$が型付け不能であることを言うには，
-      \emph{いかなる$\Gamma$と$\tau$をもってきても}，$\Gamma \vdash e
-      \COL \tau$を導けないことを言わなければならないので，この説明は厳
-      密には不十分である．}
-  \item[\rn{T-Let}:]
-    型環境$\Gamma$の下で式$e_1$が型$\tau_1$を持ち，
-    式$e_2$が$\Gamma$を$x \COL \tau_1$というエントリで拡張して得られる
-    型環境$\Gamma,x\COL\tau_1$の下で型$\tau_2$を持つならば，
-    式$\ML{let}\ x = e_1\ \ML{in}\
-    e_2$は全体として$\tau_2$を持つという判断を導いてよい．この規則
-    は$\ML{let}$式がどのように評価されるかと合わせて考えると分かりやす
-    い．式$\ML{let}\ x = e_1\ \ML{in}\ e_2$を評価する際には，ま
-    ず$e_1$を現在の環境で評価し，得られた結果に$x$を束縛した上で$e_2$を
-    評価して，その結果を全体の評価結果とする．そのため，型付け規則にお
-    いても，$e_1$の型付けには（「現在の環境」に対応する）型環
-    境$\Gamma$を使い，$e_2$の型付けには$e_1$の型$\tau_1$を$x$の型とした
-    型環境$\Gamma,x\COL\tau_1$を用いるのである．
-\end{description}
+で定義される．ただし，この型環境の定義域 $\mathbf{Dom}(\Gamma, x:\tau)$ は
+
+$$
+\mathbf{Dom}(\Gamma, x:\tau) = \mathbf{Dom}(\Gamma) \cup \{x\}
+$$
+
+で定義される．
+
+この規則は，型環境$\Gamma$の下で式$e_1$が型$\tau_1$を持ち，式$e_2$が$\Gamma$を$x : \tau_1$というエントリで拡張して得られる型環境$\Gamma,x:\tau_1$の下で型$\tau_2$を持つならば，式$\mathbf{let}\ x = e_1\ \mathbf{in}\ e_2$は全体として$\tau_2$を持つという判断を導いてよい，ということを表している．．この規則は$\mathbf{let}$式がどのように評価されるかと合わせて考えると分かりやすい．式$\mathbf{let}\ x = e_1\ \mathbf{in}\ e_2$を評価する際には，まず$e_1$を現在の環境で評価し，得られた結果に$x$を束縛した上で$e_2$を評価して，その結果を全体の評価結果とする．そのため，型付け規則においても，$e_1$の型付けには（「現在の環境」に対応する）型環境$\Gamma$を使い，$e_2$の型付けには$e_1$の型$\tau_1$を$x$の型とした型環境$\Gamma,x:\tau_1$を用いるのである．
+
+<!-- 規則の前提として括弧内に書かれているのは\mathbf{int}ro{付帯条件}{side condition}と呼ばれるもので，規則を使う際に成立していなければならない条件を示している． -->
+
+## 型判断の導出
+
+TODO: ここまで書いた．
+
+{% comment %}
 
 ここで型判断$\Gamma \p e \COL \tau$が\emph{導出できる}{derivable}とは，
 根が型判断$\Gamma \p e \COL \tau$で，上記のすべての辺が型付け規則に沿っ
@@ -394,3 +438,5 @@ let ty_decl tyenv = function
   \caption{\miniML{2} 型推論の実装 (2)}
   \label{fig:MLb2}
 \end{figure}
+
+{% endcomment %}
