@@ -55,6 +55,7 @@ f 0 100000000
     if n <= 0 then 3 4 (* (A) *)
     else 
       let x = x mod 2 in
+      Format.printf "Hoge.@\n";
       f x (n + -1)
   in
   f 0 100000000;;
