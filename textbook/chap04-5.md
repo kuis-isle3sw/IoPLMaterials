@@ -2,74 +2,129 @@
 
 # MiniML3 のための型推論 (2): 実装
 
-{% comment %}
+では，[前節](chap04-4.md)での説明を踏まえて，MiniML3 インタプリタに型推論機能を実装しよう．
 
-## 実装の仕方
+## 型変数を表すデータ構造
 
-ここまで述べたことを実装したのが図\ref{fig:MLarrow1}である．型@ty@を型変数を表すコンストラクタ@TyVar@と関数型を表すコンストラクタ@TyFun@とで拡張する．@TyVar@は@tyvar@型の値を一つとるコンストラクタで@TyVar(tv)@という形をしており，これが型変数を表す．@tyvar@型は型変数の名前を表す型で，実体は整数型である．@TyFun@は@ty@型の引数を2つ持つ@TyFun(t1,t2)@という形をしており，これが型$\tyFun{\tau_1}{\tau_2}$を表す．
+まず，`syntax.ml` を改造して，型の構文に型変数を追加しよう．
 
-型推論アルゴリズムの実行中には，他のどの型変数ともかぶらない新しい型変
-数を生成する必要がある．（このような型変数を\emph{fresh な型変数}と呼
-  ぶ．）これを行うのが関数 @fresh_tyvar@ である．この関数は引数として
-@()@を渡すと（すなわち@fresh_tyvar ()@のように呼び出すと）新しい未使用
-の型変数を生成する．この関数は次に生成すべき型変数の名前を表す整数への
-参照@counter@を保持しており，保持している値を新しい型変数として返し，
-同時にその参照をインクリメントする．上で説明したように，\rn{T-Fun}のケー
-スでは新しい型変数を生成するのだが，その際にこの関数を使用する．
-\footnote{関数@fresh_tyvar@は呼び出すたびに異なる値を返すことに注意せ
-  よ．これは@fresh_tryvar@が純粋な意味での計算ではない（参照の値の更新
-    や参照からの値の呼び出しといった）\intro{副作用}{side effect}を持
-  つためである．}
+{% highlight ocaml %}
 
-上述の型変数とその正体の対応関係を，\intro{型代入}{type substitution}
-と呼ぶ．型代入（メタ変数として$\subst$を使用する．）は，型変数から型
-への（定義域が有限集合な）写像である．以下では，$\subst\tau$ で
-$\tau$ 中の型変数を $\subst$ を使って置き換えたような型，
-$\subst\Gamma$ で，型環境中の全ての型に $\subst$ を適用したような
-型環境を表す．例えば$\subst$が$\set{\alpha \mapsto \Int, \beta \mapsto
-  \Bool}$であるとき，$\subst\alpha = \Int$であり，
-$\subst(\tyFun{\alpha}{\beta}) = \tyFun{\Int}{\Bool}$であり，
-$\subst(x\COL\alpha, y\COL\beta) = (x\COL\Int, y\COL\Bool)$である．
-$\subst\tau$，$\subst\Gamma$ はより厳密には以下のように定義される．
-%
-\begin{eqnarray*}
-\subst \alpha & = & \left\{
+type tyvar = int (* New! 型変数の識別子を整数で表現 *)
+
+ type ty =
+     TyInt
+   | TyBool
+   | TyVar of tyvar (* New! 型変数型を表すコンストラクタ *)
+   | TyFun of ty * ty (* New! TFun(t1,t2) は関数型 t1 -> t2 を表す *)
+
+(* New! 型のための pretty printer （実装せよ） *)
+let pp_ty = ...
+
+(* New! 呼び出すたびに，他とかぶらない新しい tyvar 型の値を返す関数 *)
+let fresh_tyvar =
+  let counter = ref 0 in (* 次に返すべき tyvar 型の値を参照で持っておいて， *)
+  let body () =
+    let v = !counter in
+      counter := v + 1; v (* 呼び出されたら参照をインクリメントして，古い counter の参照先の値を返す *)
+  in body
+
+(*  New!  ty に現れる自由な型変数の識別子（つまり，tyvar 型の集合）を返す関数．実装せよ．*)
+(* 型は ty -> tyvar MySet.t にすること．MySet モジュールの実装はリポジトリに入っているはず．*)
+let rec freevar_ty ty = ... 
+
+{% endhighlight %}
+
+- 型変数の名前を表す型 `tyvar` を定義する．実体は整数型とする．
+- 型 `ty` を型変数を表すコンストラクタ `TyVar` と関数型を表すコンストラクタ `TyFun` とで拡張する．`TyVar` は `tyvar` 型の値を一つとるコンストラクタで `TyVar(tv)` という形をしており，これが型変数を表す．`TyFun` は `ty` 型の引数を2つ持つ `TyFun(t1,t2)` という形をしており，これが型 $\tau_1 \rightarrow \tau_2$ を表す．
+
+<a name="nameandtype">`ty` と `TyVar(tv)`</a>を混同しないように気をつけてほしい．（例年これを混同することによって課題が進まない人がたまにいる．）前者は型変数の名前を表す OCaml の型，後者は型変数型を表す OCaml の型である．
+
+型推論アルゴリズムの実行中には，他のどの型変数ともかぶらない新しい型変数を生成する必要がある．（このような型変数を _fresh な型変数 (a fresh type variable)_ と呼ぶ．）これを行うのが関数 `fresh_tyvar` である．この関数は引数として `()` を渡すと（すなわち `fresh_tyvar ()` のように呼び出すと）新しい未使用の型変数を生成する．この関数は次に生成すべき型変数の名前を表す整数への参照 `counter` を保持しており，保持している値を新しい型変数として返し，同時にその参照をインクリメントする．上で説明したように，$\textrm{T-Fun}$ のケースでは新しい型変数を生成するのだが，その際にこの関数を使用する．<sup>[`fresh_tyvar`と副作用についての注](#freshtyvar)</sup>
+
+<a name="freshtyvar">`fresh_tyvar` と副作用</a>: 関数 `fresh_tyvar` は呼び出すたびに異なる値を返すことに注意せよ．これは `fresh_tryvar` が数学的な意味での「関数」では計算ではないことを意味する．（数学の関数は，与えられた引数が同じなのに違う値になることはない．）このように，参照の値の更新や参照からの値の呼び出しといった，数学的な関数と異なる振る舞いをプログラムにさせるような計算上の作用のことを _副作用 (side effect)_ と呼ぶ．副作用には，このような破壊的代入の他に外部入出力（数学的な意味での関数は "Hello World!" とか呑気なことは出力しない），無限ループ（数学的な意味での関数は定義域全体で定義されている値から値への写像であり，無限ループという概念が存在しない），並行計算，非決定的計算，確率的計算等がある．
+
+## 型代入とその実装
+
+
+[前節](chap04-4.md)で説明した通り，MiniML3 の型推論アルゴリズムは型変数をどのような型にすれば入力されたプログラムが型付け可能になるかを出力する．この型変数とその正体の対応関係を，_型代入 (type substitution)_ と呼び，メタ変数として$\theta$を使用する．
+
+型代入は型変数から型への（定義域が有限集合な）写像である．以下では，
+
++ $\theta\tau$ で型 $\tau$ 中の型変数を型代入 $\theta$ に従って置き換えて得られる型を，
++ $\theta\Gamma$ で，型環境 $\Gamma$ 中の全ての型に $\theta$ を適用して得られる型環境を
+
+表すことにする．例えば$\theta$が $\{\alpha \mapsto \mathbf{int}, \beta \mapsto \mathbf{bool}\}$ という型代入であるとき，$\theta\alpha = \mathbf{int}$であり，
+$\theta(\alpha \rightarrow \beta) = \mathbf{int} \rightarrow \mathbf{bool}$であり，
+$\theta(x:\alpha, y:\beta) = (x:\mathbf{int}, y:\mathbf{bool})$である．
+$\theta\tau$，$\theta\Gamma$ はより厳密には以下のように定義される．
+
+$$
+\begin{array}{rcl}
+\theta \alpha & = & \left\{
    \begin{array}{cp{10em}}
-     \subst(\alpha) & if $\alpha \in \dom(\subst)$ \\
+     \theta(\alpha) & \mathit{if}\ \alpha \in \mathbf{dom}(\theta)\\
      \alpha & otherwise
    \end{array}\right. \\
-\subst \Int & = & \Int \\
-\subst \Bool & = & \Bool \\
-\subst (\tyFun{\tau_1}{\tau_2}) & = & \tyFun{\subst\tau_1}{\subst\tau_2} \\
+\theta \mathbf{int} & = & \mathbf{int} \\
+\theta \mathbf{bool} & = & \mathbf{bool} \\
+\theta (\tau_1 \rightarrow \tau_2) & = & \theta\tau_1 \rightarrow \theta\tau_2 \\
 \\
-\dom(\subst\Gamma)& = & \dom(\Gamma)  \\
-(\subst\Gamma)(x) &= & \subst(\Gamma(x))
-\end{eqnarray*}
-%
-$\subst\alpha$のケースが実質的な代入を行っているケースである．$\subst$
-の定義域$\dom(\subst)$に$\alpha$が入っている場合は，$\subst$によって定
-められた型（すなわち$\subst\alpha$）に写像する．$\Int$と$\Bool$は型変
-数を含まないので，$\subst$を適用しても型に変化はない．$\tau$が
-$\tyFun{\tau_1}{\tau_2}$であった場合は再帰的に$\subst$を適用する．
+\mathbf{dom}(\theta\Gamma)& = & \mathbf{dom}(\Gamma)  \\
+(\theta\Gamma)(x) &= & \theta(\Gamma(x))
+\end{array}
+$$
+
+$\theta\alpha$のケースが実質的な代入を行っているケースである．$\theta$の定義域$\mathbf{dom}(\theta)$に$\alpha$が入っている場合は，$\theta$によって定められた型（すなわち$\theta\alpha$）に写像する．$\mathbf{int}$と$\mathbf{bool}$は型変数を含まないので，$\theta$を適用しても型に変化はない．$\tau$が$\tau_1 \rightarrow \tau_2$であった場合は再帰的に$\theta$を適用する．
+
+型推論アルゴリズムを実装するためには，型代入を表すデータ構造を決める必要がある．様々な表現方法がありうるが，ここでは素直に型変数と型のペアのリストで表現することにしよう．すなわち，型代入を表す OCaml の型は以下のように宣言された `subst` である．
+
+{% highlight ocaml %}
+type subst = (tyvar * ty) list
+{% endhighlight %}
+
+`subst` 型は `[(id1,ty1); ...; (idn,tyn)]` の形をしたリストである．ここで，`id1,id2,...,idn` は型変数の名前（_つまり `tyvar` 型の値）であり，`ty1,ty2,...,tyn` は型（_つまり `ty` 型の値）である．このリストは$[\mathtt{idn} \mapsto \mathtt{tyn}] \circ \cdots \circ[\mathtt{id1} \mapsto \mathtt{ty1}]$という型代入を表すものと約束する．つまり，この型代入は
+
+- 受け取った型中の型変数 `id1` をすべて型 `ty1` に置き換え，
+- その後得られた型中の型変数 `id2` をすべて型 `ty2` に置き換え
+- ．．．
+- その後得られた型中の型変数 `idn` をすべて型 `tyn` に置き換える
+
+という操作を行う型代入である．
+
+注意すべき点が2つある．
+
+TODO: ここまで書いた
+
++ リスト中の型変数と型のペアの順序と，代入としての作用の順序は逆になっている．
++ リスト中の型は後続のリストが表す型代入の影響を受ける．例えば，型代入 `[(alpha, TyInt)]` が型 `TyFun(TyVar alpha, TyBool)` に作用すると，`TyFun(TyVar TyInt, TyBool)` となり，型代入 `[(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)]`
+\end{alltt}
+が型@(TyVar beta)@に作用すると，まずリストの先頭の@(beta, (TyFun (TyVar alpha, TyInt)))@が作用して@TyFun (TyVar alpha, TyInt)@が得られ，
+次にこの型にリストの二番目の要素の@(alpha, TyBool)@が作用して@TyFun(TyBool, TyInt)@が得られる
+
+## MiniML3 の型推論アルゴリズムの仕様
 
 型代入を使うと，新しい型推論アルゴリズムの仕様は以下のように与えられる．
-\begin{description}
-\item[入力:] 型環境 $\Gamma$ と式 $e$
-\item[出力:] $\subst\Gp e : \tau$ を結論とする判断が存在するような型
-  $\tau$と代入 $\subst$
-\end{description}
-%% 上記の$\ML{fun}\ \ML{x} \rightarrow \ML{fun}\ \ML{y}\rightarrow
-%% \ML{x\; y}$の型推論の実行は，概ね以下のようになるはずである．
-%% \begin{enumerate}
-%% \item 型変数$\alpha$を生成し，型環境$x\COL\alpha$と式
-%%   $\ML{fun}\ \ML{y}\rightarrow \ML{x\; y}$とを入力して型推論アルゴリ
-%%   ズムを再帰的に呼び出す．
-%% \item 新しい型変数$\beta$を生成し，型環境$x\COL\alpha, y\COL\beta$と式
-%%   $\ML{x\; y}$とを入力として型推論アルゴリズムを再帰的に呼び出す．
-%% \item \ML{x\;y} の型推論の結果，この式の型が別の新しい型変数$\gamma$を
-%%   使って$\tyFun{\beta}{\gamma}$と書け，$\alpha =
-%%   \tyFun{\beta}{\gamma}$であることが判明する．
-%% \end{enumerate}
+
+- 入力: 型環境 $\Gamma$ と式 $e$
+- 出力: $\theta\Gamma \vdash e : \tau$ を結論とする判断が存在するような型$\tau$と代入 $\theta$
+
+<!-- %% 上記の$\ML{fun}\ \ML{x} \rightarrow \ML{fun}\ \ML{y}\rightarrow -->
+<!-- %% \ML{x\; y}$の型推論の実行は，概ね以下のようになるはずである． -->
+<!-- %% \begin{enumerate} -->
+<!-- %% \item 型変数$\alpha$を生成し，型環境$x:\alpha$と式 -->
+<!-- %%   $\ML{fun}\ \ML{y}\rightarrow \ML{x\; y}$とを入力して型推論アルゴリ -->
+<!-- %%   ズムを再帰的に呼び出す． -->
+<!-- %% \item 新しい型変数$\beta$を生成し，型環境$x:\alpha, y:\beta$と式 -->
+<!-- %%   $\ML{x\; y}$とを入力として型推論アルゴリズムを再帰的に呼び出す． -->
+<!-- %% \item \ML{x\;y} の型推論の結果，この式の型が別の新しい型変数$\gamma$を -->
+<!-- %%   使って$\tyFun{\beta}{\gamma}$と書け，$\alpha = -->
+<!-- %%   \tyFun{\beta}{\gamma}$であることが判明する． -->
+<!-- %% \end{enumerate} -->
+
+TODO: ここまで書いた
+
+{% comment %}
 
 型推論アルゴリズムを実装する前に，以降で使う補助関数を定義しておこう．
 
@@ -86,28 +141,6 @@ val freevar_ty : ty -> tyvar MySet.t
 集合を表す型である．
 \end{mandatoryexercise}
 
-さて，型推論アルゴリズムを実装するためには，型代入を表すデータ構造を決
-める必要がある．様々な表現方法がありうるが，ここでは素直に型変数と型の
-のペアのリストで表現することにしよう．すなわち，型代入を表す\OCAML{}の
-型は以下のように宣言された@subst@である．
-#{&}
-type subst = (tyvar * ty) list
-#{@}
-@subst@型は@[(id1,ty1); ...; (idn,tyn)]@の形をしたリストである．このリ
-ストは$[@idn@ \mapsto @tyn@] \circ \cdots \circ[@id1@ \mapsto @ty1@]
-$という型代入を表すものと約束する．つまり，この型代入は「受け取った型
-  中の型変数@id1@をすべて型@ty1@に置き換え，得られた型中の型変数@id2@
-  をすべて型@ty2@に置き換え．．．得られた型中の型変数@idn@をすべて型
-  @tyn@に置き換える」ような代入である．リスト中の型変数と型のペアの順
-序と，代入としての作用の順序が逆になっていることに注意してほしい．また，
-リスト中の型は後続のリストが表す型代入の影響を受けることに注意してほし
-い．例えば，型代入@[(alpha, TyInt)]@が型@TyFun(TyVar alpha, TyBool)@に作
-用すると，@TyFun(TyVar TyInt, TyBool)@となり，型代入
-\begin{alltt}
-  [(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)]
-\end{alltt}
-が型@(TyVar beta)@に作用すると，まずリストの先頭の@(beta, (TyFun (TyVar alpha, TyInt)))@が作用して@TyFun (TyVar alpha, TyInt)@が得られ，
-次にこの型にリストの二番目の要素の@(alpha, TyBool)@が作用して@TyFun(TyBool, TyInt)@が得られる．
 
 以下の演習問題で，型代入を作用させる補助関数を実装しよう．
 \begin{mandatoryexercise}
@@ -137,78 +170,40 @@ subst_type [(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)] (TyVar beta)
 の値は @TyFun (TyBool, TyInt)@ になる．
 \end{mandatoryexercise}
 
-\begin{figure}
-  \begin{flushleft}
-%% @Makefile@: \\
-%%   \begin{boxedminipage}{\textwidth}
-%% #{&}
-%% OBJS=\graybox{mySet.cmo} syntax.cmo parser.cmo lexer.cmo \\
-%%    environment.cmo typing.cmo eval.cmo main.cmo
-%% #{@}
-%%   \end{boxedminipage} \\
-@syntax.ml@: \\
-  \begin{boxedminipage}{\textwidth}
-#{&}
-...
-\graybox{type tyvar = int}
-
- type ty =
-     TyInt
-   | TyBool
-   \graybox{| TyVar of tyvar}
-   \graybox{| TyFun of ty * ty}
-
-(* pretty printing *)
-let pp_ty = ...
-
-\graybox{let fresh_tyvar =}
-  \graybox{let counter = ref 0 in}
-  \graybox{let body () =}
-    \graybox{let v = !counter in}
-      \graybox{counter := v + 1; v}
-  \graybox{in body}
-
-\graybox{let rec freevar_ty ty = ...} (*  ty -> tyvar MySet.t *)
-#{@}
-\end{boxedminipage}
-\end{flushleft}
-  \caption{\miniML{3} 型推論の実装(1)}
-  \label{fig:MLarrow1}
-\end{figure}
 
 \subsection{単一化}
 
 型変数と型代入を導入したところで型付け規則をもう一度見てみよう．
-\rn{T-If}や\rn{T-Plus}などの規則は「条件式の型は \Bool でなくてはなら
+\rn{T-If}や\rn{T-Plus}などの規則は「条件式の型は \mathbf{bool} でなくてはなら
   ない」「\ML{then}節と\ML{else}節の式の型は一致していなければならない」
-   「引数の型は \Int でなくてはならない」という制約を課していることが
+   「引数の型は \mathbf{int} でなくてはならない」という制約を課していることが
    わかる．
 
 これらの制約を\miniML{2}に対する型推論では，型(すなわち @TyInt@ などの
 定義される言語の型を表現した値) の比較を行うことでチェックしていた．例
 えば与えられた式$e$が$e_1+e_2$の形をしていたときには，$e_1$の型
 $\tau_1$と$e_2$の型$\tau_2$を再帰的にアルゴリズムを呼び出すことにより
-推論し，\emph{それらが$\Int$であることをチェックしてから}全体の型とし
-て$\Int$を返していた．
+推論し，\emph{それらが$\mathbf{int}$であることをチェックしてから}全体の型とし
+て$\mathbf{int}$を返していた．
 
 しかし，型の構文が型変数で拡張されたいま，この方法は不十分である．とい
 うのは，部分式の型（上記の$\tau_1$と$\tau_2$）に型変数が含まれるかもし
 れないからである．例えば，$\ML{fun\ x} \rightarrow \ML{1+x}$ という
 式の型推論過程を考えてみる．まず，$\emptyset \vdash \ML{fun\ x}
-\rightarrow \ML{1+x} \COL \tyFun{\Int}{\Int}$であることに注意しよう．
+\rightarrow \ML{1+x} : \tyFun{\mathbf{int}}{\mathbf{int}}$であることに注意しよう．
             （実際に導出木を書いてチェックしてみること．）したがって，
-            型推論アルゴリズムは，この式の型として$\tyFun{\Int}{\Int}$
+            型推論アルゴリズムは，この式の型として$\tyFun{\mathbf{int}}{\mathbf{int}}$
             を返すように実装するのが望ましい．
 
 では，空の型環境$\emptyset$と上記の式を入力として，型推論アルゴリズム
 がどのように動くべきかを考えてみよう．この場合，まず\rn{T-Fun}を下から
 上に読んで，$\ML{x}$ の型を型変数$\alpha$ とおいた型環境
-$x\COL\alpha$の下で$\ML{1+x}$の型推論をすることになる．その後，各部
+$x:\alpha$の下で$\ML{1+x}$の型推論をすることになる．その後，各部
 分式$\ML{1}$と$\ML{x}$の型を，アルゴリズムを再帰的に呼び出すことで
-推論し，$\Int$ と $\alpha$ を得る．\miniML{2}の型推論では，ここでそ
-れぞれの型が$\Int$であるかどうかを単純比較によってチェックし，$\Int$で
+推論し，$\mathbf{int}$ と $\alpha$ を得る．\miniML{2}の型推論では，ここでそ
+れぞれの型が$\mathbf{int}$であるかどうかを単純比較によってチェックし，$\mathbf{int}$で
 なかったら型エラーを報告していた．しかし今回は後者の型が$\alpha$であっ
-て$\Int$ではないため，\emph{単純比較による部分式の型のチェックだけでは
+て$\mathbf{int}$ではないため，\emph{単純比較による部分式の型のチェックだけでは
   型推論が上手くいかない}．
 
 では，どうすれば良いのだろうか．定石として知られている手法は\intro{制約
@@ -216,8 +211,8 @@ $x\COL\alpha$の下で$\ML{1+x}$の型推論をすることになる．その後
 手法では，与えられたプログラムの各部分式から型変数に関する\intro{制
   約}{constraint}が生成されるものと見て，式をスキャンする過程で制約を集
 め，その制約をあとで解き型代入を得る，という形で型推論アルゴリズムを設
-計する．例えば，上記の例では，「$\alpha$は実は$\Int$である」という
-制約が生成される．この制約を解くと型代入$\set{\alpha \mapsto \Int}$が得
+計する．例えば，上記の例では，「$\alpha$は実は$\mathbf{int}$である」という
+制約が生成される．この制約を解くと型代入$\set{\alpha \mapsto \mathbf{int}}$が得
 られる．
 
 上記の場合は制約が単純だったが，\rn{T-App}で関数$e_1$の受け取る引数の型
@@ -225,19 +220,19 @@ $x\COL\alpha$の下で$\ML{1+x}$の型推論をすることになる．その後
 の型が一致することを検査するためには，より一般的な，
 \begin{quotation}
   与えられた型のペアの集合 $\set{(\tau_{11}, \tau_{12}), \ldots,
-    (\tau_{n1}, \tau_{n2})}$ に対して，$\subst \tau_{11} =
-  \subst\tau_{12}$, \ldots, $\subst \tau_{n1} = \subst\tau_{n2}$ な
-  る $\subst$ を求めよ
+    (\tau_{n1}, \tau_{n2})}$ に対して，$\theta \tau_{11} =
+  \theta\tau_{12}$, \ldots, $\theta \tau_{n1} = \theta\tau_{n2}$ な
+  る $\theta$ を求めよ
 \end{quotation}
 という制約解消問題を解かなければいけない．このような問題は\intro{単一
   化}{unification}問題と呼ばれ，型推論だけではなく，計算機による自動証
 明などにおける基本的な問題として知られている．例え
-ば，$\alpha$ と$\Int$ は $\subst(\alpha) = \Int$ なる型代
-入$\subst$により単一化できる．ま
-た，$\tyFun{\alpha}{\Bool}$ と
-$\tyFun{(\tyFun{\Int}{\beta})}{\beta}$ は
-$\subst(\alpha) = \tyFun{\Int}{\Bool}$ かつ $\subst(\beta) =
-\Bool$ なる$\subst$ により単一化できる．
+ば，$\alpha$ と$\mathbf{int}$ は $\theta(\alpha) = \mathbf{int}$ なる型代
+入$\theta$により単一化できる．ま
+た，$\tyFun{\alpha}{\mathbf{bool}}$ と
+$\tyFun{(\tyFun{\mathbf{int}}{\beta})}{\beta}$ は
+$\theta(\alpha) = \tyFun{\mathbf{int}}{\mathbf{bool}}$ かつ $\theta(\beta) =
+\mathbf{bool}$ なる$\theta$ により単一化できる．
 
 単一化問題は，対象（ここでは型）の構造や変数の動く範囲によっては，非常
 に難しくなるが\footnote{問題設定によっては\intro{決定不能}{undecidable}に
@@ -345,13 +340,13 @@ val unify : (ty * ty) list -> subst
 ば，$e_1\ML{+}e_2$ 式に対する型推論は，\rn{T-Plus}規則を下から上に読
 むと，
 \begin{enumerate}
-\item $\Gamma, e_1$ を入力として型推論を行い，$\subst_1$，$\tau_1$ を得る．
-\item $\Gamma, e_2$ を入力として型推論を行い，$\subst_2$，
+\item $\Gamma, e_1$ を入力として型推論を行い，$\theta_1$，$\tau_1$ を得る．
+\item $\Gamma, e_2$ を入力として型推論を行い，$\theta_2$，
   $\tau_2$ を得る．
-\item 型代入 $\subst_1, \subst_2$ を $\alpha = \tau$ という形の方
-  程式の集まりとみなして，$\subst_1 \cup \subst_2 \cup \set{(\tau_1,
-    \Int), (\tau_2, \Int)}$ を単一化し，型代入$\subst_3$を得る．
-\item $\subst_3$ と $\Int$ を出力として返す．
+\item 型代入 $\theta_1, \theta_2$ を $\alpha = \tau$ という形の方
+  程式の集まりとみなして，$\theta_1 \cup \theta_2 \cup \set{(\tau_1,
+    \mathbf{int}), (\tau_2, \mathbf{int})}$ を単一化し，型代入$\theta_3$を得る．
+\item $\theta_3$ と $\mathbf{int}$ を出力として返す．
 \end{enumerate}
 となる．部分式の型推論で得られた型代入を方程式とみなして，再び単一化を
 行うのは，ひとつの部分式から $[\alpha \mapsto \tau_1]$，もうひとつか
