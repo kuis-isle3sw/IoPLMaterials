@@ -45,7 +45,8 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
     - [3.7: MiniML5 and beyond: やりこみのための演習問題](textbook/chap03-7.md)
   - 4章: 型推論機能付き MiniML インタプリタの実装（あるいは，型システムを用いた形式検証の初歩）
     - [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md)
-    - [4.2: MiniML2 のための型推論](textbook/chap04-2.md)
+    - [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md)
+    - [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md)
 
 
 <!--
