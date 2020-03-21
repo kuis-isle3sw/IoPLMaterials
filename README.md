@@ -74,7 +74,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 
 ## 講義に関する情報
 
-- 講義をする人: 末永幸平（[@ksuenaga](http://www.twitter.com/ksuenaga/), https://researchmap.jp/ksuenaga/）
+- 講義をする人: 末永幸平（[@ksuenaga](http://www.twitter.com/ksuenaga/), [Researchmap](https://researchmap.jp/ksuenaga/)）
 - 講義が行われる時間: 月曜2限
 - 講義が行われる場所: 総合研究7号館講義室1
 - Language used in the class: Japanese
