@@ -92,15 +92,11 @@ type subst = (tyvar * ty) list
 
 という操作を行う型代入である．
 
-注意すべき点が2つある．
-
-TODO: ここまで書いた
-
-+ リスト中の型変数と型のペアの順序と，代入としての作用の順序は逆になっている．
-+ リスト中の型は後続のリストが表す型代入の影響を受ける．例えば，型代入 `[(alpha, TyInt)]` が型 `TyFun(TyVar alpha, TyBool)` に作用すると，`TyFun(TyVar TyInt, TyBool)` となり，型代入 `[(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)]`
-\end{alltt}
-が型@(TyVar beta)@に作用すると，まずリストの先頭の@(beta, (TyFun (TyVar alpha, TyInt)))@が作用して@TyFun (TyVar alpha, TyInt)@が得られ，
-次にこの型にリストの二番目の要素の@(alpha, TyBool)@が作用して@TyFun(TyBool, TyInt)@が得られる
+注意すべき点がいくつかある．
+ 
++ 空リストは何も行わない代入（恒等変換）を表す．
++ 代入を型に適用すると，リスト中の型変数と型のペアで表される操作が先頭から順番に適用される．型代入 `[(id1,ty1); ...; (idn,tyn)]` を型に適用すると，最初に `id1` に `ty1` を代入する操作が行われる．
++ リスト中の型は後続のリストが表す型代入の影響を受ける．例えば，型代入 `[(alpha, TyInt)]` が型 `TyFun(TyVar alpha, TyBool)` に作用すると，`TyFun(TyInt, TyBool)` となり，型代入 `[(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)]` が型 `(TyVar beta)` に作用すると，まずリストの先頭の `(beta, (TyFun (TyVar alpha, TyInt)))` が作用して `TyFun (TyVar alpha, TyInt)` が得られ，次にこの型にリストの二番目の要素の`(alpha, TyBool)` が作用して `TyFun(TyBool, TyInt)` が得られる．
 
 ## MiniML3 の型推論アルゴリズムの仕様
 
@@ -122,202 +118,120 @@ TODO: ここまで書いた
 <!-- %%   \tyFun{\beta}{\gamma}$であることが判明する． -->
 <!-- %% \end{enumerate} -->
 
-TODO: ここまで書いた
+それでは，型代入を型に適用する関数を（この後使う補助関数とともに）定義しよう．
 
-{% comment %}
+### <a name="freevar_ty">Exercise ___ [必修]</a>
 
-型推論アルゴリズムを実装する前に，以降で使う補助関数を定義しておこう．
-
-\begin{mandatoryexercise}
-  \label{ex:freevarTy}
-図\ref{fig:MLarrow1}中の @pp_ty@，@freevar_ty@ を完成させよ．
-@freevar_ty@ は，与えられた型中の型変数の集合を返す関数で，型は
-%
-#{&}
-val freevar_ty : ty -> tyvar MySet.t
-#{@}
-%
-とする．型@'a MySet.t@ は@mySet.mli@ で定義されている@'a@を要素とする
-集合を表す型である．
-\end{mandatoryexercise}
+`pp_ty` と `freevar_ty` を完成させよ．`freevar_ty` は，与えられた型中の型変数の集合を返す関数で，型は `ty -> tyvar MySet.t` とする．型 `'a MySet.t` は `mySet.mli` で定義されている型 `'a` の値を要素とする集合を表す値の型である．
 
 
-以下の演習問題で，型代入を作用させる補助関数を実装しよう．
-\begin{mandatoryexercise}
-型代入に関する以下の型，関数を @typing.ml@ 中に実装せよ．
-%
-#{&}
+### Exercise ___ [必修]
+
+型代入に関する以下の型，関数を `typing.ml` 中に実装せよ．
+
+{% highlight ocaml %}
 type subst = (tyvar * ty) list
 
-val subst_type : subst -> ty -> ty
-#{@}
-%
+	val subst_type : subst -> ty -> ty
+{% endhighlight %}
 
 例えば，
-%
-#{&}
+
+{% highlight ocaml %}
 let alpha = fresh_tyvar () in
 subst_type [(alpha, TyInt)] (TyFun (TyVar alpha, TyBool))
-#{@}
-% 
-の値は @TyFun (TyInt, TyBool)@ になり，
-%
-#{&}
+{% endhighlight %}
+
+の値は `TyFun (TyInt, TyBool)` になり，
+
+{% highlight ocaml %}
 let alpha = fresh_tyvar () in
 let beta = fresh_tyvar () in
 subst_type [(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)] (TyVar beta)
-#{@}
-の値は @TyFun (TyBool, TyInt)@ になる．
-\end{mandatoryexercise}
+{% endhighlight %}
 
+の値は `TyFun (TyBool, TyInt)` になる．
 
-\subsection{単一化}
+## 制約に基づく型推論
 
-型変数と型代入を導入したところで型付け規則をもう一度見てみよう．
-\rn{T-If}や\rn{T-Plus}などの規則は「条件式の型は \mathbf{bool} でなくてはなら
-  ない」「\ML{then}節と\ML{else}節の式の型は一致していなければならない」
-   「引数の型は \mathbf{int} でなくてはならない」という制約を課していることが
-   わかる．
+型変数と型代入を導入したところで型付け規則をもう一度見てみよう．$\textrm{T-If}$ や $\textrm{T-Plus}$ などの規則は「条件式の型は \mathbf{bool} でなくてはならない」「`then` 節と `else` 節の式の型は一致していなければならない」「引数の型は \mathbf{int} でなくてはならない」という制約を課していることがわかる．
 
-これらの制約を\miniML{2}に対する型推論では，型(すなわち @TyInt@ などの
-定義される言語の型を表現した値) の比較を行うことでチェックしていた．例
-えば与えられた式$e$が$e_1+e_2$の形をしていたときには，$e_1$の型
-$\tau_1$と$e_2$の型$\tau_2$を再帰的にアルゴリズムを呼び出すことにより
-推論し，\emph{それらが$\mathbf{int}$であることをチェックしてから}全体の型とし
-て$\mathbf{int}$を返していた．
+これらの制約を，MiniML2 に対する型推論では，推論された MiniML2 の型（すなわち `TyInt` などの定義される言語の型を表現した OCaml の値) の形を調べることでチェックしていた．例えば与えられた式 `e` が `$e_1+e_2` の形をしていたときには，`e_1` の型 $\tau_1$ と `e_2` の型 $\tau_2$ を再帰的にアルゴリズムを呼び出すことにより推論し，_それらが$\mathbf{int}$であることをチェックしてから_，全体の型として$\mathbf{int}$を返していた．
 
-しかし，型の構文が型変数で拡張されたいま，この方法は不十分である．とい
-うのは，部分式の型（上記の$\tau_1$と$\tau_2$）に型変数が含まれるかもし
-れないからである．例えば，$\ML{fun\ x} \rightarrow \ML{1+x}$ という
-式の型推論過程を考えてみる．まず，$\emptyset \vdash \ML{fun\ x}
-\rightarrow \ML{1+x} : \tyFun{\mathbf{int}}{\mathbf{int}}$であることに注意しよう．
-            （実際に導出木を書いてチェックしてみること．）したがって，
-            型推論アルゴリズムは，この式の型として$\tyFun{\mathbf{int}}{\mathbf{int}}$
-            を返すように実装するのが望ましい．
+しかし，型の構文が型変数で拡張されたいま，この方法は不十分である．というのは，部分式の型（上記の $\tau_1$ と $\tau_2$）に型変数が含まれるかもしれないからである．例えば，`fun x -> 1+x` という式の型推論過程を考えてみる．まず，$\emptyset \vdash \mathbf{fun}\ x \rightarrow 1+x : \mathbf{int} \rightarrow \mathbf{int}$であることに注意しよう．（実際に導出木を書いてチェックしてみること．）したがって，型推論アルゴリズムは，この式の型として $\mathbf{int} \rightarrow \mathbf{int}$ を返すように実装するのが望ましい．
 
-では，空の型環境$\emptyset$と上記の式を入力として，型推論アルゴリズム
-がどのように動くべきかを考えてみよう．この場合，まず\rn{T-Fun}を下から
-上に読んで，$\ML{x}$ の型を型変数$\alpha$ とおいた型環境
-$x:\alpha$の下で$\ML{1+x}$の型推論をすることになる．その後，各部
-分式$\ML{1}$と$\ML{x}$の型を，アルゴリズムを再帰的に呼び出すことで
-推論し，$\mathbf{int}$ と $\alpha$ を得る．\miniML{2}の型推論では，ここでそ
-れぞれの型が$\mathbf{int}$であるかどうかを単純比較によってチェックし，$\mathbf{int}$で
-なかったら型エラーを報告していた．しかし今回は後者の型が$\alpha$であっ
-て$\mathbf{int}$ではないため，\emph{単純比較による部分式の型のチェックだけでは
-  型推論が上手くいかない}．
+では，空の型環境 $\emptyset$ と上記の式を入力として，型推論アルゴリズムがどのように動くべきかを考えてみよう．この場合，まず \textrm{T-Fun} を下から上に読んで，$x$ の型を型変数$\alpha$ とおいた型環境 $x:\alpha$の下で `1+x` の型推論をすることになる．その後，各部分式 `1` と `x` の型を，アルゴリズムを再帰的に呼び出すことで推論し，$\mathbf{int}$ と $\alpha$ を得る．MiniML2 の型推論では，ここでそれぞれの型が$\mathbf{int}$であるかどうかを単純比較によってチェックし，$\mathbf{int}$でなかったら型エラーを報告していた．しかし今回は後者の型が $\alpha$ であって $\mathbf{int}$ ではないため，_単純比較による部分式の型のチェックだけでは型推論が上手くいかない_．
 
-では，どうすれば良いのだろうか．定石として知られている手法は\intro{制約
-  による型推論}{constraint-based type inference}という手法である．この
-手法では，与えられたプログラムの各部分式から型変数に関する\intro{制
-  約}{constraint}が生成されるものと見て，式をスキャンする過程で制約を集
-め，その制約をあとで解き型代入を得る，という形で型推論アルゴリズムを設
-計する．例えば，上記の例では，「$\alpha$は実は$\mathbf{int}$である」という
-制約が生成される．この制約を解くと型代入$\set{\alpha \mapsto \mathbf{int}}$が得
-られる．
+では，どうすれば良いのだろうか．よく使われる手法として _制約による型推論 (constraint-based type inference)_ という手法がある．この手法では，
 
-上記の場合は制約が単純だったが，\rn{T-App}で関数$e_1$の受け取る引数の型
-と$e_2$の型が一致すること，また\rn{T-If}で\ML{then}節と\ML{else}節の式
-の型が一致することを検査するためには，より一般的な，
-\begin{quotation}
-  与えられた型のペアの集合 $\set{(\tau_{11}, \tau_{12}), \ldots,
-    (\tau_{n1}, \tau_{n2})}$ に対して，$\theta \tau_{11} =
-  \theta\tau_{12}$, \ldots, $\theta \tau_{n1} = \theta\tau_{n2}$ な
-  る $\theta$ を求めよ
-\end{quotation}
-という制約解消問題を解かなければいけない．このような問題は\intro{単一
-  化}{unification}問題と呼ばれ，型推論だけではなく，計算機による自動証
-明などにおける基本的な問題として知られている．例え
-ば，$\alpha$ と$\mathbf{int}$ は $\theta(\alpha) = \mathbf{int}$ なる型代
-入$\theta$により単一化できる．ま
-た，$\tyFun{\alpha}{\mathbf{bool}}$ と
-$\tyFun{(\tyFun{\mathbf{int}}{\beta})}{\beta}$ は
-$\theta(\alpha) = \tyFun{\mathbf{int}}{\mathbf{bool}}$ かつ $\theta(\beta) =
-\mathbf{bool}$ なる$\theta$ により単一化できる．
+- 式をスキャンしながら，与えられたプログラムが型付け可能であるための _制約 (constraint)_ を生成し，（_制約生成 (constraint generation)_）
+- その制約をあとで解き型代入を得る，（_制約解消 (constraint solving)_）
 
-単一化問題は，対象（ここでは型）の構造や変数の動く範囲によっては，非常
-に難しくなるが\footnote{問題設定によっては\intro{決定不能}{undecidable}に
-  なることもある．決定不能であるとは，いい加減に言えば，かつすべての入
-  力について有限時間で停止し正しい出力を返すプログラムが存在しないこと
-  を言う．従って，決定不能な問題を計算機でなんとかしようとすると，一部
-  の入力については正しくない答えを返すことを許容するか，一部の入力につ
-  いては停止しないことを許容しなければならない．}，ここでは，型が単純
-な木構造を持ち，型代入も単に型変数に型を割当てるだけのもの（\intro{一
-    階の単一化}{first-order unification}と呼ばれる問題）なので，解であ
-る型代入を求めるアルゴリズムが存在する．
-\footnote{このアルゴリズムは，Prolog などの論理型言語と呼ばれるプログ
-  ラミング言語の処理系において多く用いられる．}（しかも，求まる型代入
-  がある意味で「最も良い」解であることがわかっている．）
+という形で型推論アルゴリズムを設計する．例えば，上記の例では，「$\alpha$ と $\mathbf{int}$ が等しい」という制約が生成される．この制約を解くと型代入 $\{\alpha \mapsto \mathbf{int}\}$ が得られる．
 
-一階の単一化を行うアルゴリズム$\UNIFY(X)$は，型のペアの集合$X$を入力と
-し，$X$中のすべての型のペアを同じ型にするような型代入を返す．（そのよ
-  うな型代入が存在しないときにはエラーを返す．）$\UNIFY$は以下のように
-定義される．
-%
-\[
+上記の場合は制約が単純だったが，$\textrm{T-App}$で
+
+- 関数 $e_1$ の型が関数型であり，
+- その引数の型と $e_2$ の型が一致すること，
+
+や，$\textrm{T-If}$ で
+
+- `then` 節と `else` 節の式の型が一致すること
+
+などを表現する際にはもう少し複雑な制約が生成されることがある．
+
+一般的には，MiniML3 の型推論の範囲内では，型の間の等式制約 $\{\tau_{11} = \tau_{12}, \dots, \tau_{n1} = \tau_{n2}\}$ によって，式が型付け可能であるための条件を表現することが可能となる．となれば，型推論は，与えられた型の等式制約 $\{\tau_{11} = \tau_{12}, \dots, \tau_{n1} = \tau_{n2}\}$ の解となる型代入 $\theta$，すなわち $\theta \tau_{11} = \theta\tau_{12}, \ldots, \theta \tau_{n1} = \theta\tau_{n2}$ をすべて満たすような $\theta$ を求める問題に帰着される．
+
+## 単一化による型の等式制約の解法
+
+TODO: ここまで
+
+このように項の間の等式制約を満たす代入を求める問題は _単一化 (unification)_ 問題と呼ばれ，型推論だけではなく，Prolog 等の論理プログラミング言語や Coq 等の証明支援系等にも現れる基本的な問題として知られている．例えば，$\alpha$ と$\mathbf{int}$ は $\theta(\alpha) = \mathbf{int}$ なる型代入$\theta$により単一化できる．また，$\alpha \rightarrow \mathbf{bool}$ と $(\mathbf{int} \rightarrow \beta) \rightarrow \beta$ は$\theta(\alpha) = \mathbf{int} \rightarrow \mathbf{bool}$ かつ $\theta(\beta) =\mathbf{bool}$ なる$\theta$ により単一化できる．
+
+単一化問題は，項（ここでは型）の構造や変数の動く範囲など，問題設定によっては _決定不能 (undecidable)_ になることもある．<sup>[決定不能性についての注](#undecidable)</sup>しかし，ここでは型が単純な木構造を持ち，型代入も単に型変数に型を割当てるだけのもの（_一階の単一化 (first-order unification)_ と呼ばれる問題）なので，解である型代入を求めるアルゴリズムが存在する．（このアルゴリズムは，Prolog などの論理型言語と呼ばれるプログラミング言語の処理系において多く用いられる．また，求まる型代入がある意味で「最も一般的な」解であることがわかっている．）
+
+TODO: mgu について追記？
+
+<a name="undecidable">決定不能性について</a>: ある問題が決定不能であるとは，いい加減に言えば，すべての入力に対して正しい答えを返し，かつすべての入力について有限時間で停止するプログラムが存在しないことを言う．従って，決定不能な問題を計算機でなんとかしようとすると，一部の入力については正しくない答えを返すことを許容するか，一部の入力については停止しないことを許容しなければならない．
+
+一階の単一化を行うアルゴリズム$\mathit{Unify}(X)$は，型の等式制約 $X$ を入力とし，$X$ 中のすべての型のペアを同じ型にするような型代入を返す．（そのような型代入が存在しないときにはエラーを返す．）$\mathit{Unify}$ の定義を以下に示す．
+
+$$
 \begin{array}{lcl}
-  \unify{\emptyset} & = & \emptyset\\
-  \unifyX{\tau}{\tau} & = & \unify{X'} \\
-  \unifyX{\tyFun{\tau_{11}}{\tau_{12}}}{\tyFun{\tau_{21}}{\tau_{22}}} &=&
-   \unify{\set{(\tau_{11}, \tau_{21}), (\tau_{12}, \tau_{22})}\uplus X'}\\
-  \unifyX{\alpha}{\tau} \quad (\mbox{if }\tau \neq \alpha) & = & \left\{
+  \mathit{Unify}(\emptyset) & = & \emptyset\\
+  \mathit{Unify}(X' \uplus \{\tau = \tau\}) & = & \mathit{Unify}(X') \\
+  \mathit{Unify}(X' \uplus \{\tau_{11} \rightarrow \tau_{12} = \tau_{21} \rightarrow \tau_{22}\} &=&
+   \mathit{Unify}(\{\tau_{11} = \tau_{21}, \tau_{12} = \tau_{22}\} \uplus X')\\
+  \mathit{Unify}(X' \uplus \{\alpha = \tau\}) \quad (\mbox{if }\tau \neq \alpha) & = & \left\{
     \begin{array}{ll}
-      \unify{[\alpha\mapsto\tau] X'} \circ
-      [\alpha\mapsto\tau]
-& (\alpha \not \in \FTV(\tau)) \\
-      \error & (\mbox{その他})
+	  \mathit{Unify}([\alpha\mapsto\tau] X') \circ [\alpha\mapsto\tau] & (\alpha \not \in \mathbf{FTV}(\tau)) \\
+	  \mathbf{Error} & (\mbox{Otherwise})
     \end{array}\right. \\
-  \unifyX{\tau}{\alpha} \quad (\mbox{if }\tau \neq \alpha) & = & \left\{
+  \mathit{Unify}(X' \uplus \{\tau = \alpha\}) \quad (\mbox{if }\tau \neq \alpha) & = & \left\{
     \begin{array}{ll}
-      \unify{[\alpha\mapsto\tau] X'} \circ
-      [\alpha\mapsto\tau]
-& (\alpha \not \in \FTV(\tau)) \\
-      \error & (\mbox{その他})
+      \mathit{Unify}([\alpha\mapsto\tau] X') \circ [\alpha\mapsto\tau] & (\alpha \not \in \mathbf{FTV}(\tau)) \\
+      \mathbf{Error} & (\mbox{Otherwise})
     \end{array}\right. \\
-  \unifyX{\tau_1}{\tau_2} &=& \error \quad (\mbox{その他の場合})
+  \mathit{Unify}(X \uplus \tau_1 = \tau_2) &=& \mathbf{Error} \quad (\mbox{Otherwise})
 \end{array}
-\]
-%
-ここで，$\emptyset$ は空の型代入を表し，$[\alpha\mapsto\tau]$は
-$\alpha$を $\tau$ に写す（そしてそれ以外の型変数については何も行わ
-  ない）型代入である．また$\FTV(\tau)$は $\tau$中に現れる型変数の
-集合である．また，$X\uplus Y$ は，$X\cap Y = \emptyset$のときの
-$X \cup Y$を表す記号である．
+$$
 
-この$\UNIFY$の定義は以下のように$X$を入力とする単一化アルゴリズムとし
-て読める:
-\begin{itemize}
-\item $X$が空集合であれば空の代入を返す．
-\item そうでなければ，$X$から型のペア$(\tau_1,\tau_2)$を任意に一つ選び，
-  それ以外の部分を$X'$とし，$(\tau_1,\tau_2)$がどのような形をしている
-  かによって，以下の各動作を行う．
-  \begin{itemize}
-  \item $\tau_1$と$\tau_2$がすでに同じ形であった場合: $X'$について再帰
-    的に単一化を行い，その結果を返せばよい．（$\tau_1$と$\tau_2$はすで
-      に同じ形なので，残りの制約集合$X'$の解がそのまま全体の解となる．）
-  \item 選んだ型のペアがどちらも関数型の形をしていた場合，すなわち
-    $\tau_1$が$\tyFun{\tau_{11}}{\tau_{12}}$の形をしており，$\tau_2$が
-    $\tyFun{\tau_{21}}{\tau_{22}}$の形をしていた場合: $\tau_1$と
-    $\tau_2$が同じ形となるためには$\tau_{11}$と$\tau_{21}$が同じ形であ
-    り，かつ$\tau_{12}$と$\tau_{22}$が同じ形であればよい．これを満たす
-    型代入を求めるために，$\UNIFY$を
-    $\set{(\tau_{11},\tau_{21}),(\tau_{12},\tau_{22})} \cup X'$を入力
-    として再帰的に呼び出し，帰ってきた結果を全体の結果とする．
-  \item 選んだ型のペアが型変数と型のペア，すなわち$(\alpha,\tau)$か
-    $(\tau,\alpha)$の形をしていた場合\footnote{$(\alpha,\alpha)$の形だっ
-    た場合はこのケースではなく，一つ前のケースに当てはまる．}: この場
-    合，型変数$\alpha$は$\tau$でなければならないことがわかる．したがっ
-    て，残りの制約$X'$中の$\alpha$に$\tau$を代入した制約
-    $[\alpha\mapsto\tau] X'$を再帰的に解き，得られた解に$\alpha$を
-    $\tau$に代入する写像$[\alpha \mapsto \tau]$を合成して得られる写像
-    $\unify{[\alpha\mapsto\tau] X'} \circ [\alpha\mapsto\tau]$を解とし
-    て返せばよい．ところが，ここで注意すべきことが一つある．もし$\tau$
-    中に$\alpha$が現れていた場合\footnote{繰り返しになるが，$\tau$が
-      $\alpha$自体であった場合はこのケースには当てはまらない．ここでエ
-      ラーを報告しなければならないのは，例えば$\tau$が
-      $\tyFun{\alpha}{\alpha}$の場合である．}，ここでエラーを検出しな
-    ければならない．（なぜなのかを考察する課題を以下に用意している．）
-  \end{itemize}
-\end{itemize}
+ここで，$\emptyset$ は空の型代入を表し，$[\alpha\mapsto\tau]$ は $\alpha$を $\tau$ に写す（そしてそれ以外の型変数については何も行わない）型代入である．また$\mathbf{FTV}(\tau)$ は（[前に実装した](#freevar_ty) `freevar_ty` で計算される） $\tau$中に現れる型変数の集合である．また，$X \uplus Y$ は，$X \cap Y = \emptyset$ のときの $X \cup Y$を表す記号である．
+
+この$\mathit{Unify}$の定義は以下のように$X$を入力とする単一化アルゴリズムとして読める:
+
++ $X$が空集合であれば空の代入を返す．
++ そうでなければ，$X$から等式制約 $\tau_1 = \tau_2$を任意に一つ選び，それ以外の部分を $X'$ とし，制約 $\tau_1 = \tau_2$がどのような形をしているかによって，以下の各動作を行う．
+  + $\tau_1$と$\tau_2$がすでに同じ形であった場合: $X'$について再帰的に単一化を行い，その結果を返せばよい．（$\tau_1$と$\tau_2$はすでに同じ形なので，残りの制約集合$X'$に対する解がそのまま全体の解となる．）
+  + $\tau_1$ も $\tau_2$ も関数型の形をしていた場合，すなわち$\tau_1$が$\tau_{11} \rightarrow \tau_{12}$の形をしており，$\tau_2$が $\tau_{21} \rightarrow \tau_{22}$の形をしていた場合: $\tau_1$と $\tau_2$が同じ形となるためには$\tau_{11}$と$\tau_{21}$が同じ形であり，かつ$\tau_{12}$と$\tau_{22}$が同じ形であればよい．これを満たす型代入を求めるために，$\mathit{Unify}$ を $\{\tau_{11} = \tau_{21}, \tau_{12} = \tau_{22}\} \cup X'$ を入力として再帰的に呼び出し，帰ってきた結果を全体の結果とする．
+  + $\tau_1$ と $\tau_2$ の片方が型変数だった場合，すなわち選んだ制約が $\alpha = \tau$ か $\tau = \alpha$ の形をしていた場合<sup>[$\alpha = \alpha$の場合についての注](#alphaeqalpha)</sup>: この場合，型変数$\alpha$は$\tau$でなければならないことがわかる．したがって，残りの制約$X'$中の$\alpha$に$\tau$を代入した制約$[\alpha\mapsto\tau] X'$を作り，これを再帰的に解き，得られた解に$\alpha$を$\tau$に代入する写像$[\alpha \mapsto \tau]$を合成して得られる写像$\mathit{Unify}([\alpha\mapsto\tau] X') \circ [\alpha\mapsto\tau]$を解として返せばよい．ところが，ここで注意すべきことが一つある．もし$\tau$中に$\alpha$が現れていた場合<sup>[$\alpha = \alpha$の場合の注2](#alphaeqalpha2)</sup>，ここでエラーを検出しなければならない．（なぜなのかを考察する課題を以下に用意している．）
++ これら以外の場合: エラーを報告する．
+
+<a name="alphaeqalpha">$\alpha = \alpha$ の形だった場合はこのケースではなく，一つ前のケースに当てはまる．</a>
+
+<a name="alphaeqalpha2">繰り返しになるが，$\tau$が$\alpha$自体であった場合はこのケースには当てはまらない．ここでエラーを報告しなければならないのは，例えば$\tau$が$\alpha \rightarrow \alpha$の場合である．</a>
+
+{% comment %}
 
 \begin{mandatoryexercise}
 上の単一化アルゴリズムを
@@ -330,7 +244,7 @@ val unify : (ty * ty) list -> subst
 \end{mandatoryexercise}
 
 \begin{mandatoryexercise}
-単一化アルゴリズムにおいて，$\alpha \not \in \FTV(\tau)$ という条件
+単一化アルゴリズムにおいて，$\alpha \not \in \mathbf{FTV}(\tau)$ という条件
 はなぜ必要か考察せよ．
 \end{mandatoryexercise}
 
