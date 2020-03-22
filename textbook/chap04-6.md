@@ -9,6 +9,8 @@
 - 型代入 $\theta_1, \theta_2$ を $\alpha = \tau$ という形の方程式の集まりとみなして，$\theta_1 \cup \theta_2 \cup \{\tau_1 = \mathbf{int}, (\tau_2, \mathbf{int})\}$ を単一化し，型代入$\theta_3$を得る．
 - $\theta_3$ と $\mathbf{int}$ を出力として返す．
 
+{% comment %}
+
 となる．部分式の型推論で得られた型代入を方程式とみなして，再び単一化を
 行うのは，ひとつの部分式から $[\alpha \mapsto \tau_1]$，もうひとつか
 らは $[\alpha \mapsto \tau_2]$ という代入が得られた時に$\tau_1$ と
@@ -111,3 +113,4 @@ let rec ty_exp tyenv = function
   \label{fig:MLarrow2}
 \end{figure}
 
+{% endcomment %}
