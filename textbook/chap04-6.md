@@ -9,36 +9,87 @@
 - 型代入 $\theta_1, \theta_2$ を $\alpha = \tau$ という形の方程式の集まりとみなして，$\theta_1 \cup \theta_2 \cup \{\tau_1 = \mathbf{int}, (\tau_2, \mathbf{int})\}$ を単一化し，型代入$\theta_3$を得る．
 - $\theta_3$ と $\mathbf{int}$ を出力として返す．
 
+となる．部分式の型推論で得られた型代入を方程式とみなして，再び単一化を行うのは，ひとつの部分式から $[\alpha \mapsto \tau_1]$，もうひとつからは $[\alpha \mapsto \tau_2]$ という代入が得られた時に$\tau_1$ と$\tau_2$ の整合性が取れているか（単一化できるか）を検査するためである．
+
+### Exercise ___ [必修]
+他の型付け規則に関しても同様に型推論の手続きを与えよ(レポートの一部としてまとめよ)．そして，以下の `typing.ml` に加えるべき変更の解説を参考にして，型推論アルゴリズムの実装を完成させよ．
+
+{% highlight ocaml %}
+(* New! 型代入を表す値の型 *)
+type subst = (tyvar * ty) list
+
+(* すでに実装済みのはず *)
+let rec subst_type subst t = ...
+
+(* New! eqs_of_subst : subst -> (ty * ty) list
+   型代入を型の等式集合に変換．型の等式制約 ty1 = ty2 は (ty1,ty2) という
+   ペアで表現し，等式集合はペアのリストで表現． *)
+let eqs_of_subst s = ... 
+
+(* New! 
+   subst_eqs: subst -> (ty * ty) list -> (ty * ty) list
+   型の等式集合に型代入を適用する関数． *)
+let subst_eqs s eqs = ...
+
+(* すでに実装済みのはず *)
+let rec unify l = ... 
+
+(* New! 演算子 op が生成すべき制約集合と返り値の型を記述 *)
+let ty_prim op ty1 ty2 = match op with
+    Plus -> ([(ty1, TyInt); (ty2, TyInt)], TyInt)
+  | ...
+
+(* New! 型環境 tyenv と式 exp を受け取って，型代入と exp の型のペアを返す *)
+let rec ty_exp tyenv exp =
+  match exp with
+    Var x ->
+     (try ([], Environment.lookup x tyenv) with
+         Environment.Not_bound -> err ("variable not bound: " ^ x))
+  | ILit _ -> ([], TyInt)
+  | BLit _ -> ([], TyBool)
+  | BinOp (op, exp1, exp2) ->
+      let (s1, ty1) = ty_exp tyenv exp1 in
+      let (s2, ty2) = ty_exp tyenv exp2 in
+      let (eqs3, ty) = ty_prim op ty1 ty2 in
+	  (* s1 と s2 を等式制約の集合に変換して，eqs3 と合わせる *)
+      let eqs = (eqs_of_subst s1) @ (eqs_of_subst s2) @ eqs3 in
+	  (* 全体の制約をもう一度解く．*)
+      let s3 = unify eqs in (s3, subst_type s3 ty)
+  | IfExp (exp1, exp2, exp3) -> ...
+  | LetExp (id, exp1, exp2) -> ...
+  | FunExp (id, exp) ->
+      (* id の型を表す fresh な型変数を生成 *)
+      let domty = TyVar (fresh_tyvar ()) in
+	  (* id : domty で tyenv を拡張し，その下で exp を型推論 *)
+      let s, ranty =
+        ty_exp (Environment.extend id domty tyenv) exp in
+        (s, TyFun (subst_type s domty, ranty))
+  | AppExp (exp1, exp2) ->} ...
+  | _ -> Error.typing ("Not Implemented!")
+{% endhighlight %}
+
+### Exercise ___ [**]
+再帰的定義のための `let rec` 式の型付け規則は以下のように与えられる．
+
+$$
+\begin{array}{c}
+\Gamma, f: \tau_1 \rightarrow \tau_2, x: \tau_1 \vdash e_1 : \tau_2 \quad
+\Gamma, f:\tau_1 \rightarrow \tau_2 \vdash e_2 : \tau\\
+\rule{13cm}{1pt}\\
+\Gamma \vdash \mathbf{let\ rec}\ f = \mathbf{fun}\ x\ \rightarrow e_1\ \mathbf{in}\ e_2 : \tau_2
+\end{array}
+\textrm{T-LetRec}
+$$
+
+型推論アルゴリズムが \ML{let rec} 式を扱えるように拡張せよ．
+
 {% comment %}
 
-となる．部分式の型推論で得られた型代入を方程式とみなして，再び単一化を
-行うのは，ひとつの部分式から $[\alpha \mapsto \tau_1]$，もうひとつか
-らは $[\alpha \mapsto \tau_2]$ という代入が得られた時に$\tau_1$ と
-$\tau_2$ の整合性が取れているか（単一化できるか）を検査するためであ
-る．
+### Exercise ___ [**]
 
-\begin{mandatoryexercise}
-  他の型付け規則に関しても同様に型推論の手続きを与えよ(レポートの一部と
-  してまとめよ)．そして，図\ref{fig:MLarrow2}を参考にして，型推論アルゴ
-  リズムの実装を完成させよ．
-\end{mandatoryexercise}
-
-\begin{optexercise}{2}
-再帰的定義のための \ML{let\ rec} 式の型付け規則は以下のように与えられる．
-%
-\infrule[T-LetRec]{
-  \Gamma, f: \tau_1 \rightarrow \tau_2, x: \tau_1 \p e_1 : \tau_2 \andalso
-  \Gamma, f:\tau_1 \rightarrow \tau_2 \p e_2 : \tau
-}{
-  \Gp \ML{let\ rec}\ f\ \ML{=}\ \ML{fun}\ x\ \rightarrow e_1\ \ML{in}\ e_2 : \tau
-}
-%
-型推論アルゴリズムが \ML{let rec} 式を扱えるように拡張せよ．
-\end{optexercise}
-
-\begin{optexercise}{2}
 以下は，リスト操作に関する式の型付け規則である．リストには要素の型を
-$\tau$ として $\tyList{\tau}$ という型を与える．
+$\tau$ として $\tau\ \mathbf{list}$ という型を与える．
+
 %
 \infrule[T-Nil]{
 }{
@@ -60,57 +111,6 @@ $\tau$ として $\tyList{\tau}$ という型を与える．
 }
 %
 型推論アルゴリズムがこれらの式を扱えるように拡張せよ．
-\end{optexercise}
 
-\begin{figure}
-  \begin{flushleft}
-@typing.ml@: \\
-  \begin{boxedminipage}{\textwidth}
-#{&}
-\graybox{type subst = (tyvar * ty) list}
-
-\graybox{let rec subst_type subst t = ...}
-
-\graybox{(* eqs_of_subst : subst -> (ty * ty) list }
-\graybox{   型代入を型の等式集合に変換             *)}
-\graybox{let eqs_of_subst s = ... }
-
-\graybox{(* subst_eqs: subst -> (ty * ty) list -> (ty * ty) list }
-\graybox{   型の等式集合に型代入を適用                           *)}
-\graybox{let subst_eqs s eqs = ...}
-
-\graybox{let rec unify l = ... }
-
-let ty_prim op ty1 ty2 = match op with
-    Plus -> \graybox{([(ty1, TyInt); (ty2, TyInt)], TyInt)}
-  | ...
-
-let rec ty_exp tyenv = function
-    Var x ->
-     (try \graybox{([],} Environment.lookup x tyenv\graybox{)} with
-         Environment.Not_bound -> err ("variable not bound: " ^ x))
-  | ILit _ -> \graybox{([], TyInt)}
-  | BLit _ -> \graybox{([], TyBool)}
-  | BinOp (op, exp1, exp2) ->
-      let \graybox{(s1, ty1)} = ty_exp tyenv exp1 in
-      let \graybox{(s2, ty2)} = ty_exp tyenv exp2 in
-      \graybox{let (eqs3, ty) = ty_prim op ty1 ty2 in}
-      \graybox{let eqs = (eqs_of_subst s1) @ (eqs_of_subst s2) @ eqs3 in}
-      \graybox{let s3 = unify eqs in (s3, subst_type s3 ty)}
-  | IfExp (exp1, exp2, exp3) -> ...
-  | LetExp (id, exp1, exp2) -> ...
-  \graybox{| FunExp (id, exp) ->}
-      \graybox{let domty = TyVar (fresh_tyvar ()) in}
-      \graybox{let s, ranty =}
-       \graybox{ty_exp (Environment.extend id domty tyenv) exp in}
-       \graybox{(s, TyFun (subst_type s domty, ranty))}
-  \graybox{| AppExp (exp1, exp2) ->} ...
-  | _ -> Error.typing ("Not Implemented!")
-#{@}
-\end{boxedminipage}
-  \end{flushleft}
-  \caption{MiniML3 型推論の実装(2)}
-  \label{fig:MLarrow2}
-\end{figure}
 
 {% endcomment %}
