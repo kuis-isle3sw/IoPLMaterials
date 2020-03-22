@@ -1,6 +1,6 @@
 {% include head.html %}
 
-# MiniML3 のための型推論 (1): Prelude
+# MiniML3,4 のための型推論 (1): Prelude
 
 ## 関数に関する型付け規則
 

@@ -1,6 +1,6 @@
 {% include head.html %}
 
-# MiniML3 のための型推論 (2): 実装
+# MiniML3,4 のための型推論 (2): 型の等式制約と単一化
 
 では，[前節](chap04-4.md)での説明を踏まえて，MiniML3 インタプリタに型推論機能を実装しよう．
 
@@ -184,8 +184,6 @@ subst_type [(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)] (TyVar beta)
 
 ## 単一化による型の等式制約の解法
 
-TODO: ここまで
-
 このように項の間の等式制約を満たす代入を求める問題は _単一化 (unification)_ 問題と呼ばれ，型推論だけではなく，Prolog 等の論理プログラミング言語や Coq 等の証明支援系等にも現れる基本的な問題として知られている．例えば，$\alpha$ と$\mathbf{int}$ は $\theta(\alpha) = \mathbf{int}$ なる型代入$\theta$により単一化できる．また，$\alpha \rightarrow \mathbf{bool}$ と $(\mathbf{int} \rightarrow \beta) \rightarrow \beta$ は$\theta(\alpha) = \mathbf{int} \rightarrow \mathbf{bool}$ かつ $\theta(\beta) =\mathbf{bool}$ なる$\theta$ により単一化できる．
 
 単一化問題は，項（ここでは型）の構造や変数の動く範囲など，問題設定によっては _決定不能 (undecidable)_ になることもある．<sup>[決定不能性についての注](#undecidable)</sup>しかし，ここでは型が単純な木構造を持ち，型代入も単に型変数に型を割当てるだけのもの（_一階の単一化 (first-order unification)_ と呼ばれる問題）なので，解である型代入を求めるアルゴリズムが存在する．（このアルゴリズムは，Prolog などの論理型言語と呼ばれるプログラミング言語の処理系において多く用いられる．また，求まる型代入がある意味で「最も一般的な」解であることがわかっている．）
@@ -224,144 +222,17 @@ $$
 + そうでなければ，$X$から等式制約 $\tau_1 = \tau_2$を任意に一つ選び，それ以外の部分を $X'$ とし，制約 $\tau_1 = \tau_2$がどのような形をしているかによって，以下の各動作を行う．
   + $\tau_1$と$\tau_2$がすでに同じ形であった場合: $X'$について再帰的に単一化を行い，その結果を返せばよい．（$\tau_1$と$\tau_2$はすでに同じ形なので，残りの制約集合$X'$に対する解がそのまま全体の解となる．）
   + $\tau_1$ も $\tau_2$ も関数型の形をしていた場合，すなわち$\tau_1$が$\tau_{11} \rightarrow \tau_{12}$の形をしており，$\tau_2$が $\tau_{21} \rightarrow \tau_{22}$の形をしていた場合: $\tau_1$と $\tau_2$が同じ形となるためには$\tau_{11}$と$\tau_{21}$が同じ形であり，かつ$\tau_{12}$と$\tau_{22}$が同じ形であればよい．これを満たす型代入を求めるために，$\mathit{Unify}$ を $\{\tau_{11} = \tau_{21}, \tau_{12} = \tau_{22}\} \cup X'$ を入力として再帰的に呼び出し，帰ってきた結果を全体の結果とする．
-  + $\tau_1$ と $\tau_2$ の片方が型変数だった場合，すなわち選んだ制約が $\alpha = \tau$ か $\tau = \alpha$ の形をしていた場合<sup>[$\alpha = \alpha$の場合についての注](#alphaeqalpha)</sup>: この場合，型変数$\alpha$は$\tau$でなければならないことがわかる．したがって，残りの制約$X'$中の$\alpha$に$\tau$を代入した制約$[\alpha\mapsto\tau] X'$を作り，これを再帰的に解き，得られた解に$\alpha$を$\tau$に代入する写像$[\alpha \mapsto \tau]$を合成して得られる写像$\mathit{Unify}([\alpha\mapsto\tau] X') \circ [\alpha\mapsto\tau]$を解として返せばよい．ところが，ここで注意すべきことが一つある．もし$\tau$中に$\alpha$が現れていた場合<sup>[$\alpha = \alpha$の場合の注2](#alphaeqalpha2)</sup>，ここでエラーを検出しなければならない．（なぜなのかを考察する課題を以下に用意している．）
+  + $\tau_1$ と $\tau_2$ の片方が型変数だった場合，すなわち選んだ制約が $\alpha = \tau$ か $\tau = \alpha$ の形をしていた場合<sup>[$\alpha = \alpha$の場合についての注](#alphaeqalpha)</sup>: この場合，型変数$\alpha$は$\tau$でなければならないことがわかる．したがって，残りの制約$X'$中の$\alpha$に$\tau$を代入した制約$[\alpha\mapsto\tau] X'$を作り，これを再帰的に解き，得られた解に$\alpha$を$\tau$に代入する写像$[\alpha \mapsto \tau]$を合成して得られる写像$\mathit{Unify}([\alpha\mapsto\tau] X') \circ [\alpha\mapsto\tau]$を解として返せばよい．ところが，ここで注意すべきことが一つある．もし$\tau$中に$\alpha$が現れていた場合<sup>[$\alpha = \alpha$の場合の注2](#alphaeqalpha2)</sup>，ここでエラーを検出しなければならない．（なぜなのかを考察する課題を以下に用意している．）この条件のチェックのことを _オカーチェック (occur check)_ と呼ぶ．
 + これら以外の場合: エラーを報告する．
 
 <a name="alphaeqalpha">$\alpha = \alpha$ の形だった場合はこのケースではなく，一つ前のケースに当てはまる．</a>
 
 <a name="alphaeqalpha2">繰り返しになるが，$\tau$が$\alpha$自体であった場合はこのケースには当てはまらない．ここでエラーを報告しなければならないのは，例えば$\tau$が$\alpha \rightarrow \alpha$の場合である．</a>
 
-{% comment %}
+### Exercise ___ [必修]
 
-\begin{mandatoryexercise}
-上の単一化アルゴリズムを
-%
-#{&}
-val unify : (ty * ty) list -> subst
-#{@}
-%
-として実装せよ．
-\end{mandatoryexercise}
+上の単一化アルゴリズムを `(ty * ty) list -> subst` 型の関数 `unify` として実装せよ．
 
-\begin{mandatoryexercise}
-単一化アルゴリズムにおいて，$\alpha \not \in \mathbf{FTV}(\tau)$ という条件
-はなぜ必要か考察せよ．
-\end{mandatoryexercise}
+### Exercise ___ [必修]
 
-\subsection{\miniML{3}型推論アルゴリズム}
-
-以上を総合すると，\miniML{3}のための型推論アルゴリズムが得られる．例え
-ば，$e_1\ML{+}e_2$ 式に対する型推論は，\rn{T-Plus}規則を下から上に読
-むと，
-\begin{enumerate}
-\item $\Gamma, e_1$ を入力として型推論を行い，$\theta_1$，$\tau_1$ を得る．
-\item $\Gamma, e_2$ を入力として型推論を行い，$\theta_2$，
-  $\tau_2$ を得る．
-\item 型代入 $\theta_1, \theta_2$ を $\alpha = \tau$ という形の方
-  程式の集まりとみなして，$\theta_1 \cup \theta_2 \cup \set{(\tau_1,
-    \mathbf{int}), (\tau_2, \mathbf{int})}$ を単一化し，型代入$\theta_3$を得る．
-\item $\theta_3$ と $\mathbf{int}$ を出力として返す．
-\end{enumerate}
-となる．部分式の型推論で得られた型代入を方程式とみなして，再び単一化を
-行うのは，ひとつの部分式から $[\alpha \mapsto \tau_1]$，もうひとつか
-らは $[\alpha \mapsto \tau_2]$ という代入が得られた時に$\tau_1$ と
-$\tau_2$ の整合性が取れているか（単一化できるか）を検査するためであ
-る．
-
-\begin{mandatoryexercise}
-  他の型付け規則に関しても同様に型推論の手続きを与えよ(レポートの一部と
-  してまとめよ)．そして，図\ref{fig:MLarrow2}を参考にして，型推論アルゴ
-  リズムの実装を完成させよ．
-\end{mandatoryexercise}
-
-\begin{optexercise}{2}
-再帰的定義のための \ML{let\ rec} 式の型付け規則は以下のように与えられる．
-%
-\infrule[T-LetRec]{
-  \Gamma, f: \tau_1 \rightarrow \tau_2, x: \tau_1 \p e_1 : \tau_2 \andalso
-  \Gamma, f:\tau_1 \rightarrow \tau_2 \p e_2 : \tau
-}{
-  \Gp \ML{let\ rec}\ f\ \ML{=}\ \ML{fun}\ x\ \rightarrow e_1\ \ML{in}\ e_2 : \tau
-}
-%
-型推論アルゴリズムが \ML{let rec} 式を扱えるように拡張せよ．
-\end{optexercise}
-
-\begin{optexercise}{2}
-以下は，リスト操作に関する式の型付け規則である．リストには要素の型を
-$\tau$ として $\tyList{\tau}$ という型を与える．
-%
-\infrule[T-Nil]{
-}{
- \Gp \ML{[]} : \tyList{\tau}
-}
-\infrule[T-Cons]{
-  \Gp e_1 : \tau \andalso
-  \Gp e_2 : \tyList{\tau}
-}{
-  \Gp e_1\ \ML{::}\ e_2 : \tyList{\tau}
-}
-\infrule[T-Match]{
-  \Gp e_1 : \tyList{\tau} \andalso
-  \Gp e_2 : \tau' \andalso
-  \Gamma, x: \tau, y:\tyList{\tau} \p e_3 : \tau'
-}{
-  \Gp \ML{match}\ e_1\ \ML{with\ []} \rightarrow e_2\ \ML{|}\ 
-   x\ \ML{::}\ y \rightarrow e_3 : \tau'
-}
-%
-型推論アルゴリズムがこれらの式を扱えるように拡張せよ．
-\end{optexercise}
-
-\begin{figure}
-  \begin{flushleft}
-@typing.ml@: \\
-  \begin{boxedminipage}{\textwidth}
-#{&}
-\graybox{type subst = (tyvar * ty) list}
-
-\graybox{let rec subst_type subst t = ...}
-
-\graybox{(* eqs_of_subst : subst -> (ty * ty) list }
-\graybox{   型代入を型の等式集合に変換             *)}
-\graybox{let eqs_of_subst s = ... }
-
-\graybox{(* subst_eqs: subst -> (ty * ty) list -> (ty * ty) list }
-\graybox{   型の等式集合に型代入を適用                           *)}
-\graybox{let subst_eqs s eqs = ...}
-
-\graybox{let rec unify l = ... }
-
-let ty_prim op ty1 ty2 = match op with
-    Plus -> \graybox{([(ty1, TyInt); (ty2, TyInt)], TyInt)}
-  | ...
-
-let rec ty_exp tyenv = function
-    Var x ->
-     (try \graybox{([],} Environment.lookup x tyenv\graybox{)} with
-         Environment.Not_bound -> err ("variable not bound: " ^ x))
-  | ILit _ -> \graybox{([], TyInt)}
-  | BLit _ -> \graybox{([], TyBool)}
-  | BinOp (op, exp1, exp2) ->
-      let \graybox{(s1, ty1)} = ty_exp tyenv exp1 in
-      let \graybox{(s2, ty2)} = ty_exp tyenv exp2 in
-      \graybox{let (eqs3, ty) = ty_prim op ty1 ty2 in}
-      \graybox{let eqs = (eqs_of_subst s1) @ (eqs_of_subst s2) @ eqs3 in}
-      \graybox{let s3 = unify eqs in (s3, subst_type s3 ty)}
-  | IfExp (exp1, exp2, exp3) -> ...
-  | LetExp (id, exp1, exp2) -> ...
-  \graybox{| FunExp (id, exp) ->}
-      \graybox{let domty = TyVar (fresh_tyvar ()) in}
-      \graybox{let s, ranty =}
-       \graybox{ty_exp (Environment.extend id domty tyenv) exp in}
-       \graybox{(s, TyFun (subst_type s domty, ranty))}
-  \graybox{| AppExp (exp1, exp2) ->} ...
-  | _ -> Error.typing ("Not Implemented!")
-#{@}
-\end{boxedminipage}
-  \end{flushleft}
-  \caption{\miniML{3} 型推論の実装(2)}
-  \label{fig:MLarrow2}
-\end{figure}
-
-{% endcomment %}
+単一化アルゴリズムにおいて，オカーチェックの条件 $\alpha \not \in \mathbf{FTV}(\tau)$ はなぜ必要か考察せよ．
