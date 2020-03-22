@@ -83,34 +83,45 @@ $$
 
 型推論アルゴリズムが `let rec` 式を扱えるように拡張せよ．
 
-{% comment %}
+
 
 ### Exercise ___ [**]
 
-以下は，リスト操作に関する式の型付け規則である．リストには要素の型を
-$\tau$ として $\tau\ \mathbf{list}$ という型を与える．
+以下は，リスト操作に関する式の型付け規則である．リストには要素の型を $\tau$ として $\tau\ \mathbf{list}$ という型を与える．型推論アルゴリズムがこれらの式を扱えるように拡張せよ．
 
-%
-\infrule[T-Nil]{
-}{
- \Gp \ML{[]} : \tyList{\tau}
-}
-\infrule[T-Cons]{
-  \Gp e_1 : \tau \andalso
-  \Gp e_2 : \tyList{\tau}
-}{
-  \Gp e_1\ \ML{::}\ e_2 : \tyList{\tau}
-}
-\infrule[T-Match]{
-  \Gp e_1 : \tyList{\tau} \andalso
-  \Gp e_2 : \tau' \andalso
-  \Gamma, x: \tau, y:\tyList{\tau} \p e_3 : \tau'
-}{
-  \Gp \ML{match}\ e_1\ \ML{with\ []} \rightarrow e_2\ \ML{|}\ 
-   x\ \ML{::}\ y \rightarrow e_3 : \tau'
-}
-%
-型推論アルゴリズムがこれらの式を扱えるように拡張せよ．
+#### T-Nil
+
+$$
+\begin{array}{c}
+\rule{6cm}{1pt}\\
+\Gamma \vdash [] : \tau\ \mathbf{list}
+\end{array}
+\textrm{T-Nil}
+$$
+
+#### T-Cons
+
+$$
+\begin{array}{c}
+\Gamma \vdash e_1 : \tau \quad
+\Gamma \vdash e_2 : \tau\ \mathbf{list}\\
+\rule{6cm}{1pt}\\
+\Gamma \vdash e_1 :: e_2 : \tau\ \mathbf{list}
+\end{array}
+\textrm{T-Cons}
+$$
+
+#### T-Match
+
+$$
+\begin{array}{c}
+\Gamma \vdash e : \tau_1\ \mathbf{list} \quad
+\Gamma \vdash e_1 : \tau_2 \quad
+\Gamma, x : \tau_1, y : \tau_1\ \mathbf{list} \vdash e_2 : \tau_2\\
+\rule{20cm}{1pt}\\
+	\Gamma \vdash \mathbf{match}\ e\ \mathbf{with}\ [] \rightarrow e_1 \mid x :: y \rightarrow e_2 : \tau_2
+\end{array}
+\textrm{T-Cons}
+$$
 
 
-{% endcomment %}
