@@ -122,221 +122,184 @@ $$
 \textrm{T-PolyLet?}
 $$
 
-TODO: ここまで書いた
+この型付け規則では，$e_1$の型 $\tau_1$ から型スキーム $\forall \alpha_1.\dots\forall \alpha_n. \tau_1$ を作り，$x$をこの型スキームに束縛して，それを使って $e_2$ の型付けをすればいいことを示している．では，$\alpha_1,\ldots,\alpha_n$としてどのような型変数を選べばよいだろうか．もちろん，これらの型変数は，$\tau_1$に現れる型変数から選ぶのだが，任意の型変数を $\forall$ で束縛してよいわけではない．束縛してよい型変数は，\emph{$\Gamma$ に自由に出現しない型変数のみ}である．$\Gamma$ 中に自由に現れる型変数は，その後の型推論の過程で正体がわかって特定の型に置き換えられる可能性があるので，ここで任意におきかえられるものとみなしてはまずいのである．例えば，
 
-これは，$e_1$の型から型スキームを作って，それを使って $e_2$ の型付
-けをすればいいことを示している．さて，残る問題は
-$\alpha_1,\ldots,\alpha_n$としてどんな型変数を選べばよいかである．も
-ちろん，$\tau_1$に現れる型変数に関して $\forall$ をつけて，「未知
-  の型」から「任意の型」に役割変更をするのだが，どんな型変数でも変更し
-てよいわけではない．役割変更してよいものは\emph{$\Gamma$ に自由に出
-  現しないもの}である．$\Gamma$ 中に(自由に)現れる型変数は，その後の
-型推論の過程で正体がわかって特定の型に置き換えられる可能性があるので，
-任意におきかえられるものとみなしてはまずいのである．例えば，
-%
-\begin{quote}\sf
+{% highlight ocaml %}
 let f x = ((let g y = (x, y) in g 4), x + 1) in ...
-\end{quote}
-%
-という式を考え，その型推論の経過を書くと，
-\begin{enumerate}
-\item \textsf{x} の型を $\alpha$ とし，式 \ML{((let g y = (x, y) in g 4), x + 1)}の型推論をする．
-\item 第1要素の式@let g y = (x, y) in g 4@の型推論を行う．このために，
-  関数 \textsf{g} のパラメータ \textsf{y} の型を$\beta$ とし，型推論
-  を行う．関数の型として $\beta \rightarrow \alpha * \beta$ が得られ
-  る．
-\end{enumerate}
-ここで，@g@は@let@で束縛されているので，推論された型$\beta
-\rightarrow \alpha * \beta$から型スキームを作り，$g$をこの型スキーム
-に束縛する必要がある．ここで$\forall$で束縛してよい（つまり多相的に使っ
-  て良い）型変数はどれであろうか．
+{% endhighlight %}
 
-もし $\forall \alpha.\forall \beta.\beta \rightarrow \alpha * \beta$
-のように $\alpha$ についてまで束縛して（$\forall$ をつけて）しまっ
-たとしよう．すると，関数@f@は型$\forall \alpha.\forall \beta.\beta
-\rightarrow \alpha * \beta$を持つことになる．これは@f@に対してどのよ
-うな型の引数でも渡せることを意味するから，@f true@といった式が@in@の後
-に書かれていても許されることになる．しかし，@f@の定義中に@x + 1@という
-式が現れているため，これでは@true + 1@を実行中に評価することになってし
-まい，実行時に型エラーが起こってしまう．
+という式を考え，その型推論の経過を追ってみよう．
 
-何がおかしかったのだろうか．$\alpha$が@g@のスコープの外側で宣言されて
-いる@x@の型であったことである．スコープの外側で宣言されている変数の型
-は，その変数が外側でどのように使われているかに依存して決まるため，後に
-なって特定の型にしなければならない場合がある．（実際にこの例では@x@が
-  外側で@x+1@のように整数との加算に用いられているため，@x@の型を
-  $\mathbf{int}$としなければならないことが，後になって分かる．）そのため，
-$\forall$をつけて多相性を持たせてはならないのである．というわけで，正
-しい型付け規則は，付帯条件をつけて，
-%
-\infrule[T-PolyLet]{
-  \Gp e_1 : \tau_1 \andalso
-  \Gamma, x:\forall \alpha_1.\cdots\forall \alpha_n. \tau_1 \p e_2 : \tau_2 \\
-\mbox{($\alpha_1,\ldots,\alpha_n$ は $\tau_1$
-  に自由に出現する型変数で $\Gamma$ には自由に出現しない)}
-}{
-  \Gp \ML{let}\ x\ \ML{=}\ e_1\ \ML{in}\ e_2 : \tau_2
-}
-%
-となる．「$\Gamma$に自由に出現しない」という条件で，スコープ外で宣言さ
-れた変数の型として使われている型変数が多相性を持たないように制限してい
-る．
+- `x` の型を $\alpha$ とし，式 `((let g y = (x, y) in g 4), x + 1)` の型推論をする．
+- このペアの第1要素の式 `let g y = (x, y) in g 4` の型推論を行う．このために，関数 `g` の仮引数 `y` の型を$\beta$ とし，型推論を行う．`g` の型として $\beta \rightarrow \alpha * \beta$ が得られる．
 
-\subsection{型推論アルゴリズム概要}
+ここで，`g` は `let` で束縛されているので，推論された型$\beta \rightarrow \alpha * \beta$ から型スキームを作り，`g` をこの型スキームに束縛することになる．ここで$\forall$で束縛してよい（つまり多相的に使って良い）型変数はどれであろうか．
 
-ここまでのところが理解できれば，実は型推論の実装に対する変更はそんなに
-多くはない．メジャーな変更が必要なのは変数式に関するケースと \ML{let}
-式に関するケースである．図\ref{fig:MLlet2}にコードの変更点を示す．
+もし $\forall \alpha.\forall \beta.\beta \rightarrow \alpha * \beta$のように $\alpha$ についてまで束縛して（$\forall$ をつけて）しまったとしよう．すると，関数 `f` は型スキーム$\forall \alpha.\forall \beta.\beta\rightarrow \alpha * \beta$を持つことになる．これは`f`に対してどのような型の引数でも渡せることを意味するから，`f true`といった式が`in`の後に書かれていても許されることになる．しかし，`f`の定義中に`x + 1`という式が現れているため，これでは`true + 1`を実行中に評価することになってしまい，実行時に型エラーが起こってしまう．
 
-まず，変数式に関するケースを考えよう．型変数に代入する型（型付け規則中
-  の$\tau_1,\ldots,\tau_n$）はこの時点では未知であり，変数が他の部分
-でどう使われるかに依存して決定される．そのため，ここでは
-$\tau_1,\dots,\tau_n$に相当する新しい型変数を用意し，それらを使って
-具体化を行う．
+何がおかしかったのだろうか．$\alpha$が `g` のスコープの外側で宣言されている `x` の型であったことである．スコープの外側で宣言されている変数の型は，その変数が外側でどのように使われているかに依存して決まるため，後になって特定の型にしなければならない場合がある．（実際にこの例では `x` が外側で `x+1` のように整数との加算に用いられているため，`x` の型を$\mathbf{int}$としなければならないことが，後になって分かる．）そのため，$\forall$をつけて多相性を持たせてはならないのである．というわけで，正しい型付け規則は，付帯条件をつけて，
 
-次に \ML{let} 式のケースである．ここでは，$e_1$ の型推論で得られた
-$e_1$ の型 $\tau$ を型スキーム化する必要がある．型スキームする際に
-は，\rn{T-PolyLet}の付帯条件を満たすように多相性を持たせる型変数を決定
-する必要がある．この計算を行うための補助関数として図\ref{fig:MLlet2}中
-で @closure@ を定義している．これは，型$\tau$ と型環境 $\Gamma$と
-型代入 $S$ から，条件「$\alpha_1,\ldots,\alpha_n$は $\tau$ に自
-  由に出現する型変数で $S\Gamma$ には自由に出現しない」を満たす型ス
-キーム $\forall \alpha_1.\cdots.\forall \alpha_n. \tau$を求める関数
-である．型代入 $S$を引数に取るのは，型推論の実装に便利なためである．
+$$
+\begin{array}{c}
+  \Gamma \vdash e_1 : \tau_1 \quad
+  \Gamma, x:\forall \alpha_1.\cdots\forall \alpha_n. \tau_1 \vdash e_2 : \tau_2 \\
+  \mbox{($\alpha_1,\ldots,\alpha_n$ は $\tau_1$ に自由に出現する型変数で $\Gamma$ には自由に出現しない)}\\
+\rule{20cm}{1pt}\\
+  \Gamma \vdash \mathbf{let}\ x = e_1 \mathbf{in}\ e_2 : \tau_2
+\end{array}
+\textrm{T-PolyLet}
+$$
 
-% \subsubsection{型スキームに対する型代入}
+となる．「$\Gamma$に自由に出現しない」という条件で，スコープ外で宣言された変数の型として使われている型変数が多相性を持たないように制限している．
 
-% 型推論の過程において(型環境中の)型スキームに対して型代入を作用させるこ
-% とがある．この際，自由な型変数と束縛された型変数をともに@tyvar@型の値
-% (実際は整数)で表現しているために，型スキームへの代入の定義は多少気をつ
-% ける必要がある．というのは，置き換えた型中の自由な型変数と，束縛されて
-% いる型変数が同じ名前で表現されている可能性があるためである． 
+## 型推論アルゴリズム概要
 
-% 例えば，型スキーム $\forall \alpha. \tyFun{\alpha}{\beta}$ に
-% $\subst(\beta) = \tyFun{\alpha}{\mathbf{int}}$
-% であるような型代入を作用させることを考える．この代入は，$\beta$
-% を未知の型を表す $\alpha$ を使った型で置き換える
-% ことを示している．しかし，素朴に型スキーム中の $\beta$ を
-% 置き換えると，$\forall \alpha.\tyFun{\alpha}{\tyFun{\alpha}{\mathbf{int}}}$
-% という型スキームが得られてしまう．この型スキームでは，代入の前は，
-% 未知の型を表す型変数であった，二番目の$\alpha$までが
-% 任意に置き換えられる型変数になってしまっている．このように，代入によって
-% 型変数の役割が変化してしまうのはまずいので避けなければいけない．
+ここまでのところが理解できれば，実は型推論の実装に対する変更はそんなに多くはない．メジャーな変更が必要なのは変数式に関するケースと `let` 式に関するケースである．以下にコードの変更点を示す．
 
-% このような変数の衝突問題を避けるための，ここで取る解決(回避)策は
-% 束縛変数の名前替え，という手法である\footnote{他にもいろいろな回避策が
-%   考えられる．「計算と論理」の講義で関連した問題に詳しく触れられる(か
-%   もしれない)．}．
+### `typing.ml`
 
-% これは，例えば $\forall \alpha.\tyFun{\alpha}{\alpha}$ と
-% $\forall\beta.\tyFun{\beta}{\beta}$ が(文字列としての見かけは違っても)意味的には同じ型スキームを表している\footnote{
-%   関数などの仮引数の名前を使われている場所といっしょに
-%   変えても同じ関数を表していることと同様の現象と考えられる．}ことを
-% 利用する．つまり，代入が起こる前に，新しい型変数を使って
-% 一斉に束縛変数の名前を替えてしまって衝突が起こらないようにするのである．
-% 上の例ならば，まず，$\forall \alpha.\tyFun{\alpha}{\beta}$ を
-% $\forall \gamma.\tyFun{\gamma}{\beta}$ として，その後に $\beta$ を
-% $\tyFun{\alpha}{\mathbf{int}}$ で置き換え，
-% $\forall \gamma.\tyFun{\gamma}{\tyFun{\alpha}{\mathbf{int}}}$ を得ることになる．
+{% highlight ocaml %}
+(* New! 型環境は型スキームへの束縛に *)
+type tyenv = tysc Environment.t
 
-% このような変数の名前替えを伴う代入操作の実装を図\ref{fig:MLlet2}に示す．
-% @rename_tysc@，@subst_tysc@ がそれぞれ型スキームの名前替え，代入の
-% ための関数である．
+(* New! 型スキームは束縛変数を含むので「自由に出現する型変数の集合」の計算方法を変える必要がある． *)
+let rec freevar_tyenv tyenv = ...
 
-\begin{optexercise}{2}
-  図\ref{fig:MLlet1}, \ref{fig:MLlet2} を参考にして，多相的\ML{let}
-  式・宣言ともに扱える型推論アルゴリズムの実装を完成させよ．
-\end{optexercise}
+(* New! 下の説明を参照 *)
+let closure ty tyenv subst =
+  let fv_tyenv' = freevar_tyenv tyenv in
+  let fv_tyenv =
+    MySet.bigunion
+      (MySet.map
+          (fun id -> freevar_ty (subst_type subst (TyVar id)))
+          fv_tyenv') in
+  let ids = MySet.diff (freevar_ty ty) fv_tyenv in
+    TyScheme (MySet.to_list ids, ty)
 
-\begin{optexercise}{1}
-  以下の型付け規則を参考にして，再帰関数が多相的に扱えるように，型推論機能を
-拡張せよ．
-%
-\infrule[T-PolyLetRec]{
-  \Gamma, f: \tau_1 \rightarrow \tau_2, x: \tau_1 \p e_1 : \tau_2 \andalso
-  \Gamma, f:\forall\alpha_1,\ldots,\alpha_n.\tau_1 \rightarrow \tau_2 \p e_2 : \tau \\
-  \mbox{($\alpha_1,\ldots,\alpha_n$ は $\tau_1$ もしくは $\tau_2$ に自由に出現する型変数で $\Gamma$ には自由に出現しない)}
-}{
-  \Gp \ML{let\ rec}\ f\ \ML{=}\ \ML{fun}\ x \rightarrow e_1\ \ML{in}\ e_2 : \tau
-}
-\end{optexercise}
+(* New! 束縛変数を含むため，代入の定義を少し工夫する必要がある．*)
+let rec subst_type subst = ...
 
-\begin{optexercise}{3}
-OCaml では，「@: @\metasym{型}」という形式で，式や宣言された変数の型を
-指定することができる．この機能を扱えるように処理系を拡張せよ．
-\end{optexercise}
+let rec ty_exp tyenv = function
+     Var x ->
+      (try 
+	    (* New! T-Var への変更を反映 *)
+        let TyScheme (vars, ty) = Environment.lookup x tyenv in
+        let s = List.map (fun id -> (id, TyVar (fresh_tyvar ()))) vars in
+          ([], subst_type s ty)
+       with Environment.Not_bound -> err ("variable not bound: " ^ x))
+   | ...
+   | LetExp (id, exp1, exp2) -> ... (* がんばって実装せよ*)
 
-\begin{optexercise}{3}
-型推論時のエラー処理を，プログラマにエラー箇所がわかりやすくなるように
-改善せよ．
-\end{optexercise}
+let ty_decl tyenv = function
+    Exp e -> let (_, ty) = ty_exp tyenv e in (tyenv, ty) (* New! *)
+  | Decl (id, e) -> ...
+{% endhighlight %}
 
+まず，変数式に関するケースを考えよう．型変数に代入する型（型付け規則中の$\tau_1,\ldots,\tau_n$）はこの時点では未知であり，変数が他の部分でどう使われるかに依存して決定される．そのため，ここでは$\tau_1,\dots,\tau_n$に相当する新しい型変数を用意し，それらを使って具体化を行う．
 
-	
-\begin{figure}
-  \begin{flushleft}
-@syntax.ml@\\
-@main.ml@\\
-\begin{boxedminipage}{\textwidth}
-#{&}
-...
+次に `let` 式のケースである．ここでは，$e_1$ の型推論で得られた$e_1$ の型 $\tau$ を型スキーム化する必要がある．型スキームする際に\rn{T-PolyLet}の付帯条件を満たすように多相性を持たせる型変数を決定する必要がある．この計算を行うための補助関数として `closure` を定義している．これは，型$\tau$ と型環境 $\Gamma$と型代入 $S$ から，条件「$\alpha_1,\ldots,\alpha_n$は $\tau$ に自由に出現する型変数で $S\Gamma$ には自由に出現しない」を満たす型スキーム $\forall \alpha_1.\cdots.\forall \alpha_n. \tau$を求める関数である．型代入 $S$を引数に取るのは，型推論の実装に便利なためである．
+
+### `main.ml`
+
+{% highlight ocaml %}
 let rec read_eval_print env tyenv =
   print_string "# ";
   flush stdout;
   let decl = Parser.toplevel Lexer.main (Lexing.from_channel stdin) in
-  \graybox{let (newtyenv, ty) = ty_decl tyenv decl in}
+  let (newtyenv, ty) = ty_decl tyenv decl in (* New! *)
   let (id, newenv, v) = eval_decl env decl in
     Printf.printf "val %s : " id;
     pp_ty ty;
     print_string " = ";
     pp_val v;
     print_newline();
-    read_eval_print newenv \graybox{newtyenv}
-#{@}
-\end{boxedminipage}
- \end{flushleft}
-  \caption{多相的\ML{let}のための型推論の実装(1)}
-  \label{fig:MLlet1}
-\end{figure}
+    read_eval_print newenv newtyenv (* New! *)
+{% endhighlight %}
 
-\begin{figure}
-  \begin{flushleft}
-@typing.ml@\\
-\begin{boxedminipage}{\textwidth}
-#{&}
-type tyenv = \graybox{tysc Environment.t}
+<!-- % \subsubsection{型スキームに対する型代入} -->
 
-\graybox{let rec freevar_tyenv tyenv =} ...
+<!-- % 型推論の過程において(型環境中の)型スキームに対して型代入を作用させるこ -->
+<!-- % とがある．この際，自由な型変数と束縛された型変数をともに@tyvar@型の値 -->
+<!-- % (実際は整数)で表現しているために，型スキームへの代入の定義は多少気をつ -->
+<!-- % ける必要がある．というのは，置き換えた型中の自由な型変数と，束縛されて -->
+<!-- % いる型変数が同じ名前で表現されている可能性があるためである．  -->
 
-\graybox{let closure ty tyenv subst =}
-  \graybox{let fv_tyenv' = freevar_tyenv tyenv in}
-  \graybox{let fv_tyenv =}
-    \graybox{MySet.bigunion}
-      \graybox{(MySet.map}
-          \graybox{(fun id -> freevar_ty (subst_type subst (TyVar id)))}
-          \graybox{fv_tyenv') in}
-  \graybox{let ids = MySet.diff (freevar_ty ty) fv_tyenv in}
-    \graybox{TyScheme (MySet.to_list ids, ty)}
+<!-- % 例えば，型スキーム $\forall \alpha. \tyFun{\alpha}{\beta}$ に -->
+<!-- % $\subst(\beta) = \tyFun{\alpha}{\mathbf{int}}$ -->
+<!-- % であるような型代入を作用させることを考える．この代入は，$\beta$ -->
+<!-- % を未知の型を表す $\alpha$ を使った型で置き換える -->
+<!-- % ことを示している．しかし，素朴に型スキーム中の $\beta$ を -->
+<!-- % 置き換えると，$\forall \alpha.\tyFun{\alpha}{\tyFun{\alpha}{\mathbf{int}}}$ -->
+<!-- % という型スキームが得られてしまう．この型スキームでは，代入の前は， -->
+<!-- % 未知の型を表す型変数であった，二番目の$\alpha$までが -->
+<!-- % 任意に置き換えられる型変数になってしまっている．このように，代入によって -->
+<!-- % 型変数の役割が変化してしまうのはまずいので避けなければいけない． -->
 
-let rec subst_type subst = ...
+<!-- % このような変数の衝突問題を避けるための，ここで取る解決(回避)策は -->
+<!-- % 束縛変数の名前替え，という手法である\footnote{他にもいろいろな回避策が -->
+<!-- %   考えられる．「計算と論理」の講義で関連した問題に詳しく触れられる(か -->
+<!-- %   もしれない)．}． -->
 
-let rec ty_exp tyenv = function
-     Var x ->
-      (try 
-        \graybox{let TyScheme (vars, ty) = Environment.lookup x tyenv in}
-        \graybox{let s = List.map (fun id -> (id, TyVar (fresh_tyvar ())))}
-                  \graybox{vars in}
-          \graybox{([], subst_type s ty)}
-       with Environment.Not_bound -> err ("variable not bound: " ^ x))
-   | ...
-   \graybox{| LetExp (id, exp1, exp2) -> ...}
+<!-- % これは，例えば $\forall \alpha.\tyFun{\alpha}{\alpha}$ と -->
+<!-- % $\forall\beta.\tyFun{\beta}{\beta}$ が(文字列としての見かけは違っても)意味的には同じ型スキームを表している\footnote{ -->
+<!-- %   関数などの仮引数の名前を使われている場所といっしょに -->
+<!-- %   変えても同じ関数を表していることと同様の現象と考えられる．}ことを -->
+<!-- % 利用する．つまり，代入が起こる前に，新しい型変数を使って -->
+<!-- % 一斉に束縛変数の名前を替えてしまって衝突が起こらないようにするのである． -->
+<!-- % 上の例ならば，まず，$\forall \alpha.\tyFun{\alpha}{\beta}$ を -->
+<!-- % $\forall \gamma.\tyFun{\gamma}{\beta}$ として，その後に $\beta$ を -->
+<!-- % $\tyFun{\alpha}{\mathbf{int}}$ で置き換え， -->
+<!-- % $\forall \gamma.\tyFun{\gamma}{\tyFun{\alpha}{\mathbf{int}}}$ を得ることになる． -->
 
-let ty_decl tyenv = function
-    Exp e -> let (_, ty) = ty_exp tyenv e in \graybox{(tyenv, ty)}
-  \graybox{| Decl (id, e) -> ...}
-#{@}  
-\end{boxedminipage}
- \end{flushleft}
-  \caption{多相的\ML{let}のための型推論の実装(2)}
-  \label{fig:MLlet2}
-\end{figure}
+<!-- % このような変数の名前替えを伴う代入操作の実装を図\ref{fig:MLlet2}に示す． -->
+<!-- % @rename_tysc@，@subst_tysc@ がそれぞれ型スキームの名前替え，代入の -->
+<!-- % ための関数である． -->
+
+TODO: ここまで書いた
+
+### Exercise ___ [**]
+  多相的 `let` 式・宣言ともに扱える型推論アルゴリズムの実装を完成させよ．
+
+### Exercise ___ [*]
+  以下の型付け規則を参考にして，再帰関数が多相的に扱えるように，型推論機能を拡張せよ．
+
+$$
+\begin{array}{c}
+  \Gamma, f: \tau_1 \rightarrow \tau_2, x: \tau_1 \vdash e_1 : \tau_2 \quad
+  \Gamma, f:\forall\alpha_1,\ldots,\alpha_n.\tau_1 \rightarrow \tau_2 \vdash e_2 : \tau \\
+  \mbox{($\alpha_1,\ldots,\alpha_n$ は $\tau_1$ もしくは $\tau_2$ に自由に出現する型変数で $\Gamma$ には自由に出現しない)}\\
+\rule{23cm}{1pt}\\
+  \Gamma \vdash \mathbf{let\ rec}\ f = \mathbf{fun}\ x \rightarrow e_1 \mathbf{in}\ e_2 : \tau
+\end{array}
+\textrm{T-LetRec}
+$$
+
+### Exercise ___ [***]
+
+OCaml では，$: \tau$ という形式で，式や宣言された変数の型を指定することができる．この機能を扱えるように処理系を拡張せよ．
+
+### Exercise ___ [**]
+
+型エラーが起こった際にエラー箇所が指摘できるように実装を改善せよ．
+
+### Exercise ___ [*****]
+
+型推論時にエラーが発生した際に，元のプログラムのうち型エラーに関係している場所以外を `...` に変更してユーザに表示せよ．これにより，型エラーの原因をある意味わかりやすく表示することができる．例えば
+
+{% highlight ocaml %}
+let rec f = fun x -> fun y ->
+  let w = y + 1 in
+    w :: y
+{% endhighlight %}
+
+に対して
+
+{% highlight ocaml %}
+... y ->
+  ... y + ...
+    ... :: y
+{% endhighlight %}
+
+が出力されるとよい．これにより，`y` が整数としてもリストとしても使われているのが型エラーの原因であると分かる．これは _型エラースライシング (type-error slicing)_ と呼ばれている手法で，[Christian Haack, Joe B. Wells: Type Error Slicing in Implicitly Typed Higher-Order Languages. ESOP 2003: 284-301](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.8.9985&rep=rep1&type=pdf)で提案されている手法である．
+
+	
