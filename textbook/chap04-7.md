@@ -5,148 +5,125 @@
 前節までの実装で実現される型(システム)は単相的であり，ひとつの変数をあたかも複数の型を持つように扱えない．例えば，
 
 {% highlight ocaml %}
-let f = fun x \(\rightarrow$ x  in
+let f = fun x -> x  in
 if f true then f 2 else 3;;
 {% endhighlight %}
 
-のようなプログラムは，`f` が，`if` の条件部では $\mathbf{bool} \rightarrow$ \mathbf{bool}$として，また，`then` 節では $\mathbf{int} \rightarrow$ \mathbf{int}$ として使われているため， 型推論に失敗してしまう．本節では，上記のプログラムなどを受理するよう _let 多相 (let polymorphism)_ を実装する．
+のようなプログラムは，`f` が，`if` の条件部では $\mathbf{bool} \rightarrow \mathbf{bool}$として，また，`then` 節では $\mathbf{int} \rightarrow \mathbf{int}$ として使われているため， 型推論に失敗してしまう．本節では，上記のプログラムなどを受理するよう _let 多相 (let polymorphism)_ を実装する．
 
 本節を理解するためには OCaml の多相型の知識があったほうがよい．例えば，以下の二つのプログラムがどのように型付けされるか，あるいはされないかが理解できているだろうか．
 
 + `let id x = x in (id 3, id true)`
 + `(fun id -> (id 3, id true)) (fun x -> x)`
 
-理解できている人も，できていない人も，[OCaml入門テキスト](mltext.pdf) 4.2.1 節を復習してから，この先を読むことをおすすめする．
+[OCaml入門テキスト](mltext.pdf) 4.2.1 節を復習してから，この先を読むことをおすすめする．
 
 ## 多相性と型スキーム
 
 OCaml インタプリタに `let f = fun x -> x;;` を入力すると，その型は `'a -> 'a` であると表示される．ここで現れる型変数 `'a` は，[以前に導入した](chap04-5.md)ような後でその正体が判明する（今のところは）未知の型を表しているわけではなく，「どんな型にでも置き換えてよい」ことを示すための，いわば「穴ボコ」につけた名前である．そのために，`'a` を `int` で置き換えて `int->int` として扱うことで整数に適用できる関数の型としたり，`'a` を `bool` で置き換えて `bool->bool` として真偽値に適用する関数の型としたりすることができる．このように，OCaml の型変数には「今のところ未確定で後で正体が判明する型変数（ _単相的 (monomorphic)_）な型変数）」と「どんな型にでも置き換えてよい型変数（_多相的 (polymorphic)_な型変数）」の二種類がある．
 
-この二種類を区別するために，多相的な型変数は $\forall \alpha.$ で束縛することにしよう．$\forall \alpha.$ が型の前に付けられた表現を _型スキーム (type scheme)_ と呼んで，型とは区別することにする．より正確には，型$\tau$の前に有限個の$\forall \alpha$が付けられた表現$\forall \alpha_1. \forall \alpha_2. \dots \forall \alpha_n. \tau$を型スキームと呼ぶ．（この型スキームを，型変数の列$(\alpha_1,\dots,\alpha_n)$をベクトル表記を借りて$\vec{\alpha}$と書くことにして，以下では$\forall \vec{\alpha}. \tau$と書くことにする．）例えば $\forall \alpha. \alpha \rightarrow \alpha$ は（型ではなく）型スキームである．
+この二種類を区別するために，多相的な型変数は $\forall \alpha.$ で束縛することにしよう．$\forall \alpha.$ が型の前に付けられた表現を _型スキーム (type scheme)_ と呼んで，型とは区別することにする．より正確には，型$\tau$の前に有限個の$\forall \alpha$が付けられた表現$\forall \alpha_1. \forall \alpha_2. \dots \forall \alpha_n. \tau$を型スキームと呼ぶ．（この型スキームを，型変数の列$(\alpha_1,\dots,\alpha_n)$をベクトル表記を借りて$\vec{\alpha}$と書くことにして，以下では$\forall \vec{\alpha}. \tau$と書くことにする．）例えば $\forall \alpha. \alpha \rightarrow \alpha$ は（型ではなく）型スキームである
 
-TODO: ここから
+型スキーム$\forall \vec{\alpha}. \tau$は，型変数の列$\vec{\alpha}$に相当する型を受け取って型を返す，いわば型から型への関数のようなものと見ることができる．例えば，型スキーム$\forall \alpha. \alpha \rightarrow \alpha$は，型$\mathbf{int}$を受け取ったら型$\mathbf{int} \rightarrow \mathbf{int}$を返し，型$\mathbf{bool}$を受け取ったら型$\mathbf{bool} \rightarrow \mathbf{bool}$を返すものと見ることができる．このように見ると，上記のプログラムでは，
 
-型スキーム$\forall \vec{\alpha}. \tau$は，型変数の列$\vec{\alpha}$に相
-当する型を受け取って型を返す，いわば型から型への関数のようなものと見る
-ことができる．例えば，型スキーム$\forall \alpha.
-\tyFun{\alpha}{\alpha}$は，型$\mathbf{int}$を受け取ったら型
-$\tyFun{\mathbf{int}}{\mathbf{int}}$を返し，型$\mathbf{bool}$を受け取ったら型
-$\tyFun{\mathbf{bool}}{\mathbf{bool}}$を返すものと見ることができる．このように見ると，
-上記のプログラムでは，
-\begin{itemize}
-  \item @let@で@f@が束縛された場所で@f@に型スキーム$\forall
-    \alpha. \tyFun{\alpha}{\alpha}$を割り当て，
-  \item @if@の条件節の式@f true@中では割り当てられた型スキームに
-    $\mathbf{bool}$を与えることで@f@を$\tyFun{\mathbf{bool}}{\mathbf{bool}}$型として使い，
-  \item @then@節の式@f 2@中では，割り当てられた型スキームに$\mathbf{int}$を与
-    えることで@f@を$\tyFun{\mathbf{int}}{\mathbf{int}}$型として使う，
-\end{itemize}
-ことで@f@の多相的な振る舞いを捉えることができる．
+- `let` で `f` が束縛された場所で `f` に型スキーム $\forall \alpha. \alpha \rightarrow \alpha$を割り当て，
+- `if` の条件節の式 `f true` 中では割り当てられた型スキームに $\mathbf{bool}$ を与えることで `f` を$\mathbf{bool} \rightarrow \mathbf{bool}$型として使い，
+- `then` 節の式 `f 2` 中では，割り当てられた型スキームに$\mathbf{int}$を与えることで `f` を $\mathbf{int} \rightarrow \mathbf{int}$型として使う，
 
-より形式的には，型$\tau$と型スキーム$\sigma$の定義を以下のように変更す
-る．
-%
-\begin{eqnarray*}
- \tau  & ::= & \alpha \mid \mathbf{int} \mid \mathbf{bool} \mid \tyFun{\tau_1}{\tau_2} \\
+ことで `f` の多相的な振る舞いを捉えることができる．
+
+
+より形式的には，型$\tau$と型スキーム$\sigma$の定義を以下のように変更する．
+
+$$
+\begin{array}{rcl}
+ \tau  & ::= & \alpha \mid \mathbf{int} \mid \mathbf{bool} \mid \tau_1 \rightarrow \tau_2 \\
  \sigma & ::= & \tau \mid \forall \alpha.\sigma
-\end{eqnarray*}
-%
-新しく導入された型スキーム$\sigma$が（上の説明の通り）型$\tau$の前に有
-限個の$\forall\alpha$がついた形になっていることを確認されたい．また，
-型$\tau$は型スキームともみなせることに注意されたい．（$\forall
-  \alpha.$がひとつもついていない型スキームである．）型スキーム中，
-$\forall$のついている型変数を\intro{束縛されている}{bound}といい，束
-縛されていない型変数（これらは単相的な型変数である）を\intro{自由であ
-  る}{free}，という． 例えば $\forall
-\alpha. \tyFun{\alpha}{\tyFun{\alpha}{\beta}}$ において，$\alpha$
-は束縛されており，$\beta$ は自由である．
+\end{array}
+$$
 
-その上で，型環境$\Gamma$を（変数から型への部分関数ではなく）変数から
-\underline{型スキームへの}部分関数とする．これにより，@let@で束縛され
-た変数には型スキーム$\forall\vec{\alpha}.\tau$を持たせておき，使用する
-際に$\vec{\alpha}$を適切な型で置き換えることで，多相的な振る舞いを型シ
-ステムの上で表現することができる．なお，
-\AI{尻切れ．}
+新しく導入された型スキーム $\sigma$ が（上の説明の通り）型 $\tau$ の前に有限個の $\forall\alpha$ がついた形になっていることを確認されたい．また，型 $\tau$ は型スキームともみなせることに注意されたい．（$\forall \alpha.$がひとつもついていない型スキームである．）型スキーム中，$\forall$のついている型変数を _束縛されている (bound)_ といい，束縛されていない型変数（これらは単相的な型変数である）を _(自由である (free)_，という． 例えば $\forall \alpha. \alpha \rightarrow \alpha \rightarrow \beta$ において，$\alpha$ は束縛されており，$\beta$ は自由である．
 
-\begin{digression}{型と型スキームの区別}
-  ここまでの説明から分かるように，これから導入する型システムでは型と型
-  スキームを区別する．この区別は，技術的には，型に相当するメタ変数
-  $\tau$と型スキームに相当するメタ変数$\sigma$を区別していることから生
-  じており，この区別のために$\tyFun{(\forall \alpha.\alpha)}{(\forall
-    \alpha.\alpha)}$のような表現は型とはみなされないようになっている．
+その上で，型環境 $\Gamma$ を（変数の型への束縛の集合ではなく）変数の_型スキームへの_束縛の集合とする．これにより，`let` で束縛された変数には型スキーム$\forall\vec{\alpha}.\tau$を持たせておき，使用する際に$\vec{\alpha}$を適切な型で置き換えることで，多相的な振る舞いを型システムの上で表現することができる．
 
-  型と型スキームを区別して型システムを設計するのは，主に型推論問題の決
-  定可能性の要請から来ている．
-  \begin{eqnarray*}
-    \tau  & ::= & \alpha \mid \mathbf{int} \mid \mathbf{bool} \mid \tyFun{\tau_1}{\tau_2} \mid \forall \alpha. \tau.
-  \end{eqnarray*}
-  のように型スキームも型とみなせるように型を定義して型システムを設計す
-  ると，より多くのプログラムを型付け可能とすることができ，型システムの
-  表現力は上がるのだが，素朴な同一視をするだけでは型推論問題が決定不能
-  になることが知られている．型と型スキームを区別し（あとで見るように）
-  多相性のある変数を導入できる場所を@let@や@let rec@に制限することで，
-  実行時型エラーを含まない十分に多くのプログラムを型付け可能とすること
-  ができ，なおかつ型推論問題を決定可能とすることが可能となる．
-\end{digression}
+### 型と型スキームの区別
 
-図\ref{fig:MLlet1}上半分に型スキームの実装上の定義を示す．関数
-@freevar_tysc@は，Exercise~\ref{ex:freevarTy}で実装した関数
-@freevar_ty@の拡張で，型スキーム$\sigma$を受け取り，$\sigma$に自由に出
-現する型変数の集合を計算する関数である．$\forall \vec{\alpha}$が型変数
-列$\vec{\alpha}$を束縛するため，型スキーム$\forall\vec{\alpha}.\tau$中
-に出現する自由な型変数の集合は，型$\tau$中に出現する型変数の集合から
-$\vec{\alpha}$中の型変数をすべて除いたものになる．
+ここまでの説明から分かるように，これから導入する型システムでは型と型スキームを区別する．この区別は，技術的には，型に相当するメタ変数 $\tau$ と型スキームに相当するメタ変数$\sigma$を区別していることから生じており，この区別のために$(\forall \alpha.\alpha) \rightarrow (\forall \alpha.\alpha)$ のような表現は型とはみなされないようになっている．
 
-\subsection{型付け規則の拡張}
 
-\subsubsection*{変数のための規則}
+なぜより素直（？）に，型の構文を
 
-次に，型付け規則をどのように拡張すればよいのか考えてみよう．型環境が変
-数から\underline{型スキーム}への部分関数であることを思い出されたい．変
-数のための規則は以下の通りになっている．
-%
-\infrule[T-PolyVar]{
-  (\Gamma(x) = \forall \alpha_1,\ldots,\alpha_n. \tau)
-}{
-  \Gp x : [\alpha_1\mapsto\tau_1,\ldots,\alpha_n\mapsto\tau_n]\tau
-}
-%
-すなわち，型環境中で$x$が束縛されている先の型スキームを$\forall
-\alpha_1,\dots,\alpha_n.\tau$とすると，$\tau$中の
-$\alpha_1,\dots,\alpha_n$を任意の型$\tau_1,\dots,\tau_n$で置き換えて得
-られる型を$x$の型としてよい．（まさにこれがやりたかったことである．）
-例えば，$\Gamma(\ML{f}) = \forall \alpha.\tyFun{\alpha}{\alpha}$ と
-すると，
-%
-\[
-  \Gp \ML{f} : \tyFun{\mathbf{int}}{\mathbf{int}}
-\]
-%
+$$
+\begin{array}{rcl}
+ \tau  & ::= & \alpha \mid \mathbf{int} \mid \mathbf{bool} \mid \tau_1 \rightarrow \tau_2 \mid \forall \alpha. \tau
+\end{array}
+$$
+
+として，型と型スキームを区別しない型システムを作らないのだろうか？一つの理由は，型推論問題の決定可能性の要請である．
+このように型と型スキームを区別しない型システムを設計すると，より多くのプログラムを型付け可能とすることができ，型システムの表現力は上がるのだが，型推論問題が決定不能になることが知られている．型と型スキームを区別し（あとで見るように）多相性のある変数を導入できる場所を `let` や `let rec` に制限することで，実行時型エラーを含まない十分に多くのプログラムを型付け可能とすることができ，なおかつ型推論問題を決定可能とすることが可能となる．
+
+## 型スキームを表す OCaml の型と，補助関数の定義
+
+以下は `syntax.ml` に追加すべき，型スキームを表す型と，以下で使う補助関数の定義（の一部）である．
+
+{% highlight ocaml %}
+(* type scheme *)
+type tysc = TyScheme of tyvar list * ty
+
+let tysc_of_ty ty = TyScheme ([], ty)
+
+let freevar_tysc tysc = ...
+{% endhighlight %}
+
+型スキームを表す型 `tysc` は唯一のコンストラクタ `TyScheme` を持つヴァリアント型である．$\forall \alpha_1 \dots \forall \alpha_n. \tau$ に対応する型スキームは $\mathtt{TyScheme}([\alpha_1; \dots; \alpha_n], \tau)$で表現される．関数 `freevar_tysc` は，[この Exercise](chap04-5.md#freevar_ty) で実装した関数 `freevar_ty` の拡張で，型スキーム$\sigma$を受け取り，$\sigma$に自由に出現する型変数の集合を計算する関数である．$\forall \vec{\alpha}$が型変数列$\vec{\alpha}$を束縛するため，型スキーム$\forall\vec{\alpha}.\tau$中に出現する自由な型変数の集合は，型$\tau$中に出現する型変数の集合から$\vec{\alpha}$中の型変数をすべて除いたものになる．`tysc_of_ty ty` は，型 `ty` を型スキーム `TyScheme([],ty)` に変換する関数である．
+
+## 型付け規則の拡張
+
+### 変数のための規則
+
+次に，型付け規則をどのように拡張すればよいのか考えてみよう．型環境が変数から\underline{型スキーム}への部分関数であることを思い出されたい．変数のための規則は以下の通りになっている．
+
+$$
+\begin{array}{c}
+\Gamma(x) = \forall \alpha_1,\dots,\alpha_n. \tau\\
+\rule{10cm}{1pt}\\
+\Gamma \vdash x : [\alpha_1\mapsto\tau_1,\ldots,\alpha_n\mapsto\tau_n]\tau
+\end{array}
+\textrm{T-PolyVar}
+$$
+
+すなわち，型環境中で$x$が束縛されている先の型スキームを$\forall \alpha_1,\dots,\alpha_n.\tau$とすると，$\tau$中の$\alpha_1,\dots,\alpha_n$を任意の型$\tau_1,\dots,\tau_n$で置き換えて得られる型を$x$の型としてよい．（まさにこれがやりたかったことである．）例えば，$\Gamma(`f`) = \forall \alpha.\tyFun{\alpha}{\alpha}$ とすると，
+
+$$
+  \Gamma \vdash f : \mathbf{int} \rightarrow \mathbf{int}
+$$
+
 や
-%
-\[
-  \Gp \ML{f} : \tyFun{(\tyFun{\mathbf{int}}{\mathbf{int}})}{(\tyFun{\mathbf{int}}{\mathbf{int}})}
-\]
-%
-といった型判断を導出することができる．\footnote{なお，あとで定義する型
-  推論アルゴリズムは，プログラム全体に型が付くように適切な
-  $\tau_1,\dots,\tau_n$を選ばなければならない．しかしながら，型付け規
-  則を定義する段階においては，適切な$\tau_1,\dots,\tau_n$は何なのかを
-  気にする必要はない．このように，型付け規則は数学的にきれいな形で書い
-  ておいて，型推論アルゴリズムで適切な$\tau_1,\dots,\tau_n$を選ぶ等の
-  作業を頑張るといった役割分担は，型システム関係の文献では頻出である．}
 
-\subsubsection*{\ML{let (rec)}式に関する規則}
+$$
+  \Gamma \vdash f : (\mathbf{int} \rightarrow \mathbf{int}) \rightarrow (\mathbf{int} \rightarrow \mathbf{int})
+$$
+
+といった型判断を導出することができる．
+
+なお，あとで定義する型推論アルゴリズムは，プログラム全体に型が付くように適切な $\tau_1,\dots,\tau_n$を選ばなければならない．しかしながら，型付け規則を定義する段階においては，適切な$\tau_1,\dots,\tau_n$は何なのかを気にする必要はない．このように，型付け規則は数学的にきれいな形で書いておいて，型推論アルゴリズムで適切な$\tau_1,\dots,\tau_n$を選ぶ等の作業を頑張るといった戦略は，型システム関係の研究では頻出である．
+
+### `let (rec)` 式に関する規則
 
 さて，\ML{let}に関しては，大まかには以下のような規則になるはずである．
-%
-\infrule[T-PolyLet?]{
-  \Gp e_1 : \tau_1 \andalso
-  \Gamma, x:\forall \alpha_1.\cdots\forall \alpha_n. \tau_1 \p e_2 : \tau_2
-}{
-  \Gp \ML{let}\ x\ \ML{=}\ e_1\ \ML{in}\ e_2 : \tau_2
-}
-%
+
+$$
+\begin{array}{c}
+  \Gamma \vdash e_1 : \tau_1 \quad
+  \Gamma, x:\forall \alpha_1.\dots\forall \alpha_n. \tau_1 \vdash e_2 : \tau_2\\
+\rule{10cm}{1pt}\\
+  \Gamma \vdash \mathbf{let}\ x\ = e_1\ \mathbf{in}\ e_2 : \tau_2
+\end{array}
+\textrm{T-PolyLet?}
+$$
+
+TODO: ここまで書いた
+
 これは，$e_1$の型から型スキームを作って，それを使って $e_2$ の型付
 けをすればいいことを示している．さて，残る問題は
 $\alpha_1,\ldots,\alpha_n$としてどんな型変数を選べばよいかである．も
@@ -294,19 +271,11 @@ OCaml では，「@: @\metasym{型}」という形式で，式や宣言された
 改善せよ．
 \end{optexercise}
 
+
+	
 \begin{figure}
   \begin{flushleft}
 @syntax.ml@\\
-\begin{boxedminipage}{\textwidth}
-#{&}
-(* type scheme *)
-\graybox{type tysc = TyScheme of tyvar list * ty}
-
-\graybox{let tysc_of_ty ty = TyScheme ([], ty)}
-
-\graybox{let freevar_tysc tysc = ...}
-#{@}  
-\end{boxedminipage}
 @main.ml@\\
 \begin{boxedminipage}{\textwidth}
 #{&}
@@ -371,4 +340,3 @@ let ty_decl tyenv = function
   \caption{多相的\ML{let}のための型推論の実装(2)}
   \label{fig:MLlet2}
 \end{figure}
-
