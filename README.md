@@ -97,7 +97,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 ## OCaml の設定方法 <a name="ocaml"></a>
 
 OCaml のパッケージシステムである OPAM を用いてインストールするのが簡単である．
-https://opam.ocaml.org/doc/Install.html を読んでインストールすること．
+[https://opam.ocaml.org/doc/Install.html](このページ) を読んでインストールすること．
 以下は簡便のために抜粋したものであるが，最新の情報ではないかもしれないので，できれば上記ページを読むこと．
 
 - `sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)`
@@ -118,7 +118,7 @@ https://opam.ocaml.org/doc/Install.html を読んでインストールするこ�
 便利情報がいくつかある．
 
 - Emacs を使う人は tuareg-mode を使うとよい．`opam install tuareg` のあとに `opam user-setup install` を実行．
-- emacs と vim では merlin https://ocaml.github.io/merlin/ が便利である．これがあるとエディタが IDE になる．`opam install merlin` のあとに `opam user-setup install` を実行．
-  - Sublime-Text バージョンもベータ版として提供されている https://github.com/let-def/sublime-text-merlin
+- emacs と vim では [merlin](https://ocaml.github.io/merlin/) が便利である．これがあるとエディタが IDE になる．`opam install merlin` のあとに `opam user-setup install` を実行．
+  - Sublime-Text バージョンも[ベータ版](https://github.com/let-def/sublime-text-merlin)として提供されている 
 - VSCode で OCaml を使う方法がいくつかあるらしい．（調べた人は情報ください．）
   
