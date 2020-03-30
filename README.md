@@ -96,8 +96,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 
 ## OCaml の設定方法 <a name="ocaml"></a>
 
-OCaml のパッケージシステムである OPAM を用いてインストールするのが簡単である．
-[https://opam.ocaml.org/doc/Install.html](このページ) を読んでインストールすること．
+OCaml のパッケージシステムである OPAM を用いてインストールするのが簡単である．[このページ](https://opam.ocaml.org/doc/Install.html) を読んでインストールすること．
 以下は簡便のために抜粋したものであるが，最新の情報ではないかもしれないので，できれば上記ページを読むこと．
 
 - `sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)`
