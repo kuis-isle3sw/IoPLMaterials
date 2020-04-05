@@ -4,6 +4,7 @@
 
 ## お知らせ
 
+- **4月5日: 講義について重要なお知らせがあります．KULASIS と PandA をチェックしてください．また，履修を検討している人は講義用 Slack ワークスペースに入ってください．**
 - 3月4日: 2020年の講義資料ページを作りました．
 
 ## 学習の仕方
@@ -11,10 +12,11 @@
 _計算機科学コースの学生には講義中に別途やり方を指示します．（実験3SWもやるので．）_
 
 - [この講義資料の GitHub のページ](https://github.com/kuis-isle3sw/IoPLMaterials)からリポジトリを clone しましょう．
-- [OCaml が使えるように環境を設定](#ocaml)しましょう．
+- [OCaml が使えるように環境を設定](textbook/setting-up-ocaml.md)しましょう．
 - 落ちてきたソースコード中の `textbook/interpreter/` ディレクトリの中にインタプリタのソースコードが入っているので，`dune`コマンドでビルドしましょう．
 - [教科書](#textbook)を読みながらもりもり演習問題を解きましょう．
   - 教科書にバグを見つけたら [issue](https://github.com/kuis-isle3sw/IoPLMaterials/issues) で報告しましょう．
+  - 講義の履修者は講義用 Slack で質問してもよいですね．
 - プログラミング言語強者になりましょう．そのためには．．．
   - なにか自分で言語を作って処理系を作ってみましょう．作った処理系を自慢しましょう．世界中で自作の言語が使われるようになったらいいですね．
   - もしくは，プログラミング言語理論やプログラム検証を勉強してみましょう．
@@ -25,7 +27,8 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 （鋭意 Markdown 化中．）
 
 - [オリエンテーション資料](misc/orientation.md)
-- [opamのインストール方法](textbook/install_opam.jp.md)
+- [OCaml の環境設定](textbook/setting-up-ocaml.md)
+<!--  - [opamのインストール方法](textbook/install_opam.jp.md) -->
 - OCaml あまり知らない人向け: 前提となる OCaml の知識を身に付ける．
   - [OCaml 爆速入門 by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html)
   - [OCaml で二分探索木を書く by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html)
@@ -95,30 +98,30 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 | 7/20 | | |
 | ?/?? | 期末試験 | |
 
-## OCaml の設定方法 <a name="ocaml"></a>
+<!-- ## OCaml の設定方法 <a name="ocaml"></a> -->
 
-OCaml のパッケージシステムである OPAM を用いてインストールするのが簡単である．[このページ](https://opam.ocaml.org/doc/Install.html) を読んでインストールすること．
-以下は簡便のために抜粋したものであるが，最新の情報ではないかもしれないので，できれば上記ページを読むこと．
+<!-- OCaml のパッケージシステムである OPAM を用いてインストールするのが簡単である．[このページ](https://opam.ocaml.org/doc/Install.html) を読んでインストールすること． -->
+<!-- 以下は簡便のために抜粋したものであるが，最新の情報ではないかもしれないので，できれば上記ページを読むこと． -->
 
-- `sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)`
-  - `curl` 関係のエラーが出る場合は https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh のスクリプトをダウンロードして `sh install.sh` を実行．
-  - 各自のパッケージ管理システム（Mac なら homebrew や macport，Linux なら yum や apt 等）を用いて opam をインストールしてもよい．
-- _以下では実行ログの最後に`eval $(opam env)`を実行せよと書いてあることがあるので，その時は次の作業に移る前に `eval $(opam env)` を実行すること．_
-- `opam init` を実行
-  - 途中設定ファイルに opam が書き込んでよいか聞かれる．全部 `y` にしておくと楽は楽である．
-- `opam switch create 4.07.1`を実行
-- `opam install depext`
-- `opam install user-setup`
+<!-- - `sh <(curl -sL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)` -->
+<!--   - `curl` 関係のエラーが出る場合は https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh のスクリプトをダウンロードして `sh install.sh` を実行． -->
+<!--   - 各自のパッケージ管理システム（Mac なら homebrew や macport，Linux なら yum や apt 等）を用いて opam をインストールしてもよい． -->
+<!-- - _以下では実行ログの最後に`eval $(opam env)`を実行せよと書いてあることがあるので，その時は次の作業に移る前に `eval $(opam env)` を実行すること．_ -->
+<!-- - `opam init` を実行 -->
+<!--   - 途中設定ファイルに opam が書き込んでよいか聞かれる．全部 `y` にしておくと楽は楽である． -->
+<!-- - `opam switch create 4.07.1`を実行 -->
+<!-- - `opam install depext` -->
+<!-- - `opam install user-setup` -->
 
-演習にはいくつかのパッケージが必要である．OPAM が入った状態であれば，以下のコマンドを順に実行することでこれらのパッケージを導入できる．
+<!-- 演習にはいくつかのパッケージが必要である．OPAM が入った状態であれば，以下のコマンドを順に実行することでこれらのパッケージを導入できる． -->
 
-- `opam depext menhir dune ounit`
-- `opam install menhir dune ounit`
+<!-- - `opam depext menhir dune ounit` -->
+<!-- - `opam install menhir dune ounit` -->
 
-便利情報がいくつかある．
+<!-- 便利情報がいくつかある． -->
 
-- Emacs を使う人は tuareg-mode を使うとよい．`opam install tuareg` のあとに `opam user-setup install` を実行．
-- emacs と vim では [merlin](https://ocaml.github.io/merlin/) が便利である．これがあるとエディタが IDE になる．`opam install merlin` のあとに `opam user-setup install` を実行．
-  - Sublime-Text バージョンも[ベータ版](https://github.com/let-def/sublime-text-merlin)として提供されている 
-- VSCode で OCaml を使う方法がいくつかあるらしい．（調べた人は情報ください．）
+<!-- - Emacs を使う人は tuareg-mode を使うとよい．`opam install tuareg` のあとに `opam user-setup install` を実行． -->
+<!-- - emacs と vim では [merlin](https://ocaml.github.io/merlin/) が便利である．これがあるとエディタが IDE になる．`opam install merlin` のあとに `opam user-setup install` を実行． -->
+<!--   - Sublime-Text バージョンも[ベータ版](https://github.com/let-def/sublime-text-merlin)として提供されている  -->
+<!-- - VSCode で OCaml を使う方法がいくつかあるらしい．（調べた人は情報ください．） -->
   
