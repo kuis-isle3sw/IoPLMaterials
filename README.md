@@ -25,6 +25,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 （鋭意 Markdown 化中．）
 
 - [オリエンテーション資料](misc/orientation.md)
+- [opamのインストール方法](textbook/install_opam.jp.md)
 - OCaml あまり知らない人向け: 前提となる OCaml の知識を身に付ける．
   - [OCaml 爆速入門 by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html)
   - [OCaml で二分探索木を書く by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html)
