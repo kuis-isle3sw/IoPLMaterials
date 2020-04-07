@@ -63,7 +63,7 @@ let reservedWords = [
    ...
 ]
 ...
-| "=" { Parser.EQ \
+| "=" { Parser.EQ }
 | "->" { Parser.RARROW } (* New! *)
 {% endhighlight %}
 
