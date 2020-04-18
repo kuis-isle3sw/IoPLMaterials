@@ -67,4 +67,10 @@ opam user-setup install
 - Emacs を使う人は `tuareg-mode` を使うとよい．`opam install tuareg` を実行して `opam user-setup install` を実行．
 - Emacs と Vim では `merlin` が便利である．これがあるとエディタが IDE になる．`opam install merlin` を実行してから `opam user-setup install` を実行．
   - Sublime-Text バージョンもベータ版として提供されている
-- VSCode で OCaml を使う方法がいくつかあるらしい．（調べた人は情報ください．）（このページに対する編集としてプルリクを出してくれると嬉しい．）
+- VSCode で OCaml を使う場合には [`vscode-ocaml-platform`](https://github.com/ocamllabs/vscode-ocaml-platform) を使うとよい. 
+  - また, `vscode-ocaml-platform` が必要とする [`ocaml-lsp`](https://github.com/ocaml/ocaml-lsp) を別途インストール必要がある. 以下の手順でインストールができる. 
+  ```bash
+  $ opam pin add ocaml-lsp-server https://github.com/ocaml/ocaml-lsp.git
+  $ opam install ocaml-lsp-server
+  ```
+  - また, [`ocamlformatter-vscode`](https://github.com/badochov/ocamlformatter-vscode) を利用するとインデント等を自動的に整理されてよい.
