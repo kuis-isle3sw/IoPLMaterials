@@ -73,4 +73,4 @@ opam user-setup install
   $ opam pin add ocaml-lsp-server https://github.com/ocaml/ocaml-lsp.git
   $ opam install ocaml-lsp-server
   ```
-  - また, [`ocamlformatter-vscode`](https://github.com/badochov/ocamlformatter-vscode) を利用するとインデント等を自動的に整理されてよい.
+  - また,作業ディレクトリに`.ocamlformat`ファイルを(空でもよいので)用意するとインデント等を自動的に整理されてよい.
