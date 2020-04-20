@@ -48,7 +48,7 @@ let pp_ty typ =
   | TyBool -> print_string "bool"
 {% endhighlight %}
 
-#### `main.ml` への変更
+#### `cui.ml` への変更
 
 {% highlight ocaml %}
 open Typing
