@@ -74,3 +74,4 @@ opam user-setup install
   $ opam install ocaml-lsp-server
   ```
   - また,作業ディレクトリに`.ocamlformat`ファイルを(空でもよいので)用意するとインデント等を自動的に整理されてよい.
+    - `ocamlformat`をインストールしていない場合はエラーが発生するので,その場合は`opam install ocamlformat`を実行し,`ocamlformat`をインストールする.
