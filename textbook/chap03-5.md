@@ -41,7 +41,7 @@ Expr :
 (* fun x -> e を構文解析するための規則は自分で考えて追加すること． *)
 
 MExpr :
-    e1=MExpr MULT \graybox{e2=AppExpr} { BinOp (Mult, e1, e2) }
+    e1=MExpr MULT e2=AppExpr { BinOp (Mult, e1, e2) }
   | e=AppExpr { e } (* New! *)
 
 (* New! *)
