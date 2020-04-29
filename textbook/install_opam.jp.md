@@ -94,9 +94,9 @@ dnf install opam
 
 ### FreeBSD
 
-### OSX (Mac)
+### macOS
 
-[homebrew](http://mxcl.github.com/homebrew/) か [MacPorts](http://www.macports.org/) をインストールせよ．これは OSX で UNIX 系ツールを使うために使うパッケージシステムである．これを使うとインストールが可能である．それぞれ以下のようにすればよい．
+[homebrew](https://brew.sh/) か [MacPorts](https://www.macports.org/) をインストールせよ．これは macOS で UNIX 系ツールを使うために使うパッケージシステムである．これを使うとインストールが可能である．それぞれ以下のようにすればよい．
 
 #### Homebrew
 
@@ -105,13 +105,14 @@ brew install gpatch
 brew install opam
 ```
 
-#### MacPort
+#### MacPorts
 
 ```
 port install opam
 ```
 
-[howto setup Emacs.app](https://github.com/ocaml/opam/wiki/Setup-Emacs.app-on-macosx-for-opam-usage) も読むとよい．
+<!--[howto setup Emacs.app](https://github.com/ocaml/opam/wiki/Setup-Emacs.app-on-macosx-for-opam-usage) も読むとよい． -->
+<!-- opam wiki 削除に伴いリンク切れ -->
 
 ### Ubuntu
 
