@@ -52,13 +52,13 @@ sudo install <ダウンロードしたファイル> /usr/local/bin/opam
 ### Debian
 
 opam のバイナリパッケージは
-[stable](http://packages.debian.org/jessie/opam)，
-[testing](http://packages.debian.org/stretch/opam)，
-[unstable](http://packages.debian.org/sid/opam)，では公式のリポジトリから利用可能である．
+[stable](https://packages.debian.org/stable/ocaml/opam)
+[testing](https://packages.debian.org/testing/ocaml/opam)
+[unstable](https://packages.debian.org/unstable/ocaml/opam)，では公式のリポジトリから利用可能である．
 以下のコマンドを実行すればよい．
 
 ```
-apt-get install opam
+apt install opam
 ```
 
 ### [Exherbo](http://exherbo.org)
