@@ -47,7 +47,21 @@ sudo install <ダウンロードしたファイル> /usr/local/bin/opam
 
 これは， **もし自分のディストリビューションのパッケージシステムで opam が利用可能で，かつそれが最新であれば** オススメの方法である．（**逆に言えば，そうでない場合があるので気をつけなければならない．**）[このページ](https://github.com/ocaml/opam/wiki/Distributions)に，ディストリビューションのパッケージシステムでどのバージョンが入手可能かが書かれているので，チェックすること．以下は現在サポートされているディストリビューションでのインストール方法である．（主要なものだけ翻訳してあるので，自分の使っているディストリビューションが翻訳されていない場合は，講義用 Slack か PandA でリクエストを出すこと．）
 
-### Archlinux
+### Arch Linux
+
+[opam](https://www.archlinux.org/packages/community/x86_64/opam/) パッケージは公式ディストリビューションで利用可能である．
+以下のコマンドを実行すればよい．
+
+```
+pacman -S opam
+```
+
+開発版を使いたい場合は [opam-git](https://aur.archlinux.org/packages/opam-git/) パッケージが [AUR](https://aur.archlinux.org/) にある．
+[yay](https://github.com/Jguer/yay) がインストールされているなら，以下のコマンドを実行すればよい．
+
+```
+yay -S opam-git
+```
 
 ### Debian
 
