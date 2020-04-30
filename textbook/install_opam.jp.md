@@ -118,8 +118,15 @@ port install opam
 
 **注意: この先に進む前に `cat /etc/os-release` によって表示される情報の `PRETTY_NAME` の値をチェックして，使用中の Ubuntu のバージョンを必ずチェックすること**
 
-#### バージョン 18.04 かそれ以降
-現在の `opam` の安定バージョンを含む [ppa](https://launchpad.net/~avsm/+archive/ubuntu/ppa) が提供されている．以下のようにしてインストールせよ．
+#### バージョン 19.04 以降
+最新のバージョンに近い `opam` が公式リポジトリにて提供されている．以下のコマンドを実行すればよい．
+
+```
+apt install opam
+```
+
+#### バージョン 18.04 と 18.10
+公式リポジトリより新しい `opam` [ppa](https://launchpad.net/~avsm/+archive/ubuntu/ppa) が提供されているが，更新が途絶えている．以下のようにしてインストールせよ．
 
 ```
 add-apt-repository ppa:avsm/ppa
