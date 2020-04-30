@@ -92,9 +92,27 @@ dnf install opam
 
 ### Mageia
 
+Mageia の opam パッケージは以下のコマンドでインストールできる．
+
+```
+urpmi opam
+```
+
 ### OpenBSD
+OpenBSD の opam パッケージは以下のコマンドでインストールできる．
+
+```
+pkg_add opam
+```
 
 ### FreeBSD
+
+opam は FreeBSD 11 以上の Ports/Packages Collection で利用可能である．
+
+```
+cd /usr/ports/devel/ocaml-opam
+make install
+```
 
 ### macOS (Mac)
 
@@ -141,6 +159,12 @@ apt install opam
 [バイナリディストリビューション](#Binary-distribution)を利用せよ．
 
 ### Guix & Guix System
+
+[Guix](https://guix.gnu.org/) の opam パッケージは以下のコマンドでインストールできる．
+
+```
+guix install opam
+```
 
 ## ソースコードからビルドする方法
 
