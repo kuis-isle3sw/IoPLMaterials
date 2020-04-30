@@ -96,7 +96,7 @@ dnf install opam
 
 ### FreeBSD
 
-### macOS
+### macOS (Mac)
 
 [homebrew](https://brew.sh/) か [MacPorts](https://www.macports.org/) をインストールせよ．これは macOS で UNIX 系ツールを使うために使うパッケージシステムである．これを使うとインストールが可能である．それぞれ以下のようにすればよい．
 
