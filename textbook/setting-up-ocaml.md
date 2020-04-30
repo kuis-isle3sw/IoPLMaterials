@@ -6,7 +6,7 @@
 
 ## 要するに
 
-- まず[「プログラミング言語」の講義ページの環境設定に関する資料](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/setup.html)を読んで OPAM をセットアップ
+- まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/setup.html)を読んで OPAM をセットアップ
 - 以下のコマンドを順に実行．ログの最後に `eval $(opam env)` を実行せよみたいなメッセージが出たら，`eval $(opam env)` を実行してから次のコマンドを実行．
   ```
   opam install depext
@@ -21,9 +21,9 @@
 
 ## Windows について
 
-OCaml を Windows で動作させるのは従来かなり大変だったのだが，Windows 10 からは WSL をインストールして Ubuntu 環境を作ることでうまくいくようになっているようである．（末永は Windows を使っていないので，WSL がどのようなものかあまり分かっていない．）それ以前のバージョンの Windows では，[VMWare Workstation Player（個人利用は無料）](https://www.vmware.com/jp/products/workstation-player.html) や [VirtualBox（無料）](https://www.virtualbox.org/) 等を用いて，Linux 等の UNIX 系 OS の仮想環境を作った上で，その中で OCaml をインストールして開発を進めることになる．いずれにしても，まず[「プログラミング言語」の講義ページの環境設定に関する資料](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/setup.html)を読んでセットアップすること．
+OCaml を Windows で動作させるのは従来かなり大変だったのだが，Windows 10 からは WSL をインストールして Ubuntu 環境を作ることでうまくいくようになっているようである．（末永は Windows を使っていないので，WSL がどのようなものかあまり分かっていない．）それ以前のバージョンの Windows では，[VMWare Workstation Player（個人利用は無料）](https://www.vmware.com/jp/products/workstation-player.html) や [VirtualBox（無料）](https://www.virtualbox.org/) 等を用いて，Linux 等の UNIX 系 OS の仮想環境を作った上で，その中で OCaml をインストールして開発を進めることになる．いずれにしても，まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/setup.html)を読んでセットアップすること．
 
-というわけで，以下では，MacOS か UNIX 系の環境があると仮定して話が進む．
+というわけで，以下では，macOS か UNIX 系の環境があると仮定して話が進む．
 
 ## OCaml のパッケージマネージャ OPAM をインストールする
 
@@ -67,11 +67,11 @@ opam user-setup install
 - Emacs を使う人は `tuareg-mode` を使うとよい．`opam install tuareg` を実行して `opam user-setup install` を実行．
 - Emacs と Vim では `merlin` が便利である．これがあるとエディタが IDE になる．`opam install merlin` を実行してから `opam user-setup install` を実行．
   - Sublime-Text バージョンもベータ版として提供されている
-- VSCode で OCaml を使う場合には [`vscode-ocaml-platform`](https://github.com/ocamllabs/vscode-ocaml-platform) を使うとよい. 
-  - また, `vscode-ocaml-platform` が必要とする [`ocaml-lsp`](https://github.com/ocaml/ocaml-lsp) を別途インストール必要がある. 以下の手順でインストールができる. 
+- VSCode で OCaml を使う場合には [`vscode-ocaml-platform`](https://github.com/ocamllabs/vscode-ocaml-platform) を使うとよい.
+  - また, `vscode-ocaml-platform` が必要とする [`ocaml-lsp`](https://github.com/ocaml/ocaml-lsp) を別途インストールする必要がある. 以下の手順でインストールができる.
   ```bash
   $ opam pin add ocaml-lsp-server https://github.com/ocaml/ocaml-lsp.git
   $ opam install ocaml-lsp-server
   ```
-  - また,作業ディレクトリに`.ocamlformat`ファイルを(空でもよいので)用意するとインデント等を自動的に整理されてよい.
+  - また,作業ディレクトリに`.ocamlformat`ファイルを(空でもよいので)用意するとインデント等が自動的に整理されてよい.
     - `ocamlformat`をインストールしていない場合はエラーが発生するので,その場合は`opam install ocamlformat`を実行し,`ocamlformat`をインストールする.
