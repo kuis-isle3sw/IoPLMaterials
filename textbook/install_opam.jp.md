@@ -75,10 +75,10 @@ opam のバイナリパッケージは
 apt install opam
 ```
 
-### [Exherbo](http://exherbo.org)
+### [Exherbo](https://exherbo.org)
 
 
-### [Fedora](http://fedoraproject.org), [CentOS](http://centos.org) and RHEL
+### [Fedora](https://fedoraproject.org), [CentOS](https://centos.org) and RHEL
 
 Fedora の opam パッケージは以下のコマンドでインストールできる．
 
@@ -150,9 +150,9 @@ opam の最新バージョンのソースコードは Github から入手でき�
 
 また，opam が依存しているコードを含んだフルのアーカイブも用意されている．
 
-* [2.0.2](https://github.com/ocaml/opam/releases/download/2.0.2/opam-full-2.0.2.tar.gz)
- - MD5: 8780b0dc4209451e21330b6a3e663fe9
- - SHA384: 2ecbdd28840564f873af2f56fcb337d49477f4b63a39ed3878a38eb55bbda67d7561a8deee697c36d7be50ff36a8fe21
+* [2.0.7](https://github.com/ocaml/opam/releases/download/2.0.7/opam-full-2.0.7.tar.gz)
+ - MD5: d784c5670de657905c55db715044deca
+ - SHA384: 19d4ddb625c97e5aa6e7ea7f68699d9f498d406f5270fec0dbbdd96f1c3a43f857e18f0a411f81fd55e91d8a36f6372e
 * [1.2.2](https://github.com/ocaml/opam/releases/download/1.2.2/opam-full-1.2.2.tar.gz)
  - MD5: 7d348c2898795e9f325fb80eaaf5eae8
  - SHA384: 3a0a7868b5f510c1248959ed350eecacfe1abd886e373fd31066ce10871354010ef057934df026e5fad389ead6c2857d
