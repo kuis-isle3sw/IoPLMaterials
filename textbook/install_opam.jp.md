@@ -77,7 +77,7 @@ apt install opam
 
 ### [Exherbo](https://exherbo.org)
 
-[dev-ocaml/opam](http://git.exherbo.org/summer/packages/dev-ocaml/opam/index.html) パッケージはopam 1.x である．
+[dev-ocaml/opam](https://git.exherbo.org/summer/packages/dev-ocaml/opam/index.html) パッケージはopam 1.x である．
 [バイナリディストリビューション](#Binary-distribution)を利用せよ．
 
 ### [Fedora](https://fedoraproject.org), [CentOS](https://centos.org) and RHEL
