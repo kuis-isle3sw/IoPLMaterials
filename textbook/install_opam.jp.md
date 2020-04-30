@@ -66,8 +66,8 @@ yay -S opam-git
 ### Debian
 
 opam のバイナリパッケージは
-[stable](https://packages.debian.org/stable/ocaml/opam)
-[testing](https://packages.debian.org/testing/ocaml/opam)
+[stable](https://packages.debian.org/stable/ocaml/opam)，
+[testing](https://packages.debian.org/testing/ocaml/opam)，
 [unstable](https://packages.debian.org/unstable/ocaml/opam)，では公式のリポジトリから利用可能である．
 以下のコマンドを実行すればよい．
 
