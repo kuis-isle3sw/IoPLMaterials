@@ -36,12 +36,21 @@ OPAM のページに [OPAM のインストール方法](https://opam.ocaml.org/d
 OPAM を使うには初期設定が必要である．[「プログラミング言語」の講義ページの環境設定に関する資料](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/setup.html)に書いてある通りにやればよいが，ここにも実行すべきコマンドを書いておく．
 
 ```
+opam init -y
+opam switch create 4.10.0
+eval $(opam env)
+```
+
+もしくは
+
+```
 opam init -y --disable-sandboxing
 opam switch create 4.10.0
 eval $(opam env)
 ```
 
-最初のコマンド `opam init -y --disable-sandboxing` についているオプション `--disable-sandboxing` は，WSL 上にインストールするならば必須，そうでなければつけなくてもよいはず．
+`--disable-sandboxing` は,Windows Cygwin,もしくはWSL1にインストールするならば必須．
+WSL2はDocker for Mac/Windowsなどのように完全なLinuxカーネルなので,opamの全ての機能が利用可能.
 
 ## 授業に必要なライブラリやツールのインストール
 
