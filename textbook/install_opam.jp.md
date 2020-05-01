@@ -45,26 +45,42 @@ sudo install <ダウンロードしたファイル> /usr/local/bin/opam
 
 ## システムのパッケージシステムを使う
 
-これは， **もし自分のディストリビューションのパッケージシステムで opam が利用可能で，かつそれが最新であれば** オススメの方法である．（**逆に言えば，そうでない場合があるので気をつけなければならない．**）[このページ](https://github.com/ocaml/opam/wiki/Distributions)に，ディストリビューションのパッケージシステムでどのバージョンが入手可能かが書かれているので，チェックすること．以下は現在サポートされているディストリビューションでのインストール方法である．（主要なものだけ翻訳してあるので，自分の使っているディストリビューションが翻訳されていない場合は，講義用 Slack か PandA でリクエストを出すこと．）
+これは， **もし自分のディストリビューションのパッケージシステムで opam が利用可能で，かつそれが最新であれば** オススメの方法である．（**逆に言えば，そうでない場合があるので気をつけなければならない．**）[このページ](https://opam.ocaml.org/doc/Distribution.html)に，ディストリビューションのパッケージシステムでどのバージョンが入手可能かが書かれているので，チェックすること．以下は現在サポートされているディストリビューションでのインストール方法である．（主要なものだけ翻訳してあるので，自分の使っているディストリビューションが翻訳されていない場合は，講義用 Slack か PandA でリクエストを出すこと．）
 
-### Archlinux
+### Arch Linux
+
+[opam](https://www.archlinux.org/packages/community/x86_64/opam/) パッケージは公式ディストリビューションで利用可能である．
+以下のコマンドを実行すればよい．
+
+```
+pacman -S opam
+```
+
+開発版を使いたい場合は [opam-git](https://aur.archlinux.org/packages/opam-git/) パッケージが [AUR](https://aur.archlinux.org/) にある．
+[yay](https://github.com/Jguer/yay) がインストールされているなら，以下のコマンドを実行すればよい．
+
+```
+yay -S opam-git
+```
 
 ### Debian
 
 opam のバイナリパッケージは
-[stable](http://packages.debian.org/jessie/opam)，
-[testing](http://packages.debian.org/stretch/opam)，
-[unstable](http://packages.debian.org/sid/opam)，では公式のリポジトリから利用可能である．
+[stable](https://packages.debian.org/stable/ocaml/opam)，
+[testing](https://packages.debian.org/testing/ocaml/opam)，
+[unstable](https://packages.debian.org/unstable/ocaml/opam)，では公式のリポジトリから利用可能である．
 以下のコマンドを実行すればよい．
 
 ```
-apt-get install opam
+apt install opam
 ```
 
-### [Exherbo](http://exherbo.org)
+### [Exherbo](https://exherbo.org)
 
+[dev-ocaml/opam](https://git.exherbo.org/summer/packages/dev-ocaml/opam/index.html) パッケージはopam 1.x である．
+[バイナリディストリビューション](#Binary-distribution)を利用せよ．
 
-### [Fedora](http://fedoraproject.org), [CentOS](http://centos.org) and RHEL
+### [Fedora](https://fedoraproject.org), [CentOS](https://centos.org) and RHEL
 
 Fedora の opam パッケージは以下のコマンドでインストールできる．
 
@@ -76,13 +92,31 @@ dnf install opam
 
 ### Mageia
 
+Mageia の opam パッケージは以下のコマンドでインストールできる．
+
+```
+urpmi opam
+```
+
 ### OpenBSD
+OpenBSD の opam パッケージは以下のコマンドでインストールできる．
+
+```
+pkg_add opam
+```
 
 ### FreeBSD
 
-### OSX (Mac)
+opam は FreeBSD 11 以上の Ports/Packages Collection で利用可能である．
 
-[homebrew](http://mxcl.github.com/homebrew/) か [MacPorts](http://www.macports.org/) をインストールせよ．これは OSX で UNIX 系ツールを使うために使うパッケージシステムである．これを使うとインストールが可能である．それぞれ以下のようにすればよい．
+```
+cd /usr/ports/devel/ocaml-opam
+make install
+```
+
+### macOS (Mac)
+
+[homebrew](https://brew.sh/) か [MacPorts](https://www.macports.org/) をインストールせよ．これは macOS で UNIX 系ツールを使うために使うパッケージシステムである．これを使うとインストールが可能である．それぞれ以下のようにすればよい．
 
 #### Homebrew
 
@@ -91,20 +125,28 @@ brew install gpatch
 brew install opam
 ```
 
-#### MacPort
+#### MacPorts
 
 ```
 port install opam
 ```
 
-[howto setup Emacs.app](https://github.com/ocaml/opam/wiki/Setup-Emacs.app-on-macosx-for-opam-usage) も読むとよい．
+<!--[howto setup Emacs.app](https://github.com/ocaml/opam/wiki/Setup-Emacs.app-on-macosx-for-opam-usage) も読むとよい． -->
+<!-- opam wiki 削除に伴いリンク切れ -->
 
 ### Ubuntu
 
 **注意: この先に進む前に `cat /etc/os-release` によって表示される情報の `PRETTY_NAME` の値をチェックして，使用中の Ubuntu のバージョンを必ずチェックすること**
 
-#### バージョン 18.04 かそれ以降
-現在の `opam` の安定バージョンを含む [ppa](https://launchpad.net/~avsm/+archive/ubuntu/ppa) が提供されている．以下のようにしてインストールせよ．
+#### バージョン 19.04 以降
+最新のバージョンに近い `opam` が公式リポジトリにて提供されている．以下のコマンドを実行すればよい．
+
+```
+apt install opam
+```
+
+#### バージョン 18.04 と 18.10
+公式リポジトリより新しい `opam` [ppa](https://launchpad.net/~avsm/+archive/ubuntu/ppa) が提供されているが，更新が途絶えている．以下のようにしてインストールせよ．
 
 ```
 add-apt-repository ppa:avsm/ppa
@@ -118,6 +160,12 @@ apt install opam
 
 ### Guix & Guix System
 
+[Guix](https://guix.gnu.org/) の opam パッケージは以下のコマンドでインストールできる．
+
+```
+guix install opam
+```
+
 ## ソースコードからビルドする方法
 
 ### ソースコードの入手
@@ -128,9 +176,9 @@ opam の最新バージョンのソースコードは Github から入手でき�
 
 また，opam が依存しているコードを含んだフルのアーカイブも用意されている．
 
-* [2.0.2](https://github.com/ocaml/opam/releases/download/2.0.2/opam-full-2.0.2.tar.gz)
- - MD5: 8780b0dc4209451e21330b6a3e663fe9
- - SHA384: 2ecbdd28840564f873af2f56fcb337d49477f4b63a39ed3878a38eb55bbda67d7561a8deee697c36d7be50ff36a8fe21
+* [2.0.7](https://github.com/ocaml/opam/releases/download/2.0.7/opam-full-2.0.7.tar.gz)
+ - MD5: d784c5670de657905c55db715044deca
+ - SHA384: 19d4ddb625c97e5aa6e7ea7f68699d9f498d406f5270fec0dbbdd96f1c3a43f857e18f0a411f81fd55e91d8a36f6372e
 * [1.2.2](https://github.com/ocaml/opam/releases/download/1.2.2/opam-full-1.2.2.tar.gz)
  - MD5: 7d348c2898795e9f325fb80eaaf5eae8
  - SHA384: 3a0a7868b5f510c1248959ed350eecacfe1abd886e373fd31066ce10871354010ef057934df026e5fad389ead6c2857d
