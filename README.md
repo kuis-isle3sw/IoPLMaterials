@@ -60,6 +60,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
     - [5.1: 能書き](textbook/chap05-1.md)
     - [5.2: ソース言語 MiniML4- と中間言語$\mathcal{C}$](textbook/chap05-2.md)
     - [5.3: MiniML4- から$\mathcal{C}$への変換$\mathcal{I}$](textbook/chap05-3.md)
+    - [5.4: MIPS アセンブリ言語入門](textbook/chap05-4.md)
   - 6章: 字句解析と構文解析のためのアルゴリズム
 
 ## リンク集
