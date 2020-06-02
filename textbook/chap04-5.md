@@ -120,12 +120,12 @@ type subst = (tyvar * ty) list
 
 それでは，型代入を型に適用する関数を（この後使う補助関数とともに）定義しよう．
 
-### <a name="freevar_ty">Exercise ___ [必修]</a>
+### <a name="freevar_ty">Exercise 4.3.1 [必修]</a>
 
 `pp_ty` と `freevar_ty` を完成させよ．`freevar_ty` は，与えられた型中の型変数の集合を返す関数で，型は `ty -> tyvar MySet.t` とする．型 `'a MySet.t` は `mySet.mli` で定義されている型 `'a` の値を要素とする集合を表す値の型である．
 
 
-### Exercise ___ [必修]
+### Exercise 4.3.2 [必修]
 
 型代入に関する以下の型，関数を `typing.ml` 中に実装せよ．
 
@@ -229,10 +229,10 @@ $$
 
 <a name="alphaeqalpha2">繰り返しになるが，$\tau$が$\alpha$自体であった場合はこのケースには当てはまらない．ここでエラーを報告しなければならないのは，例えば$\tau$が$\alpha \rightarrow \alpha$の場合である．</a>
 
-### Exercise ___ [必修]
+### Exercise 4.3.3 [必修]
 
 上の単一化アルゴリズムを `(ty * ty) list -> subst` 型の関数 `unify` として実装せよ．
 
-### Exercise ___ [必修]
+### Exercise 4.3.4 [必修]
 
 単一化アルゴリズムにおいて，オカーチェックの条件 $\alpha \not \in \mathbf{FTV}(\tau)$ はなぜ必要か考察せよ．

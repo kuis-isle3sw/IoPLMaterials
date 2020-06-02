@@ -140,11 +140,11 @@ let rec eval_exp env = function
 + `eval_exp` で `FunExp` を処理する時には，その時点での環境，つまり`env` を使って関数閉包を作っている．
 + 適用式の処理は，適用される関数の評価，実引数の評価を行った後，本当に適用されている式が関数かどうかのチェックをして，本体の評価を行っている．本体の評価を行う際の環境`newenv` は，関数閉包に格納されている環境を，パラメータ・実引数で拡張して得ている．
 
-### Exercise ___ [必修]
+### Exercise 3.4.1 [必修]
 MiniML3 インタプリタを作成し，高階関数が正しく動作するかなどを含めて
 テストせよ．
 
-### Exercise ___ [**]
+### Exercise 3.4.2 [**]
 OCaml での「`(中置演算子)`」記法をサポートし，プリミティブ演算を通常の関数と同様に扱えるようにせよ．例えば
 {% highlight ocaml %}
 let threetimes = fun f -> fun x -> f (f x x) (f x x) in
@@ -152,7 +152,7 @@ let threetimes = fun f -> fun x -> f (f x x) (f x x) in
 {% endhighlight %}
 は，`20`を出力する．
 
-### Exercise ___ [*]
+### Exercise 3.4.3 [*]
 OCaml の
 {% highlight ocaml %}
 fun x1 ... xn -> ...
@@ -160,7 +160,7 @@ let f x1 ... xn = ...
 {% endhighlight %}
 といった簡略記法をサポートせよ．
 
-### Exercise ___ [*] <a name="selfapplication"></a>
+### Exercise 3.4.4 [*] <a name="selfapplication"></a>
 以下は，加算を繰り返して 4 による掛け算を実現している MiniML3 プログラムである．これを改造して，階乗を計算するプログラムを書け．
 {% highlight ocaml %}
 let makemult = fun maker -> fun x ->
@@ -169,7 +169,7 @@ let times4 = fun x -> makemult makemult x in
   times4 3
 {% endhighlight %}
 
-### Exercise ___ [*] <a name="dfun"></a>
+### Exercise 3.4.5 [*] <a name="dfun"></a>
 静的束縛とは対照的な概念として _動的束縛 (dynamic binding)_ がある．動的束縛の下では，関数本体は，関数式を評価した時点ではなく，関数呼び出しがあった時点での環境をパラメータ・実引数で拡張した環境下で評価される．インタプリタを改造し，`fun` の代わりに `dfun` を使った関数は動的束縛を行うようにせよ．例えば，
 {% highlight ocaml %}
 let a = 3 in
@@ -179,7 +179,7 @@ let a = 5 in
 {% endhighlight %}
 というプログラムでは，関数 `p` 本体中の `a` は `3` ではなく `5` に束縛され，結果は，`35`になる．(`fun` を使った場合は `25` になる．)
 
-### Exercise ___ [*]
+### Exercise 3.4.6 [*]
 動的束縛の下では，MiniML4 で導入するような再帰定義を実現するための特別な仕組みや，[このExercise](#selfapplication)のようなトリックを使うことなく，再帰関数を定義できる．以下のプログラムで， 二箇所の `fun` を `dfun` ([このExerciseを参照](#dfun))に置き換えて(4通りのプログラムを)実行し，その結果について説明せよ．
 {% highlight ocaml %}
 let fact = fun n -> n + 1 in

@@ -65,8 +65,8 @@ let rec eval_exp env = function
 
 再帰関数を定義する際に，一旦ダミーの環境を作成し，関数閉包を作成した後に，その環境を更新する必要があるが，これを OCaml の参照を用いて実現している．`eval.ml`の`exval`型の定義において，`ProcV`が保持するデータが環境`dnval Environment.t`ではなく，環境への参照`dnval Environment.t ref`になっていることに注意されたい．（したがって，ここに明示されていない関数適用のケースにおいては，格納されている環境を使用するために，参照から環境を取り出す操作が必要になる．）`eval_exp` の `LetRecExp` を処理する部分は，まずダミーの型環境への参照`dummyenv`を作った上で，この`dummyenv`を含む関数閉包を作成し，現在の環境`env`を`id`からこの関数閉包への写像で拡張した環境`newenv`を作り，参照`dummyenv`の指す先を`newenv`に変更している．
 
-### Exercise ___ [必修]
+### Exercise 3.5.1 [必修]
 図に示した `syntax.ml` にしたがって，`parser.mly` と `lexer.mll` を完成させ，MiniML4 インタプリタを作成し，テストせよ．(`let rec`式だけでなく`let rec`宣言も実装すること．)
 
-### Exercise ___ [**]
+### Exercise 3.5.2 [**]
 `and`を使って変数を同時にふたつ以上宣言できるように `let rec`式・宣言を拡張し，相互再帰的関数をテストせよ．
