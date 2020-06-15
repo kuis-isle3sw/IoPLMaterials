@@ -76,7 +76,7 @@ $$
 \Gamma, f: \tau_1 \rightarrow \tau_2, x: \tau_1 \vdash e_1 : \tau_2 \quad
 \Gamma, f:\tau_1 \rightarrow \tau_2 \vdash e_2 : \tau\\
 \rule{13cm}{1pt}\\
-\Gamma \vdash \mathbf{let\ rec}\ f = \mathbf{fun}\ x\ \rightarrow e_1\ \mathbf{in}\ e_2 : \tau_2
+\Gamma \vdash \mathbf{let\ rec}\ f = \mathbf{fun}\ x\ \rightarrow e_1\ \mathbf{in}\ e_2 : \tau
 \end{array}
 \textrm{T-LetRec}
 $$
