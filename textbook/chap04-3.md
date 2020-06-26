@@ -49,9 +49,10 @@ let pp_ty typ =
 {% endhighlight %}
 
 #### `cui.ml` への変更
-open Typing
 
 {% highlight ocaml %}
+open Typing
+
 let rec read_eval_print env tyenv = (* New! 型環境を REPL で保持 *)
    print_string "# ";
    flush stdout;
