@@ -51,8 +51,6 @@ let pp_ty typ =
 #### `cui.ml` への変更
 
 {% highlight ocaml %}
-open Typing
-
 let rec read_eval_print env tyenv = (* New! 型環境を REPL で保持 *)
    print_string "# ";
    flush stdout;
@@ -73,9 +71,6 @@ let initial_tyenv =
    Environment.extend "i" TyInt
      (Environment.extend "v" TyInt
        (Environment.extend "x" TyInt Environment.empty))
-
-(* New! initial_tyenv を REPL の最初の呼び出しで渡す *)
-let _ = read_eval_print initial_env initial_tyenv
 {% endhighlight %}
 
 ### `typing.ml` への変更
