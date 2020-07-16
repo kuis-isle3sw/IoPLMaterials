@@ -139,39 +139,27 @@ $$
 
 ## $\mathcal{C}$のプログラムから$\mathcal{V}$への変換
 
-TODO: ここから
-
-プログラム$\langle \{d_1,\dots,d_n\}, e \rangle$の変換は以下の通りである．
+プログラム$\langle \{d_1,\dots,d_n\}, e \rangle$の変換結果$\mathcal{T}(\langle \{d_1,\dots,d_n\}, e \rangle)$は命令列と，ラベル名から整数への写像$F$のペアを返す．命令列部分は，各関数定義に対応する命令列を並べ，その後に$e$に対応する命令列を並べて得られる．また，写像$F(f)$は，関数$f$を実行するのに必要なローカル記憶領域のサイズである．具体的には，以下のように定義される．
 
 $$
-\begin{array}{rcl}
-  \mathcal{T}((\{d_1,\dots,d_n\},e)) &=&
   \left(
   \begin{array}{l}
-    \mathcal{T}_\delta(d_1)\\
+    I_1\\
     \dots\\
-    \mathcal{T}_\delta(d_n)\\
-  \end{array}\mid % \middle|
-  \begin{array}{l}
-    \mathcal{T}_{\delta \cup \delta',\mathbf{local}(0)}(e)\\
-    \mathbf{return}(\mathbf{local}(0))\\
-  \end{array}\mid % \middle|
-  4m+4
+    I_k\\
+    \mathit{main}:\\
+    \; \mathcal{T}_{\delta \cup \delta',\mathbf{local}(0)}(e)\\
+    \; \mathbf{return}(\mathbf{local}(0))\\
+  \end{array},
+  \{f_1 \mapsto n_1, \dots, f_k \mapsto n_k, \mathit{main} \mapsto 4m+4\}
   \right)\\
-  &\mbox{where}&
-  \begin{array}[t]{l}
-    \{f_1,\dots,f_n\} = \mbox{$d_1,\dots,d_n$ で定義されている関数名の集合}\\
-    \{x_1,\dots,x_m\} = \mbox{$e$ 中の変数の集合}\\
-    \delta = \{f_1 \mapsto \mathbf{labimm}(f_1), \dots, f_n \mapsto \mathbf{labimm}(f_n)\}\\
-    \delta' = \{x_1 \mapsto \mathbf{local}(4), x_2 \mapsto \mathbf{local}(8), \dots, x_m \mapsto \mathbf{local}(4m)\}\\
-  \end{array}
-\end{array}
 $$
 
+ここで，
+- 各$i$について，$\mathcal{T}_\delta(d_i) = \left(I_i, n_i\right)$である．
+- $\{f_1,\dots,f_n\}$は，$d_1,\dots,d_n$ で定義されている関数名である．
+- $\{x_1,\dots,x_m\}$は$e$中の変数の集合である．
+- $\delta$は$\{f_1 \mapsto \mathbf{labimm}(f_1), \dots, f_n \mapsto \mathbf{labimm}(f_n)\}$である．
+- $\delta'$は$\{x_1 \mapsto \mathbf{local}(4), x_2 \mapsto \mathbf{local}(8), \dots, x_m \mapsto \mathbf{local}(4m)\}$である．
 
-プログラム$(\{d_1,\dots,d_n\},e)$の変換においては，まず各$d_i$の変換結果$\mathcal{T}_\delta(d_i)$を生成する．$\delta$は各$d_i$で定義されている関数名$f_i$からラベル名$\mathbf{labimm}(f_i)$への写像である．その後メインの式である$e$を評価するコードを生成すればよい．このコードの先頭にはラベル$\LABEL{l_{\mathit{main}}}$を生成している．$e$を評価する際に，$e$中の変数のための記憶領域を割り当てる必要があるが，これは上記の関数定義の仮想マシンコード生成と同じ考え方である．
-
-追加
-
-
-
+$\delta$は各$d_i$で定義されている関数名$f_i$からラベル名$\mathbf{labimm}(f_i)$への写像である．その後メインの式である$e$を評価するコードを生成すればよい．このコードの先頭にはラベル$\mathit{main}:$を配置している．$e$を評価する際に，$e$中の変数のための記憶領域を割り当てる必要があるが，これは上記の関数定義の仮想マシンコード生成と同じ考え方である．
