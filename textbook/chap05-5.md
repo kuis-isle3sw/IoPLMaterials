@@ -67,7 +67,7 @@ $l$はラベル名を表すメタ変数，$\mathit{ofs}$は整数値である．
 
 関数定義 $\langle i_1 \dots i_m \mid n \rangle$ は，関数のラベル名と，その関数本体の命令列と，関数内で使われるローカル変数に必要な記憶領域のサイズ$n$ からなる．この記憶領域サイズは，後のコード生成フェーズで使用される．プログラムは $\langle \{d_1 \dots d_m} \mid i_1 \dots i_n \mid k \rangle$ の形をしており，関数定義 $d_1 \dots d_m$ と，メインのプログラムに対応する命令列 $i_1 \dots i_n$ と，メインのプログラム内で使われるローカル変数のための記憶領域のサイズ $k$ からなる．
 
-## $\mathcal{C}$から$\mathcal{V}$への変換$\mathcal{T}$
+## $\mathcal{C}$の式から$\mathcal{V}$への変換
 
 では，$\mathcal{C}$から$\mathcal{V}$への変換$\mathcal{T}$を定義しよう．**変換の定義を簡潔に保つために，変換対象の$\mathcal{C}$プログラムではすべての束縛変数が一意な名前にあらかじめ変換されているものとする．**例えば，$\mathbf{let}\ x = 1\ \mathbf{in}\ \mathbf{let}\ x = 2\ \mathbf{in}\ x$というプログラムは$\mathbf{let}\ x_1 = 1\ \mathbf{in}\ \mathbf{let}\ x_2 = 2\ \mathbf{in}\ x_2$というプログラムにあらかじめ変換がなされているものとする．実際に，先に示した変換$\mathcal{I}$はすべての束縛変数が一意な名前を持つように変換を行っている．
 
@@ -108,32 +108,40 @@ $$
 - $\mathcal{T}\_{\delta,\mathit{tgt}}(\mathbf{let} \; x = e_1 \; \mathbf{in} \; e_2)$: まず初めに$e_1$を評価して$\delta(x)$に格納するコード$\mathcal{T}\_{\delta,\delta(x)}(e_1)$を置く．その後，$e_2$の評価結果を$\mathit{tgt}$に格納するコード$\mathcal{T}\_{\delta,\mathit{tgt}}(e_2)$を置く．
 - $\mathcal{T}_{\delta,\mathit{tgt}}(x_1 \; x_2)$: 関数呼び出しを行い，その返り値を$\mathit{tgt}$に格納するコード$\mathit{tgt} \leftarrow \mathbf{call} \; \delta(x_1) \;\delta(x_2)$を生成する．ジャンプ先のラベルは$\delta(x_1)$に格納されている．また，$\delta(x_2)$に引数が格納されている．
 
-続いて，関数定義$\mathbf{let} \; \mathbf{rec} \; f = \mathbf{fun} \; x \rightarrow e$と，プログラム$\langle \{d_1,\dots,d_n\}, e \rangle$の変換をそれぞれ示す．
+## $\mathcal{C}$の関数定義から$\mathcal{V}$への変換
 
-TODO: ここから
+関数定義$\mathbf{let} \; \mathbf{rec} \; f = \mathbf{fun} \; x \rightarrow e$は，(1) 関数 $f$ に対応する命令列のの始まる場所を示すラベル，(2) 関数本体式の評価結果を$\mathbf{local}(0)$に格納する命令列，(3) $\mathbf{local}(0)$を返り値として返す命令を順番に並べた命令列に変換される．その際に，後でアセンブリに変換する際に必要になるため，関数$f$の実行に必要なローカル変数の記憶領域のサイズも計算する．
 
+具体的には，関数定義$\mathbf{let} \; \mathbf{rec} \; f = \mathbf{fun} \; x \rightarrow e$の変換結果$\mathcal{T}_\delta(\mathbf{let}\ \mathbf{rec}\ f\ = \mathbf{fun}\ x \rightarrow e)$は
 $$
-\begin{array}{rcl}
-  \mathcal{T}_\delta(\mathbf{let}\ \mathbf{rec}\ f\ = \mathbf{fun}\ x \rightarrow e) &=&
-  \langle
+  \left(
   \begin{array}{l}
     l_f:\\
     \mathcal{T}_{\delta \cup \delta_1 \cup \delta_2, \mathbf{local}(0)}(e)\\
     \mathbf{return} \; \mathbf{local}(0)\\
-  \end{array}% \middle|
-  \mid
+  \end{array},
   4n+4
-  \rangle\\
-  &\mbox{where}&
-  \begin{array}[t]{rcl}
-    \delta_1 &=& \{x \mapsto \mathbf{param}(1)\}\\
-    \{x_1,\dots,x_n\} &=& \mbox{$e$中に出現する変数の集合}\\
-    \delta_2 &=& \{x_1 \mapsto \mathbf{local}(4), x_2 \mapsto \mathbf{local}(8), \dots, x_n \mapsto \mathbf{local}(4n)\}\\
-    \mathbf{labimm}(l) &=& \delta(f)\\
-  \end{array}
-  % \mathbf{let}\ \mathbf{rec}\ f\ = \mathbf{fun}\ x \rightarrow \COPYPROP_\emptyset(e)\\
-\end{array}
+  \right)
 $$
+と定義される．ただし，
+- $\delta_1$は$\{x \mapsto \mathbf{param}(1)\}$を表す．
+- $\{x_1,\dots,x_n\}$を$e$中に出現する変数として，$\delta_2$は$\{x_1 \mapsto \mathbf{local}(4), x_2 \mapsto \mathbf{local}(8), \dots, x_n \mapsto \mathbf{local}(4n)\}$である．
+- また，$\delta(f)$は$\mathbf{labimm}(l_f)$であると仮定する．
+
+この変換は，関数定義以外に$\delta$を引数にとる．$\delta$はトップレベルで定義されている（一般には複数の）関数名を受け取って，それを対応するコードが書かれているラベルオペランド$\mathbf{labimm}(l)$に写像する．変換結果は命令列とローカル変数に必要な記憶領域のサイズのペアである．生成されている命令列は，関数本体$e$の評価結果を$\mathbf{local}(0)$に格納し，その値を$\mathbf{return} \; \mathbf{local}(0)$で呼び出し元に返すコードである．変換の定義にあらわれている$\delta \cup \delta_1 \cup \delta_2$は$\delta$を以下の二つの写像で拡張したものである．
+
+- $\delta_1$: 仮引数名$x$から$\mathbf{param}(1)$への写像．
+- $\delta_2$: $e$中に現れるすべての変数からそれぞれ固有の記憶領域$\mathbf{local}(i)$への写像．（変換$\mathcal{C}$において，すべての束縛変数の名前を一意になるように付け替えたのがここで地味に効いている．）ここでは，すべての値が4バイトで表現できるものとして<sup>[必要とされる記憶領域の計算に関する注](#localsize)</sup>，各変数に4バイトの記憶領域を割り当て，$\delta_2$を$\{x_1 \mapsto \mathbf{local}(4), x_2 \mapsto \mathbf{local}(8), \dots, x_n \mapsto \mathbf{local}(4n)\}$としている．
+
+この関数で必要とされるローカルな記憶領域のサイズは，$x_1,\dots,x_n$のための記憶領域と，返り値用の$\mathbf{local}(0)$とを合わせて$4n+4$である．
+
+<a name="localsize">必要とされる記憶領域の計算について：ローカル変数$x_1,\dots,x_n$が束縛されている値のための記憶領域がそれぞれ4バイトという仮定は，普通は成り立たない．例えば，言語がペア型の値で拡張され，ローカル変数$x$がペア型の値に束縛されており，そのペアの要素をどちらもローカルな領域に保持しておきたい場合は，$x$に必要な記憶領域はより大きいはずである．（実際はペア等の値はヒープと呼ばれる別のメモリ領域に記憶しておき，この領域へのポインタのみをローカルな領域に保持しておくことも多い．こうすれば，ローカルな領域にはポインタを保持しておけばよい．ただし，ペアの要素にアクセスするためのメモリアクセスの回数が増えることになる．）また，これらの値の一部をレジスタに格納することにすれば，必要とされるローカルな記憶領域はより少なくて済むであろう．（ただしこの場合，使用可能なレジスタの個数は限られているので，どの値をどのレジスタに割り付けるかの解析をより真面目にやる必要がある．また，関数呼び出しの際のレジスタの退避・復帰が必要となる．）このように，どの値にどの記憶領域をどのように割り付けるかを決めるにあたっては，検討すべきことが結構多い．
+
+## $\mathcal{C}$のプログラムから$\mathcal{V}$への変換
+
+TODO: ここから
+
+プログラム$\langle \{d_1,\dots,d_n\}, e \rangle$の変換は以下の通りである．
 
 $$
 \begin{array}{rcl}
@@ -160,12 +168,6 @@ $$
 \end{array}
 $$
 
-関数定義$d$の仮想マシンコード生成を行う変換$\mathcal{T}_\delta(d)$は，$d$以外に$\delta$を引数にとる．$\delta$はトップレベルで定義されている関数名を受け取って，それを対応するコードが書かれているラベルオペランド$\mathbf{labimm}(l)$に写像する．$\mathcal{T}_\delta(\mathbf{let}\ \mathbf{rec}\ f\ = \mathbf{fun}\ x \rightarrow e)$は，その後関数本体$e$を評価するコード$\mathcal{T}_{\delta \cup \delta_1 \cup \delta_2,\mathbf{local}(0)}(e)$を生成する．$\delta \cup \delta_1 \cup \delta_2$は$\delta$を以下の二つの写像で拡張したものである．
-
-- $\delta_1$: 仮引数名$x$から$\mathbf{param}(1)$への写像．
-- $\delta_2$: $e$中に現れるすべての変数からそれぞれ固有の記憶領域$\mathbf{local}(i)$への写像．\footnote{変換$\mathbf{in}TERM$においてすべての束縛変数の名前を一意になるように付け替えたのがここで地味に効いている．}ここでは，すべての値が4バイトで表現できるものとして，各変数に4バイトの記憶領域を割り当て，$\delta_2$を$\{x_1 \mapsto \mathbf{local}(4), x_2 \mapsto \mathbf{local}(8), \dots, x_n \mapsto \mathbf{local}(4n)\}$としている．
-
-末尾に$e$の評価結果（$\mathbf{local}(0)$に格納されている）を$\mathbf{return}(\mathbf{local}(0))$で返す．この関数で必要とされるローカルな記憶領域のサイズは $4n$ である．
 
 プログラム$(\{d_1,\dots,d_n\},e)$の変換においては，まず各$d_i$の変換結果$\mathcal{T}_\delta(d_i)$を生成する．$\delta$は各$d_i$で定義されている関数名$f_i$からラベル名$\mathbf{labimm}(f_i)$への写像である．その後メインの式である$e$を評価するコードを生成すればよい．このコードの先頭にはラベル$\LABEL{l_{\mathit{main}}}$を生成している．$e$を評価する際に，$e$中の変数のための記憶領域を割り当てる必要があるが，これは上記の関数定義の仮想マシンコード生成と同じ考え方である．
 
