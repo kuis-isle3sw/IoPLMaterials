@@ -100,7 +100,7 @@ jekyll 等メモ:
 
 - Gemfile を置いて bundle exec jekyll s を実行．出てきた URL を開く．
   - 初回は bundle install が必要?
-- 各ファイルのはじめに {% include head.html %} がおいてある．_includes/head.html をここに読み込むことを表してる．
+- 各ファイルのはじめに `{% include head.html %}` がおいてある．`_includes/head.html` をここに読み込むことを表してる．
   - head.html には MathJax を使うための設定等が書いてある．
 -->
 
