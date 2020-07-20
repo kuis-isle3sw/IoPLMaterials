@@ -158,11 +158,11 @@ $$
       \begin{array}{rcl}
         \mathcal{G}_{r}(\mathbf{param}(1)) &=&
         \begin{array}[t]{ll}
-          \texttt{move} & r,\texttt{\$a0}\\
+          \texttt{move} & r,\mathtt{\$a0}\\
         \end{array}\\
         \mathcal{G}_{r}(\mathbf{local}(n)) &=&
         \begin{array}[t]{l}
-          \texttt{lw} & r,n(\texttt{\$sp})\\
+          \texttt{lw} & r,n(\mathtt{\$sp})\\
         \end{array}\\
         \mathcal{G}_{r}(\mathbf{labimm}(l)) &=&
         \begin{array}[t]{l}
@@ -178,7 +178,7 @@ $$
 オペランドの変換は$\mathcal{G}\_{r}(\mathit{oprd})$で行う．この変換では「$\mathit{oprd}$に格納されている値をレジスタ$r$にロードする」MIPSアセンブリが生成される．各ケースの説明は以下の通りである．
 - $\mathcal{G}\_{r}(\mathbf{param}(1))$: $\mathbf{param}(1)$（関数の第一引数）をレジスタ$r$にロードする．現在の$\mathcal{V}$では一引数関数のみが定義できるため$\mathbf{param}(1)$についてのみ定義されている．関数の引数は関数呼び出し規約からレジスタ$\mathtt{\$a0}$に格納されているので，この内容を$r$にロードするために$\texttt{move}$命令を用いている．
 - $\mathcal{G}\_{r}(\mathbf{local}(n))$: $\mathbf{local}(n)$に格納されている値をレジスタ$r$にロードする．$\mathbf{local}(n)$は関数呼び出し規約から$n(\mathtt{\$sp})$に格納されているので，これをレジスタ$r$にロードするために$\texttt{lw}$命令を用いる．
-- $\mathcal{G}\_{r}(\mathbf{labimm}(l))$: コード中のラベル$l$のアドレスを$r$にロードする．\footnote{このようにレジスタにコード中のアドレスをロードすることで，コード中の「場所」を値として保持することが可能となる．これは高階関数の実装で必要になる．}このために$\texttt{la}$命令を用いている．$l$はラベル$l$をMIPS内で解釈できる記号に変換したものである．
+- $\mathcal{G}\_{r}(\mathbf{labimm}(l))$: コード中のラベル$l$のアドレスを$r$にロードする．このために$\texttt{la}$命令を用いている．（このようにレジスタにコード中のアドレスをロードすることで，コード中の「場所」を値として保持することが可能となる．これは高階関数の実装で必要になる．）
 - $\mathcal{G}\_{r}(\mathbf{imm}(n))$: 整数定数$n$をレジスタ$r$にロードする．これは$\texttt{li}$命令を用いて実装することができる．
 
 ### 命令の変換
@@ -187,276 +187,180 @@ $$
 
 $$
       \begin{array}{rcl}
-        \mathcal{G}_{n}(\MOVE{\mathbf{local}(\offset)}{\mathit{oprd}}) &=&
+        \mathcal{G}_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{oprd}) &=&
         \begin{array}[t]{l}
-          \mathcal{G}_{\TMPREGONE}(\mathit{oprd})\\
-          \ST \quad \TMPREGONE, \offset(\texttt{\$sp})\\
+          \mathcal{G}_{\mathtt{\$t0}}(\mathit{oprd})\\
+          \mathtt{sw} \quad \mathtt{\$t0}, \mathit{ofs}(\mathtt{\$sp})\\
         \end{array}\\
-        \mathcal{G}_{n}(\BINOP{\mathbf{local}(\offset)}{\OP}{\mathit{oprd}_1,\mathit{oprd}_2}) &=&
+        \mathcal{G}_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{bop} \; \mathit{oprd}_1,\mathit{oprd}_2) &=&
         \begin{array}[t]{l}
-          \mathcal{G}_{\TMPREGONE}(\mathit{oprd}_1)\\
-          \mathcal{G}_{\TMPREGTWO}(\mathit{oprd}_2)\\
-          \sem{\OP} \quad \TMPREGONE, \TMPREGONE, \TMPREGTWO\\
-          \ST \quad \TMPREGONE,\offset(\texttt{\$sp})\\
+          \mathcal{G}_{\mathtt{\$t0}}(\mathit{oprd}\_1)\\
+          \mathcal{G}_{\mathtt{\$t1}}(\mathit{oprd}\_2)\\
+          [\![\mathit{bop}]\!] \quad \mathtt{\$t0}, \mathtt{\$t0}, \mathtt{\$t1}\\
+          \mathtt{sw} \quad \mathtt{\$t0},\mathit{ofs}(\mathtt{\$sp})\\
         \end{array}\\
-        \mathcal{G}_{n}(\texttt{la}BEL{l})) &=&
+        \mathcal{G}_{n}(l:) &=&
         \begin{array}[t]{l}
-          l\mathtt{ {l} }
+          l:
         \end{array}\\
-        \mathcal{G}_{n}(\BRIF{\mathit{oprd}}{l}) &=&
+        \mathcal{G}_{n}(\mathbf{if} \; \mathit{oprd} \ne 0 \; \mathbf{then} \; \mathbf{goto} \; l) &=&
         \begin{array}[t]{l}
-          \mathcal{G}_{\TMPREGONE}(\mathit{oprd})\\
-          \BGTZ \quad \TMPREGONE,l\\
+          \mathcal{G}_{\mathtt{\$t0}}(\mathit{oprd})\\
+          \mathtt{bgtz} \quad \mathtt{\$t0},l\\
         \end{array}\\
-        \mathcal{G}_{n}(\GOTO{l}) &=&
+        \mathcal{G}_{n}(\mathbf{goto} \; l) &=&
         \begin{array}[t]{l}
-          \JUMP \quad l
+          \mathtt{j} \quad l
         \end{array}\\
-        \mathcal{G}_{n}(\CALL{\mathbf{local}(\offset)}{\mathit{oprd}_f(\mathit{oprd}_1)}) &=&
+        \mathcal{G}_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{oprd}_f(\mathit{oprd}_1)) &=&
         \begin{array}[t]{l}
-          \SAVE_{n+4}(\texttt{\$a0})\\
-          \mathcal{G}_{\texttt{\$a0}}(\mathit{oprd}_1)\\
-          \mathcal{G}_{\TMPREGONE}(\mathit{oprd}_f)\\
-          \JALR \quad \RA,\TMPREGONE\\
-          \ST \quad \RETREG,\offset(\texttt{\$sp})\\
-          \RESTORE_{n+4}(\texttt{\$a0})\\
+          \mathit{Save}_{n+4}(\mathtt{\$a0})\\
+          \mathcal{G}_{\mathtt{\$a0}}(\mathit{oprd}_1)\\
+          \mathcal{G}_{\mathtt{\$t0}}(\mathit{oprd}_f)\\
+          \mathtt{jalr} \quad \mathtt{\$ra},\mathtt{\$t0}\\
+          \mathtt{sw} \quad \mathtt{\$v0},\mathit{ofs}(\mathtt{\$sp})\\
+          \mathit{Restore}_{n+4}(\mathtt{\$a0})\\
         \end{array}\\
-        \mathcal{G}_{n}(\RETURN(\mathit{oprd})) &=&
+        \mathcal{G}_{n}(\mathbf{return} \; \mathit{oprd}) &=&
         \begin{array}[t]{l}
-          \mathcal{G}_{\RETREG}(\mathit{oprd})\\
-          \EPILOGUE(n)\\
-          \JR \quad \RA\\
+          \mathcal{G}_{\mathtt{\$v0}}(\mathit{oprd})\\
+          \mathit{Epilogue}(n)\\
+          \mathtt{jr} \quad \mathtt{\$ra}\\
         \end{array}\\
       \end{array}
 $$
 
 各ケースの説明は以下の通りである．
-\begin{description}
-\item[$\mathcal{G}_{n}(\MOVE{\mathbf{local}(\offset)}{\mathit{oprd}})$]: この命令は
-  「$\mathit{oprd}$に格納されている値を$\mathbf{local}(\offset)$に格納する」ように
-  動作する．そのためにまず$\mathit{oprd}$の値を求め，一時レジスタ
-  $\TMPREGONE$に格納する命令を生成し
-  （$\mathcal{G}_{\TMPREGONE}(\mathit{oprd})$）その後$\TMPREGONE$に格納されて
-  いるアドレスからレジスタ$r$に値をロードする命令$\ST \quad
-  \TMPREGONE, \offset(\texttt{\$sp})$を生成する．
-\item[$\BINOP{\mathbf{local}(\offset)}{\OP}{\mathit{oprd}_1,\mathit{oprd}_2}$]:
-  $\mathit{oprd}_1$に格納されている値をレジスタ$\TMPREGONE$に
-  （$\mathcal{G}_{\TMPREGONE}(\mathit{oprd}_1)$），$\mathit{oprd}_2$に格納されてい
-  る値をレジスタ$\TMPREGTWO$に（$\mathcal{G}_{\TMPREGONE}(\mathit{oprd}_1)$）
-  それぞれロードする．その上で，レジスタ$\TMPREGONE$の値とレジスタ
-  $\TMPREGTWO$の値を引数として演算子$\OP$によって計算し，その結果を
-  $\TMPREGONE$にロード（$\sem{\OP} \quad \TMPREGONE, \TMPREGONE,
-    \TMPREGTWO$）する．定義を簡潔にするために，演算子$\OP$に対応する
-  MIPSの命令を$\sem{\OP}$で表し，具体的に使わなければならない命令を
-  $\sem{-}$の定義の中に押し込めている．（例えば
-    $\sem{{+}}=\mathtt{addu}, \sem{{-}}=\mathtt{mulou}$とすればよい．）
-  最後にレジスタ$\TMPREGONE$の値を$\mathbf{local}(\offset)$にストア（$\ST
-    \quad \TMPREGONE,\offset(\texttt{\$sp})$）している．$\offset$バイト目のロー
-  カル変数のアドレスが$\texttt{\$sp}+\offset$であることに注意せよ．
-\item[$\texttt{la}BEL{l}$]: ラベル$l$を生成（$l\mathtt{{:}}$）して
-  いる．ここで$l$はラベル$l$をMIPSアセンブリ内でラベルとして解釈
-  できる識別子に変換したものである．この変換は一対一対応でさえあればど
-  のように定義しても良いが，メインのプログラムを表すラベル
-  $l_{\mathit{main}}$は，MIPSアセンブリ内のエントリポイント（プログラ
-    ムの実行時に最初に制御が移される場所）を表す$\mathtt{main}$という
-  ラベル名に変換する必要がある．
-\item[$\mathcal{G}_{n}(\BRIF{\mathit{oprd}}{l})$]: まず$\mathit{oprd}$に格納されて
-  いる値をレジスタ$\TMPREGONE$に格納する．その上で，レジスタ
-  $\TMPREGONE$が$\TRUE$を表す非ゼロ値であれば$l$にジャンプ
-  （$\BGTZ \quad \TMPREGONE,l$）する．
-\item[$\mathcal{G}_{n}(\GOTO{l})$]: 無条件でラベル$l$にジャンプ
-  （$\JUMP \quad l$）する．
-\item[$\mathcal{G}_{n}(\CALL{\mathbf{local}(\offset)}{\mathit{oprd}_f(\mathit{oprd}_1)})$]:
-  関数呼び出しを行う際には，関数呼び出し規約に従ってレジスタの内容を退
-  避・復帰したり，引数をセットしたり，返り値を取得したりしなければなら
-  ない．今回のコンパイラにおいては，関数の呼び出し側では，
-  \pageref{fig:callingConvention}ページで説明した通り，(1) レジスタ
-  \verb|a0|の値の退避，(2) レジスタ\verb|v0|に格納されている返り値の取
-  得，(3) 退避しておいたレジスタ\verb|a0|の値の復帰を行う必要がある．
-  レジスタ値の退避・復帰を行う命令列は他のケースでも使用するので，それ
-  ぞれテンプレ化して図~\ref{fig:auxiliary}に「アドレス$\texttt{\$sp}+n$にレジス
-    タ$r$の内容を退避する命令列$\SAVE_n(r)$」と「アドレス$\texttt{\$sp}+n$に退避
-    したレジスタ$r$の内容を復帰する命令列$\RESTORE_n(r)$」として定義し
-  てある．$\SAVE$と$\RESTORE$を使うと，関数呼び出し前に実行されるべき
-  命令列は以下の通りとなる．
-  \begin{enumerate}
-  \item レジスタ$\texttt{\$a0}$をメモリ上のアドレス$\texttt{\$sp}+n+4$に退避
-    ($\SAVE_{n+4}(\texttt{\$a0})$) する．$\texttt{\$a0}$は今から行う関数呼び出
-    しのための実引数で上書きされるからである．
-  \item $\mathit{oprd}_1$に格納されている実引数を$\texttt{\$a0}$にロードする．
-  \item $\mathit{oprd}_f$に格納されているラベル (=コード上のアドレス) を
-    $\TMPREGONE$にロードする．
-  \item $\JALR$命令を使って$\TMPREGONE$に格納されているラベルにジャン
-    プする．$\JALR$命令の第一引数$\RA$には，ジャンプ先からリターンする
-    ときに帰ってくるべきコード上のアドレス (=この命令の次の行) がセッ
-    トされる\footnote{なので，$\RA$はこの命令の実行前にどこかに退避さ
-      れていなければならないが，これは関数定義のアセンブリ生成のところ
-      で説明する．}．
-  \end{enumerate}
-  この次の行からは，この後呼び出された関数が実行されリターンした後に実
-  行されるべき命令列が書いてある．
-  \begin{enumerate}
-  \item レジスタ $\RETREG$ に格納されているはずの（関数呼び出し規約を
-    参照のこと）リターンされた値を$\mathbf{local}(\offset)$，すなわち
-    $\texttt{\$sp}+\offset$に$\ST$命令を使ってストアする．
-  \item $\texttt{\$sp}+n+4$に呼び出し前に退避しておいたレジスタ$\texttt{\$a0}$の内容
-    を復帰させる ($\RESTORE_{n+4}(\texttt{\$a0})$)．
-  \end{enumerate}
-  以上の命令列が実際に正しく関数呼び出しを実行することを確認するために
-  は，関数呼出し時の命令のみではなく，リターン命令
-  ($\mathcal{G}_n(\RETURN(\mathit{oprd}))$) や関数定義側でどのような命令列が生
-  成されるかも確認することがある．前者についてはすぐ，後者については後
-  で$\mathcal{G}(d)$の定義を説明する際にそれぞれ説明する．
-\item[$\RETURN(\mathit{oprd})$]: $\mathit{oprd}$に格納されている値を呼び出し側に
-  返さなければならない．関数呼び出し規約によれば，関数がリターンする前
-  には以下の処理を行う必要がある: (1) 返り値をレジスタ$\RETREG$にロー
-  ド, (2) 関数の先頭でフレーム内に退避しておいた$\RA$の値を復帰，(3)
-  $\texttt{\$sp}$レジスタの値を先頭で下げた分だけ上げる (すなわち，現在のフレー
-  ムに使っていたスタック上の領域を解放する), (4) $\JR$命令を用いて
-  $\RA$に格納されたアドレスにリターンする．具体的には以下の命令列が生
-  成される:
-  \begin{enumerate}
-  \item $\mathit{oprd}$に格納されている値を返り値を格納すべきレジスタ
-    ($\RETREG$) にロード ($\mathcal{G}_{\RETREG}(\mathit{oprd})$) する．
-  \item $\RA$の値の復帰とフレームの解放を行う．定義中では
-    $\EPILOGUE(n)$でこの処理を行う命令を生成している．$\EPILOGUE(n)$は
-    ローカルな記憶領域のサイズが$n$のフレームを持つ関数呼び出しのリター
-    ン前の処理を行う命令列で，退避しておいた$\RA$の復帰
-    $\RESTORE_{n+8}(\RA)$と，$\texttt{\$sp}$の値の更新を行う．
-  \item $\JR$命令で復帰した$\RA$にリターンする．
-  \end{enumerate}
-\end{description}
+- $\mathcal{G}\_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{oprd})$: この命令は「$\mathit{oprd}$に格納されている値を$\mathbf{local}(\mathit{ofs})$に格納する」ように動作する．そのためにまず$\mathit{oprd}$の値を求め，一時レジスタ$\mathtt{\$t0}$に格納する命令を生成し（$\mathcal{G}_{\mathtt{\$t0}}(\mathit{oprd})$）その後$\mathtt{\$t0}$に格納されているアドレスからレジスタ$r$に値をロードする命令 $\mathtt{sw} \quad \mathtt{\$t0}, \mathit{ofs}(\mathtt{\$sp})$ を生成する．
+- $\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{bop} \; \mathit{oprd}\_1,\mathit{oprd}\_2$: $\mathit{oprd}\_1$に格納されている値をレジスタ$\mathtt{\$t0}$に（$\mathcal{G}\_{\mathtt{\$t0}}(\mathit{oprd}\_1)$），$\mathit{oprd}\_2$に格納されている値をレジスタ$\mathtt{\$t1}$に（$\mathcal{G}\_{\mathtt{\$t0}}(\mathit{oprd}_1)$）それぞれロードする．その上で，レジスタ$\mathtt{\$t0}$の値とレジスタ$\mathtt{\$t1}$の値を引数として演算子$\mathit{bop}$によって計算し，その結果を$\mathtt{\$t0}$にロード（$[\\![\mathit{bop}]\\\!] \quad \mathtt{\$t0}, \mathtt{\$t0}, \mathtt{\$t1}$）する．定義を簡潔にするために，演算子$\mathit{bop}$に対応する MIPSの命令を$[\\![\mathit{bop}]\\\!]$で表し，具体的に使わなければならない命令を$[\\![\dots]\\\!]$の定義の中に押し込めている．（例えば$[\\![{+}]\\\!] = \mathtt{addu}$などとする．）最後にレジスタ$\mathtt{\$t0}$の値を$\mathbf{local}(\mathit{ofs})$にストア（$\mathtt{sw} \quad \mathtt{\$t0},\mathit{ofs}(\mathtt{\$sp})$）している．$\mathit{ofs}$バイト目のローカル変数のアドレスが$\mathtt{\$sp}+\mathit{ofs}$であることに注意せよ．
+- $l:$: ラベル$l$を生成（$l\mathtt{ {:} }$）している．メインのプログラムを表すラベル$l_{\mathit{main}}$は，MIPSアセンブリ内のエントリポイント（プログラムの実行時に最初に制御が移される場所）を表す$\mathtt{main}$というラベル名とする必要がある．
+- $\mathcal{G}_{n}(\mathbf{if} \; \mathit{oprd} \ne 0 \; \mathbf{then} \; \mathbf{goto} \; l)$: まず$\mathit{oprd}$に格納されている値をレジスタ$\mathtt{\$t0}$に格納する．その上で，レジスタ$\mathtt{\$t0}$が$\mathbf{true}$を表す非ゼロ値であれば$l$にジャンプ（$\mathtt{bgtz} \quad \mathtt{\$t0},l$）する．
+- $\mathcal{G}_{n}(\mathbf{goto} \; l)$: 無条件でラベル$l$にジャンプ（$\mathtt{j} \quad l$）する．
+- $\mathcal{G}_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathbf{call} \; \mathit{oprd}_f \; \mathit{oprd}_1$: 関数呼び出しを行う際には，関数呼び出し規約に従ってレジスタの内容を退避・復帰したり，引数をセットしたり，返り値を取得したりしなければならない．今回のコンパイラにおいては，関数の呼び出し側では，すでに説明した通り，(1) レジスタ`a0`の値の退避，(2) レジスタ`v0`に格納されている返り値の取得，(3) 退避しておいたレジスタ`a0`の値の復帰を行う必要がある．レジスタ値の退避・復帰を行う命令列は他のケースでも使用するので，それぞれテンプレ化して「アドレス$\mathtt{\$sp}+n$にレジスタ$r$の内容を退避する命令列$\mathit{Save}_n(r)$」と「アドレス$\mathtt{\$sp}+n$に退避したレジスタ$r$の内容を復帰する命令列$\mathit{Restore}_n(r)$」として定義しておく（後述．）$\mathit{Save}$と$\mathit{Restore}$を使うと，関数呼び出し前に実行されるべき命令列は以下の通りとなる．
+  - レジスタ$\mathtt{\$a0}$をメモリ上のアドレス$\mathtt{\$sp}+n+4$に退避 ($\mathit{Save}_{n+4}(\mathtt{\$a0})$) する．$\mathtt{\$a0}$は今から行う関数呼び出しのための実引数で上書きされるからである．
+  - $\mathit{oprd}_1$に格納されている実引数を$\mathtt{\$a0}$にロードする．
+  - $\mathit{oprd}_f$に格納されているラベル (=コード上のアドレス) を$\mathtt{\$t0}$にロードする．
+  - $\mathtt{jalr}$命令を使って$\mathtt{\$t0}$に格納されているラベルにジャンプする．$\mathtt{jalr}$命令の第一引数$\mathtt{\$ra}$には，ジャンプ先からリターンするときに帰ってくるべきコード上のアドレス (=この命令の次の行) がセットされる．（なので，$\mathtt{\$ra}$はこの命令の実行前にどこかに退避されていなければならないが，これは関数定義のアセンブリ生成のところで説明する．）この次の行からは，この後呼び出された関数が実行されリターンした後に実行されるべき命令列が書いてある．
+  - レジスタ $\mathtt{\$v0}$ に格納されているはずの（関数呼び出し規約を参照のこと）リターンされた値を$\mathbf{local}(\mathit{ofs})$，すなわち$\mathtt{\$sp}+\mathit{ofs}$に$\mathtt{sw}$命令を使ってストアする．
+  - $\mathtt{\$sp}+n+4$に呼び出し前に退避しておいたレジスタ$\mathtt{\$a0}$の内容を復帰させる ($\mathit{Restore}_{n+4}(\mathtt{\$a0})$)．
+以上の命令列が実際に正しく関数呼び出しを実行することを確認するためには，関数呼出し時の命令のみではなく，リターン命令 ($\mathcal{G}_n(\mathbf{return} \; \mathit{oprd}$) や関数定義側でどのような命令列が生成されるかも確認することがある．前者についてはすぐ，後者については後で$\mathcal{G}(d)$の定義を説明する際にそれぞれ説明する．
+- $\mathbf{return} \; \mathit{oprd}$: $\mathit{oprd}$に格納されている値を呼び出し側に返さなければならない．関数呼び出し規約によれば，関数がリターンする前には以下の処理を行う必要がある: (1) 返り値をレジスタ$\mathtt{\$v0}$にロード, (2) 関数の先頭でフレーム内に退避しておいた$\mathtt{\$ra}$の値を復帰，(3) $\mathtt{\$sp}$レジスタの値を先頭で下げた分だけ上げる (すなわち，現在のフレームに使っていたスタック上の領域を解放する), (4) $\mathtt{jr}$命令を用いて$\mathtt{\$ra}$に格納されたアドレスにリターンする．具体的には以下の命令列が生成される:
+  - $\mathit{oprd}$に格納されている値を返り値を格納すべきレジスタ ($\mathtt{\$v0}$) にロード ($\mathcal{G}_{\mathtt{\$v0}}(\mathit{oprd})$) する．
+  - $\mathtt{\$ra}$の値の復帰とフレームの解放を行う．$\mathit{Epilogue}(n)$でこの処理を行う命令を生成している．（定義は後述）$\mathit{Epilogue}(n)$はローカルな記憶領域のサイズが$n$のフレームを持つ関数呼び出しのリターン前の処理を行う命令列で，退避しておいた$\mathtt{\$ra}$の復帰$\mathit{Restore}_{n+8}(\mathtt{\$ra})$と，$\mathtt{\$sp}$の値の更新を行う．
+  - $\mathtt{jr}$命令で復帰した$\mathtt{\$ra}$にリターンする．
 
-関数定義$(l \mid i_1 \dots i_m \mid n)$に対応する命令列$\mathcal{G}((l
-\mid i_1 \dots i_m \mid n))$は以下のアセンブリを生成する．
-\begin{enumerate}
-\item この関数のラベルを生成する ($l\mathtt{:}$)．
-\item 関数本体の先頭で行わなければならない処理を行う命令列を生成する．
-  関数呼び出し規約によれば以下の処理を行う必要がある:
-  \begin{enumerate}
-  \item レジスタ$\texttt{\$sp}$の値を更新して今から使うフレームを確保する．
-  \item レジスタ$\RA$の値をフレーム内の所定の位置に退避する．
-  \end{enumerate}
-  以上の処理を行うための命令列を$\PROLOGUE(n)$として
-  図~\ref{fig:auxiliary}に定義している．ここで$n$はこの関数内で使用す
-  る局所変数のための記憶領域のサイズである．$\PROLOGUE(n)$は初めにフレー
-  ムのサイズ分$\texttt{\$sp}$の値を$\ADDIU$命令を用いて減らす．フレームのサイズ
-  は，(局所変数用領域)+($\RA$退避先用の領域4バイト)+($\texttt{\$a0}$退避先
-  用の領域4バイト)なので$n+8$である．その後，$\RA$をフレーム内の所定の
-  場所に退避している．
-\end{enumerate}
+上述の$\mathit{Save}$と$\mathit{Restore}$は以下のように定義すればよい．
 
-最後に，プログラム$(d_1 \dots d_m \mid i_1 \dots i_n \mid k)$のアセンブリ生成の定義を説明しよう．まず先頭で，以降にかかれている情報がプログラムである旨を示す$\mathtt{.text}$ディレクティブを生成している．その次の行には，アセンブリ中の$\mathtt{main}$というラベル名がグローバルなラベル，すなわち外部から見える名前であることが宣言されている．その後$d_1$から$d_m$までのアセンブリを順番に生成した後に，$\sem{l_{\mathit{main}}}\mathtt{:}$に続いて，メインのプログラムを実行するためのフレームの確保を$\PROLOGUE(k)$で行い ($k$はフレームのサイズ)，命令列$i_1 \dots i_n$に対応するアセンブリを生成する．
-
-\begin{figure}
-  \footnotesize
-  \begin{flushleft}
-    \begin{boxedminipage}{\textwidth}
-      （$\sem{\OP}$は$\mathcal{V}$の$\OP$に対応するMIPSの命令，$l$は
-        ラベル名$l$をMIPSアセンブリ内のラベルとして解釈できるようにし
-        た表現である．ただし，$\sem{l_{\mathit{main}}} =
-        \mathtt{main}$とする．）
-      
-      \fbox{Definition of $\mathcal{G}_{r}(\mathit{oprd})$}
-
-      \fbox{Definition of $\mathcal{G}_{n}(i)$}\\
-      
-      \fbox{Definition of $\mathcal{G}(d)$}
-      \[
+$$
+\begin{array}{l}
       \begin{array}{rcl}
-        \mathcal{G}((l \mid i_1 \dots i_m \mid n)) &=&
+        \mathit{Save}_n(r) &=&
         \begin{array}[t]{l}
-          l\mathtt{:}\\
-          \PROLOGUE(n)\\
-          \mathcal{G}_{n}(i_1)\\
-          \dots\\
-          \mathcal{G}_{n}(i_m)\\
-          % \EPILOGUE(n)\\
+          \mathtt{sw} \quad r,n(\mathtt{\$sp})
+        \end{array}\\
+      \end{array}\\
+      \begin{array}{rcl}
+        \mathit{Restore}_n(r) &=&
+        \begin{array}[t]{l}
+          \texttt{lw} \quad r,n(\mathtt{\$sp})
         \end{array}\\
       \end{array}
-      \]
+\end{array}
+$$
 
-      \fbox{Definition of $\mathcal{G}(P)$}
-      \[
+また，$\mathit{Epilogue}$の定義は以下の通りとなる．
+
+$$
       \begin{array}{rcl}
-        \mathcal{G}((d_1 \dots d_m \mid i_1 \dots i_n \mid k)) &=&
+        \mathit{Epilogue}(n) &=&
+        \begin{array}[t]{l}
+          \mathit{Restore}_{n+8}(\mathtt{\$ra})\\
+          \mathtt{addiu} \quad \mathtt{\$sp},\mathtt{\$sp},n+8\\
+        \end{array}\\
+      \end{array}
+$$
+
+### 関数定義の変換
+
+関数定義
+
+$$
+  d := 
+  \left(\begin{array}{l}
+    l:\\
+    \; i_1\\
+    \; \dots\\
+    \; i_m\\
+  \end{array}, 
+  n\right)
+$$
+
+に対応する命令列$\mathcal{G}(d)$は以下のとおりとなる．
+
+$$
+        \begin{array}[t]{l}
+          l\mathtt{:}\\
+          \; \mathit{Prologue}(n)\\
+          \; \mathcal{G}_{n}(i_1)\\
+          \; \dots\\
+          \; \mathcal{G}_{n}(i_m)\\
+        \end{array}
+$$
+
+定義を以下に説明する．
+- この関数のラベルを生成する ($l\mathtt{:}$)．
+- 関数本体の先頭で行わなければならない処理を行う命令列を生成する．関数呼び出し規約によれば以下の処理を行う必要がある:
+  - レジスタ$\mathtt{\$sp}$の値を更新して今から使うフレームを確保する．
+  - レジスタ$\mathtt{\$ra}$の値をフレーム内の所定の位置に退避する．
+以上の処理を行うための命令列を$\mathit{Prologue}(n)$として生成している．（定義は後述．）ここで$n$はこの関数内で使用する局所変数のための記憶領域のサイズである．$\mathit{Prologue}(n)$は初めにフレームのサイズ分$\mathtt{\$sp}$の値を$\mathtt{addiu}$命令を用いて減らす．フレームのサイズは，(局所変数用領域)+($\mathtt{\$ra}$退避先用の領域4バイト)+($\mathtt{\$a0}$退避先用の領域4バイト)なので$n+8$である．その後，$\mathtt{\$ra}$をフレーム内の所定の場所に退避している．
+
+$\mathit{Prologue}$の定義は以下の通りである．
+
+$$
+      \begin{array}{rcl}
+        \mathit{Prologue}(n) &=&
+        \begin{array}[t]{l}
+          \mathtt{addiu} \quad \mathtt{\$sp},\mathtt{\$sp},-n-8\\
+          \mathit{Save}_{n+8}(\mathtt{\$ra})\\
+        \end{array}\\
+      \end{array}
+$$
+
+### プログラムの変換
+
+最後に，プログラム
+
+$$
+\left(
+  \begin{array}{l}
+    d_1\\
+    \dots\\
+    d_m\\
+    \mathit{main}:\\
+    \; i_1\\
+    \; \dots\\
+    \; i_n\\
+  \end{array},
+  k
+\right)
+$$
+
+に対応するアセンブリは以下の通りとなる．
+
+$$
         \begin{array}[t]{l}
           \mathtt{.text}\\
           \mathtt{.globl\ main}\\
           \mathcal{G}(d_1)\\
           \dots\\
           \mathcal{G}(d_m)\\
-          \sem{l_{\mathit{main}}}\mathtt{:}\\
-          \PROLOGUE(k)\\
-          \mathcal{G}_k(i_1)\\
-          \dots\\
-          \mathcal{G}_k(i_n)\\
-          % \EPILOGUE(k)\\
+          \mathtt{main:}\\
+          \; \mathit{Prologue}(k)\\
+          \; \mathcal{G}_k(i_1)\\
+          \; \dots\\
+          \; \mathcal{G}_k(i_n)\\
         \end{array}\\
-      \end{array}
-      \]
-    \end{boxedminipage}
-  \end{flushleft}
-  \caption{アセンブリ生成の定義．}
-  \label{fig:codegen}
-\end{figure}
+$$
 
-\begin{figure}
-  \footnotesize
-  \begin{flushleft}
-    \begin{boxedminipage}{\textwidth}
-      （$\sem{\OP}$は$\mathcal{V}$の$\OP$に対応するMIPSの命令名である．）
-      
-      \fbox{Definition of $\PROLOGUE(n)$}
-      
-      \[
-      \begin{array}{rcl}
-        \PROLOGUE(n) &=&
-        \begin{array}[t]{l}
-          \ADDIU \quad \texttt{\$sp},\texttt{\$sp},-n-8\\
-          \SAVE_{n+8}(\RA)\\
-        \end{array}\\
-      \end{array}
-      \]
-        
-      \fbox{Definition of $\EPILOGUE(n)$}
 
-      \[
-      \begin{array}{rcl}
-        \EPILOGUE(n) &=&
-        \begin{array}[t]{l}
-          \RESTORE_{n+8}(\RA)\\
-          \ADDIU \quad \texttt{\$sp},\texttt{\$sp},n+8\\
-          % \JR \quad \RA\\
-        \end{array}\\
-      \end{array}
-      \]
-
-      \fbox{Definition of $\SAVE_n(r)$}
-
-      \[
-      \begin{array}{rcl}
-        \SAVE_n(r) &=&
-        \begin{array}[t]{l}
-          \ST \quad r,n(\texttt{\$sp})
-        \end{array}\\
-      \end{array}
-      \]
-
-      \fbox{Definition of $\RESTORE_n(r)$}
-
-      \[
-      \begin{array}{rcl}
-        \RESTORE_n(r) &=&
-        \begin{array}[t]{l}
-          \texttt{lw} \quad r,n(\texttt{\$sp})
-        \end{array}\\
-      \end{array}
-      \]
-
-    \end{boxedminipage}
-  \end{flushleft}
-  \caption{アセンブリ生成用補助関数の定義．}
-  \label{fig:auxiliary}
-\end{figure}
-
+まず先頭で，以降にかかれている情報がプログラムである旨を示す$\mathtt{.text}$ディレクティブを生成している．その次の行には，アセンブリ中の$\mathtt{main}$というラベル名がグローバルなラベル，すなわち外部から見える名前であることが宣言されている．その後$d_1$から$d_m$までのアセンブリを順番に生成した後に，$\mathtt{main:}$に続いて，メインのプログラムを実行するためのフレームの確保を$\mathit{Prologue}(k)$で行い ($k$はフレームのサイズ)，命令列$i_1 \dots i_n$に対応するアセンブリを生成する．
