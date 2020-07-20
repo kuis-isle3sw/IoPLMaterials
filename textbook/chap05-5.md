@@ -1,6 +1,5 @@
 {% include head.html %}
 
-
 # 仮想マシンコードとその生成
 
 ## 仮想マシンコード
@@ -149,7 +148,7 @@ $$
     I_k\\
     \mathit{main}:\\
     \; \mathcal{T}_{\delta \cup \delta',\mathbf{local}(0)}(e)\\
-    \; \mathbf{return}(\mathbf{local}(0))\\
+    \; \mathbf{return} \; \mathbf{local}(0)\\
   \end{array},
   \{f_1 \mapsto n_1, \dots, f_k \mapsto n_k, \mathit{main} \mapsto 4m+4\}
   \right)\\
