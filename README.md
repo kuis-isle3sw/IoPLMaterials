@@ -4,6 +4,7 @@
 
 ## お知らせ
 
+- 7月24日: 講義スライドを一部公開しました．
 - 6月13日: [4.7: 多相的 `let` の型推論](textbook/chap04-7.md)の説明が結構間違っていたのでこっそり修正しました．
 - 6月2日: 演習問題に問題番号をつけました．
 - 5月18日: 今年は中間試験を行いません．成績評価については別途講義で説明した通りとなります．
@@ -30,7 +31,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 （鋭意 Markdown 化中．）
 
 <!-- - [オリエンテーション資料](misc/orientation.md) -->
-- [OCaml の環境設定](textbook/setting-up-ocaml.md)
+- [OCaml の環境設定](textbook/setting-up-ocaml.md) [講義スライド](textbook/slides/ocaml.pdf)
 <!--  - [opamのインストール方法](textbook/install_opam.jp.md) -->
 - OCaml あまり知らない人向け: 前提となる OCaml の知識を身に付ける．
   - [OCaml 爆速入門 by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html)
@@ -41,8 +42,8 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
   - _1章は古くなっているので，2章から読むこと_
 - プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平
   - [1章: イントロダクション](textbook/chap01.md)
-  - [2章: 概論的な話](textbook/chap02.md)
-  - 3章: 型無し MiniML インタプリタの実装
+  - [2章: 概論的な話](textbook/chap02.md) [講義スライド](textbook/slides/intro.pdf)
+  - 3章: 型無し MiniML インタプリタの実装 [講義スライド](textbook/slides/interpreter.pdf)
     - [3.1: MiniML1 のシンタックス](textbook/chap03-1.md)
     - [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md)
     - [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md)
@@ -50,7 +51,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
     - [3.5: MiniML3: 関数の導入](textbook/chap03-5.md)
     - [3.6: MiniML4: 再帰関数](textbook/chap03-6.md)
     - [3.7: MiniML5 and beyond: やりこみのための演習問題](textbook/chap03-7.md)
-  - 4章: 型推論機能付き MiniML インタプリタの実装（あるいは，型システムを用いた形式検証の初歩）
+  - 4章: 型推論機能付き MiniML インタプリタの実装（あるいは，型システムを用いた形式検証の初歩）[講義スライド](textbook/slides/typing.pdf)
     - [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md)
     - [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md)
     - [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md)
