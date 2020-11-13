@@ -79,7 +79,6 @@ opam user-setup install
 - VSCode で OCaml を使う場合には [`vscode-ocaml-platform`](https://github.com/ocamllabs/vscode-ocaml-platform) を使うとよい.
   - また, `vscode-ocaml-platform` が必要とする [`ocaml-lsp`](https://github.com/ocaml/ocaml-lsp) を別途インストールする必要がある. 以下の手順でインストールができる.
   ```bash
-  $ opam pin add ocaml-lsp-server https://github.com/ocaml/ocaml-lsp.git
   $ opam install ocaml-lsp-server
   ```
   - また,作業ディレクトリに`.ocamlformat`ファイルを(空でもよいので)用意するとインデント等が自動的に整理されてよい.
