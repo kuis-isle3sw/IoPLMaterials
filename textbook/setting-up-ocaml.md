@@ -11,7 +11,7 @@
   ```
   opam install depext
   opam install user-setup
-  opam depext menhir dune ounit
+  opam depext menhir dune ounit tuareg
   opam install menhir dune ounit tuareg
   opam user-setup install
   ```
