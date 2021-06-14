@@ -1,0 +1,9 @@
+digraph CFG {
+  node [shape=record fontname="courier"]
+  _toplevel0 [label="{_toplevel:\l|\<BEGIN: _toplevel\>\l}"];
+  _toplevel1 [label="{move  t0, 1\lret  t0\l}"];
+  _toplevel2 [label="{\<END: _toplevel\>\l}"];
+
+  _toplevel0 -> _toplevel1
+  _toplevel1 -> _toplevel2
+  }
