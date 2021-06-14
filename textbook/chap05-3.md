@@ -36,7 +36,7 @@ let x =
 in
 x * x
 ```
-このように異なる束縛変数に同じ名前がついていると，後々の変換で面倒なことになる．以前説明したように（TODO: リンク）束縛変数を一貫して名前変えしても，プログラムの意味は変わらない．そのため，異なる束縛変数が一意な名前を持つように変換したい．例えば，上記のプログラムは，
+このように異なる束縛変数に同じ名前がついていると，後々の変換で面倒なことになる．[以前説明したように](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap03-4.html#%E6%9D%9F%E7%B8%9B%E5%A4%89%E6%95%B0%E3%81%A8%E8%87%AA%E7%94%B1%E5%A4%89%E6%95%B0%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)束縛変数を一貫して名前変えしても，プログラムの意味は変わらない．そのため，異なる束縛変数が一意な名前を持つように変換したい．例えば，上記のプログラムは，
 ```
 let t1 =
   let t2 = 2 in
@@ -63,7 +63,7 @@ $$
 
 \mathcal{I}_\delta(\mathbf{false}) &=& \mathbf{false}\\
 
-\mathcal{I}_\delta(e_1 \mathit{op} e_2) &=&
+\mathcal{I}_\delta(e_1\ \mathit{op}\ e_2) &=&
 \begin{array}[t]{l}
 \mbox{$x_1$ and $x_2$ are fresh.}\\
 \mathbf{let}\ x_1 = \mathcal{I}_\delta(e_1)\ \mathbf{in}\\
@@ -115,7 +115,7 @@ $$
 に変換してしまうと意味が変わってしまう．（$e$が$\mathbf{true}$に評価される式で，$e_2$が無限ループする式である場合に，変換前と変換後の式の評価結果をそれぞれ考えてみよう．）
 - $e = \mathbf{let}\ x = e_1\ \mathbf{in}\ e_2$ のとき: $x$が束縛されているので，これを名前替えする必要がある．Fresh な変数$t_1$を生成して，$x$を$t_1$に名前替えする．$e_1$を変換するときには元の$\delta$を用いて，$e_2$を変換するときには，$x$が$t_1$に名前替えされたことを表すために，$\delta$に$\{x \mapsto t_1\}$を用いて変換する．
 
-続いてプログラムと再帰関数定義の変換を定義する．まず，プログラムは$\mathbf{let rec}$式による相互再帰的な関数の定義$d_1,\dots,d_n$とメインの式$e$のペア$(\{d_1,\dots,d_n\},e)$であったことを思い出そう．（TODO: リンク）$d_1,\dots,d_n$で定義される関数の名前は，このプログラムに局所的な名前であるから，fresh な名前を割り当てることにする^[#トップレベルの関数名の名前替えについての注](#toplevelfun)．
+続いてプログラムと再帰関数定義の変換を定義する．まず，プログラムは$\mathbf{let rec}$式による相互再帰的な関数の定義$d_1,\dots,d_n$とメインの式$e$のペア$(\{d_1,\dots,d_n\},e)$であったことを[思い出そう](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap05-2.html#%E3%82%BD%E3%83%BC%E3%82%B9%E8%A8%80%E8%AA%9E-miniml4-)．$d_1,\dots,d_n$で定義される関数の名前は，このプログラムに局所的な名前であるから，fresh な名前を割り当てることにする<sup>[トップレベルの関数名の名前替えについての注](#toplevelfun)</sup>．
 
 $$
 \begin{array}{rcl}
@@ -123,16 +123,20 @@ $$
 \mathcal{I}(\{d_1,\dots,d_n\},e) &=& (\{\mathcal{I}_\delta(d_1),\dots,\mathcal{I}_\delta(d_n)\},\mathcal{I}_\delta(e))\\
   &\mbox{where}&
     \begin{array}[t]{l}
+      \mbox{$t_{f_1},\dots,t_{f_n}$ are fresh.}\\
       \{f_1,\dots,f_n\} = \mbox{$d_1,\dots,d_n$で定義されている関数名}\\
       \delta = \{f_1 \mapsto t_{f_1},\dots,f_n \mapsto t_{f_n}\}\\
     \end{array}\\
 
 \mathcal{I}_\delta(\mathbf{let}\ \mathbf{rec}\ f = \mathbf{fun}\ x \rightarrow e) &=&
-\mathbf{let}\ \mathbf{rec}\ \delta(f) = \mathbf{fun}\ t_1 \rightarrow \mathcal{I}_{\delta[x \mapsto t_1]}(e)\\
+  \begin{array}[t]{l}
+    \mbox{$t_1$ is fresh.}\\
+    \mathbf{let}\ \mathbf{rec}\ \delta(f) = \mathbf{fun}\ t_1 \rightarrow \mathcal{I}_{\delta[x \mapsto t_1]}(e)\\
+  \end{array}\\
 \end{array}
 $$
 
 - プログラム$(\{d_1,\dots,d_n\},e)$を変換する際には，まず$d_1,\dots,d_n$で定義されている関数の名前$f_1,\dots,f_n$を集め，それぞれに割り当てる fresh な名前$t_{f_1},\dots,t_{f_n}$を生成し，写像$\delta := \{f_1 \mapsto t_{f_1},\dots,f_n \mapsto t_{f_n}\}$を作る．$d_1,\dots,d_n$は相互再帰関数定義であり，それぞれの本体に$f_1,\dots,f_n$のうち任意の関数が現れうるから，$\delta$を用いて各関数の定義を変換し，メインの式$e$も変換する．
-- 関数定義$\mathbf{let}\ \mathbf{rec}\ f = \mathbf{fun} x \rightarrow e$の変換においては，$f$がどの関数に名前変えされたかを$\delta$を用いて取ってくる．また，$x$に割り当てるべき fresh な名前$t_1$を生成し，$x$が$t_1$に名前変えされたことを$\delta$に記録してから，本体$e$を変換する．
+- 関数定義$\mathbf{let}\ \mathbf{rec}\ f = \mathbf{fun}\ x \rightarrow e$の変換においては，$f$がどの関数に名前変えされたかを$\delta$を用いて取ってくる．また，$x$に割り当てるべき fresh な名前$t_1$を生成し，$x$が$t_1$に名前変えされたことを$\delta$に記録してから，本体$e$を変換する．
 
-<a href="#toplevelfun">トップレベルの関数名を名前替えするかどうか</a>: 今回の$\mathcal{I}$の定義ではトップレベルの関数の名前を名前替えすることにしているが，これをすべきかどうかはケースバイケースである．というのも，これらの関数名の中には，ライブラリ関数のような，プログラムの外部に公開される名前が含まれうるからである．これらの関数の名前を勝手に変えてしまうと，これらを呼び出す他のモジュールのコードとリンクする際に，関数が見つかりませんという旨のエラーが出るかもしれない．今回は外部のモジュールとのリンクを考えないので，トップレベルで定義される関数はすべてプログラムの内部のみで使われると考えることができるから，名前替えすることにする．
+<a name="toplevelfun">トップレベルの関数名を名前替えするかどうか</a>: 今回の$\mathcal{I}$の定義ではトップレベルの関数の名前を名前替えすることにしているが，これをすべきかどうかはケースバイケースである．というのも，これらの関数名の中には，ライブラリ関数のような，プログラムの外部に公開される名前が含まれうるからである．これらの関数の名前を勝手に変えてしまうと，これらを呼び出す他のモジュールのコードとリンクする際に，関数が見つかりませんという旨のエラーが出るかもしれない．今回は外部のモジュールとのリンクを考えないので，トップレベルで定義される関数はすべてプログラムの内部のみで使われると考えることができるから，名前替えすることにする．
