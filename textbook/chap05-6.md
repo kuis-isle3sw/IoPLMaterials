@@ -64,19 +64,6 @@ in fact 10
 以下は，上記のスタックレイアウトに基づいて関数呼出しを行う手順の概要である（詳細な手順については次節を参照）．
 - 呼出し側は，`a0`レジスタの値を（自身の）`saved a0` に退避してから，関数呼出しの実引数を`a0`レジスタにセットする．
 - `jal`あるいは`jalr`命令によって呼び出される関数の先頭へジャンプする．呼出し側の次の命令のアドレスは`ra`レジスタにセットされる．
--（以下，呼び出された関数側で実行）`sp`レジスタを必要なだけ下げる．
-- `ra`レジスタに入っているリターンアドレスを，スタックの所定の位置に退避する．
-- 関数本体を実行し，求まった返り値を`v0`レジスタにセットする．
-- スタック中のリターンアドレスをレジスタに戻す． TODO: ここから
-- 
-- {enum:sp}で下げたのと同じ分だけ\verb|sp|レジスタを上げるこ
-  とで，スタックからフレームを取り除く．
-\item \verb|jr|命令によって\ref{enum:ra}で取り出したリターンアドレスへ
-  リターンする．
-\item （呼出し側で実行）\verb|v0|レジスタから返り値を取り出し，さらに，
-  退避しておいたsaved a0を\verb|a0|レジスタに戻す．
-\end{enumerate}
-
 - （以下，呼び出された関数側で実行）`sp`レジスタを必要なだけ下げる．
 - `ra`レジスタに入っているリターンアドレスを，スタックの所定の位置に退避する．
 - 関数本体を実行し，求まった返り値を`v0`レジスタにセットする．
@@ -165,7 +152,7 @@ in f 0
 
 ### オペランドの変換
 
-オペランドの変換$\mathcal{G}_{r}{\mathit{oprd}}$は以下の通りである．
+オペランドの変換$\mathcal{G}_{r}(\mathit{oprd})$は以下の通りである．
 
 $$
       \begin{array}{rcl}
@@ -207,8 +194,8 @@ $$
         \end{array}\\
         \mathcal{G}_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{bop} \; \mathit{oprd}_1,\mathit{oprd}_2) &=&
         \begin{array}[t]{l}
-          \mathcal{G}_{\mathtt{\$t0}}(\mathit{oprd}\_1)\\
-          \mathcal{G}_{\mathtt{\$t1}}(\mathit{oprd}\_2)\\
+          \mathcal{G}_{\mathtt{\$t0}}(\mathit{oprd}_1)\\
+          \mathcal{G}_{\mathtt{\$t1}}(\mathit{oprd}_2)\\
           [\![\mathit{bop}]\!] \quad \mathtt{\$t0}, \mathtt{\$t0}, \mathtt{\$t1}\\
           \mathtt{sw} \quad \mathtt{\$t0},\mathit{ofs}(\mathtt{\$sp})\\
         \end{array}\\
@@ -245,18 +232,18 @@ $$
 
 各ケースの説明は以下の通りである．
 - $\mathcal{G}\_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{oprd})$: この命令は「$\mathit{oprd}$に格納されている値を$\mathbf{local}(\mathit{ofs})$に格納する」ように動作する．そのためにまず$\mathit{oprd}$の値を求め，一時レジスタ$\mathtt{\$t0}$に格納する命令を生成し（$\mathcal{G}_{\mathtt{\$t0}}(\mathit{oprd})$）その後$\mathtt{\$t0}$に格納されているアドレスからレジスタ$r$に値をロードする命令 $\mathtt{sw} \quad \mathtt{\$t0}, \mathit{ofs}(\mathtt{\$sp})$ を生成する．
-- $\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{bop} \; \mathit{oprd}\_1,\mathit{oprd}\_2$: $\mathit{oprd}\_1$に格納されている値をレジスタ$\mathtt{\$t0}$に（$\mathcal{G}\_{\mathtt{\$t0}}(\mathit{oprd}\_1)$），$\mathit{oprd}\_2$に格納されている値をレジスタ$\mathtt{\$t1}$に（$\mathcal{G}\_{\mathtt{\$t0}}(\mathit{oprd}_1)$）それぞれロードする．その上で，レジスタ$\mathtt{\$t0}$の値とレジスタ$\mathtt{\$t1}$の値を引数として演算子$\mathit{bop}$によって計算し，その結果を$\mathtt{\$t0}$にロード（$[\\![\mathit{bop}]\\\!] \quad \mathtt{\$t0}, \mathtt{\$t0}, \mathtt{\$t1}$）する．定義を簡潔にするために，演算子$\mathit{bop}$に対応する MIPSの命令を$[\\![\mathit{bop}]\\\!]$で表し，具体的に使わなければならない命令を$[\\![\dots]\\\!]$の定義の中に押し込めている．（例えば$[\\![{+}]\\\!] = \mathtt{addu}$などとする．）最後にレジスタ$\mathtt{\$t0}$の値を$\mathbf{local}(\mathit{ofs})$にストア（$\mathtt{sw} \quad \mathtt{\$t0},\mathit{ofs}(\mathtt{\$sp})$）している．$\mathit{ofs}$バイト目のローカル変数のアドレスが$\mathtt{\$sp}+\mathit{ofs}$であることに注意せよ．
+- $\mathbf{local}(\mathit{ofs}) \leftarrow \mathit{bop} \; \mathit{oprd}\_1,\mathit{oprd}\_2$: $\mathit{oprd}\_1$に格納されている値をレジスタ$\mathtt{\$t0}$に（$\mathcal{G}\_{\mathtt{\$t0}}(\mathit{oprd}\_1)$），$\mathit{oprd}\_2$に格納されている値をレジスタ$\mathtt{\$t1}$に（$\mathcal{G}\_{\mathtt{\$t1}}(\mathit{oprd}_2)$）それぞれロードする．その上で，レジスタ$\mathtt{\$t0}$の値とレジスタ$\mathtt{\$t1}$の値を引数として演算子$\mathit{bop}$によって計算し，その結果を$\mathtt{\$t0}$にロード（$[\\![\mathit{bop}]\\\!] \quad \mathtt{\$t0}, \mathtt{\$t0}, \mathtt{\$t1}$）する．定義を簡潔にするために，演算子$\mathit{bop}$に対応する MIPSの命令を$[\\![\mathit{bop}]\\\!]$で表し，具体的に使わなければならない命令を$[\\![\dots]\\\!]$の定義の中に押し込めている．（例えば$[\\![{+}]\\\!] = \mathtt{addu}$などとする．）最後にレジスタ$\mathtt{\$t0}$の値を$\mathbf{local}(\mathit{ofs})$にストア（$\mathtt{sw} \quad \mathtt{\$t0},\mathit{ofs}(\mathtt{\$sp})$）している．$\mathit{ofs}$バイト目のローカル変数のアドレスが$\mathtt{\$sp}+\mathit{ofs}$であることに注意せよ．
 - $l:$: ラベル$l$を生成（$l\mathtt{ {:} }$）している．メインのプログラムを表すラベル$l_{\mathit{main}}$は，MIPSアセンブリ内のエントリポイント（プログラムの実行時に最初に制御が移される場所）を表す$\mathtt{main}$というラベル名とする必要がある．
 - $\mathcal{G}_{n}(\mathbf{if} \; \mathit{oprd} \ne 0 \; \mathbf{then} \; \mathbf{goto} \; l)$: まず$\mathit{oprd}$に格納されている値をレジスタ$\mathtt{\$t0}$に格納する．その上で，レジスタ$\mathtt{\$t0}$が$\mathbf{true}$を表す非ゼロ値であれば$l$にジャンプ（$\mathtt{bgtz} \quad \mathtt{\$t0},l$）する．
 - $\mathcal{G}_{n}(\mathbf{goto} \; l)$: 無条件でラベル$l$にジャンプ（$\mathtt{j} \quad l$）する．
-- $\mathcal{G}_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathbf{call} \; \mathit{oprd}_f \; \mathit{oprd}_1$: 関数呼び出しを行う際には，関数呼び出し規約に従ってレジスタの内容を退避・復帰したり，引数をセットしたり，返り値を取得したりしなければならない．今回のコンパイラにおいては，関数の呼び出し側では，すでに説明した通り，(1) レジスタ`a0`の値の退避，(2) レジスタ`v0`に格納されている返り値の取得，(3) 退避しておいたレジスタ`a0`の値の復帰を行う必要がある．レジスタ値の退避・復帰を行う命令列は他のケースでも使用するので，それぞれテンプレ化して「アドレス$\mathtt{\$sp}+n$にレジスタ$r$の内容を退避する命令列$\mathit{Save}_n(r)$」と「アドレス$\mathtt{\$sp}+n$に退避したレジスタ$r$の内容を復帰する命令列$\mathit{Restore}_n(r)$」として定義しておく（後述．）$\mathit{Save}$と$\mathit{Restore}$を使うと，関数呼び出し前に実行されるべき命令列は以下の通りとなる．
+- $\mathcal{G}_{n}(\mathbf{local}(\mathit{ofs}) \leftarrow \mathbf{call} \; \mathit{oprd}_f \; \mathit{oprd}_1$: 関数呼び出しを行う際には，関数呼び出し規約に従ってレジスタの内容を退避・復帰したり，引数をセットしたり，返り値を取得したりしなければならない．今回のコンパイラにおいては，関数の呼び出し側では，すでに説明した通り，(1) レジスタ`a0`の値の退避，(2) レジスタ`v0`に格納されている返り値の取得，(3) 退避しておいたレジスタ`a0`の値の復帰を行う必要がある．レジスタ値の退避・復帰を行う命令列は他のケースでも使用するので，それぞれテンプレート化して「アドレス$\mathtt{\$sp}+n$にレジスタ$r$の内容を退避する命令列$\mathit{Save}_n(r)$」と「アドレス$\mathtt{\$sp}+n$に退避したレジスタ$r$の内容を復帰する命令列$\mathit{Restore}_n(r)$」として定義しておく（後述．）$\mathit{Save}$と$\mathit{Restore}$を使うと，関数呼び出し前に実行されるべき命令列は以下の通りとなる．
   - レジスタ$\mathtt{\$a0}$をメモリ上のアドレス$\mathtt{\$sp}+n+4$に退避 ($\mathit{Save}_{n+4}(\mathtt{\$a0})$) する．$\mathtt{\$a0}$は今から行う関数呼び出しのための実引数で上書きされるからである．
   - $\mathit{oprd}_1$に格納されている実引数を$\mathtt{\$a0}$にロードする．
   - $\mathit{oprd}_f$に格納されているラベル (=コード上のアドレス) を$\mathtt{\$t0}$にロードする．
   - $\mathtt{jalr}$命令を使って$\mathtt{\$t0}$に格納されているラベルにジャンプする．$\mathtt{jalr}$命令の第一引数$\mathtt{\$ra}$には，ジャンプ先からリターンするときに帰ってくるべきコード上のアドレス (=この命令の次の行) がセットされる．（なので，$\mathtt{\$ra}$はこの命令の実行前にどこかに退避されていなければならないが，これは関数定義のアセンブリ生成のところで説明する．）この次の行からは，この後呼び出された関数が実行されリターンした後に実行されるべき命令列が書いてある．
   - レジスタ $\mathtt{\$v0}$ に格納されているはずの（関数呼び出し規約を参照のこと）リターンされた値を$\mathbf{local}(\mathit{ofs})$，すなわち$\mathtt{\$sp}+\mathit{ofs}$に$\mathtt{sw}$命令を使ってストアする．
   - $\mathtt{\$sp}+n+4$に呼び出し前に退避しておいたレジスタ$\mathtt{\$a0}$の内容を復帰させる ($\mathit{Restore}_{n+4}(\mathtt{\$a0})$)．
-以上の命令列が実際に正しく関数呼び出しを実行することを確認するためには，関数呼出し時の命令のみではなく，リターン命令 ($\mathcal{G}_n(\mathbf{return} \; \mathit{oprd}$) や関数定義側でどのような命令列が生成されるかも確認することがある．前者についてはすぐ，後者については後で$\mathcal{G}(d)$の定義を説明する際にそれぞれ説明する．
+以上の命令列が実際に正しく関数呼び出しを実行することを確認するためには，関数呼出し時の命令のみではなく，リターン命令 ($\mathcal{G}_n(\mathbf{return} \; \mathit{oprd}$) や関数定義側でどのような命令列が生成されるかも確認する必要がある．前者についてはすぐ，後者については後で$\mathcal{G}(d)$の定義を説明する際にそれぞれ説明する．
 - $\mathbf{return} \; \mathit{oprd}$: $\mathit{oprd}$に格納されている値を呼び出し側に返さなければならない．関数呼び出し規約によれば，関数がリターンする前には以下の処理を行う必要がある: (1) 返り値をレジスタ$\mathtt{\$v0}$にロード, (2) 関数の先頭でフレーム内に退避しておいた$\mathtt{\$ra}$の値を復帰，(3) $\mathtt{\$sp}$レジスタの値を先頭で下げた分だけ上げる (すなわち，現在のフレームに使っていたスタック上の領域を解放する), (4) $\mathtt{jr}$命令を用いて$\mathtt{\$ra}$に格納されたアドレスにリターンする．具体的には以下の命令列が生成される:
   - $\mathit{oprd}$に格納されている値を返り値を格納すべきレジスタ ($\mathtt{\$v0}$) にロード ($\mathcal{G}_{\mathtt{\$v0}}(\mathit{oprd})$) する．
   - $\mathtt{\$ra}$の値の復帰とフレームの解放を行う．$\mathit{Epilogue}(n)$でこの処理を行う命令を生成している．（定義は後述）$\mathit{Epilogue}(n)$はローカルな記憶領域のサイズが$n$のフレームを持つ関数呼び出しのリターン前の処理を行う命令列で，退避しておいた$\mathtt{\$ra}$の復帰$\mathit{Restore}_{n+8}(\mathtt{\$ra})$と，$\mathtt{\$sp}$の値の更新を行う．

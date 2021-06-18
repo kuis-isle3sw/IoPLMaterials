@@ -45,7 +45,7 @@ $$
   P &::=& (\{d_1,\dots,d_n\},e)\\
   d &::=& \mathbf{let}\ \mathbf{rec}\ f = \mathbf{fun}\ x \rightarrow e\\
   v &::=& x \mid n \mid \mathbf{true} \mid \mathbf{false}\\
-  e &::=& x \mid n \mid \mathbf{true} \mid \mathbf{false} \mid v_1 \mathit{op} v_2 \mid \mathbf{if}\ v\ \mathbf{then}\ e_1\ \mathbf{else}\ e_2 \mid \mathbf{let}\ x = e_1\ \mathbf{in}\ e_2 \mid x_1 \; x_2\\
+  e &::=& x \mid n \mid \mathbf{true} \mid \mathbf{false} \mid v_1\ \mathit{op}\ v_2 \mid \mathbf{if}\ v\ \mathbf{then}\ e_1\ \mathbf{else}\ e_2 \mid \mathbf{let}\ x = e_1\ \mathbf{in}\ e_2 \mid x_1 \; x_2\\
   \mathit{op} &::=& {+} \mid {*} \mid {<}\\
 \end{array}
 $$
