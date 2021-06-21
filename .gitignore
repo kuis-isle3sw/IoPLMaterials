@@ -17,3 +17,5 @@ vendor/
 _site/
 .bundle/
 .vscode/
+_build/
+dune-project

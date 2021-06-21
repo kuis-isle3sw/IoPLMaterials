@@ -1,8 +1,8 @@
 (executables
   (names main)
-;  (libraries
-;    miniml
-;  )
+  (libraries
+    miniml
+  )
   (public_names miniml))
 
 (env
