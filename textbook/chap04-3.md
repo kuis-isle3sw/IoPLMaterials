@@ -98,7 +98,6 @@ let ty_prim op ty1 ty2 = match op with
                  TyInt, TyInt -> TyInt
                | _ -> err ("Argument must be of integer: +"))
     ...
-  | Cons -> err "Not Implemented!"
 
 let rec ty_exp tyenv = function
     Var x -> 
