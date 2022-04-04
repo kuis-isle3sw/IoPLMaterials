@@ -38,7 +38,7 @@ OPAM を使うには初期設定が必要である．[「プログラミング�
 
 ```
 opam init -y
-opam switch create 4.10.0
+opam switch create 4.14.0
 eval $(opam env)
 ```
 
@@ -46,7 +46,7 @@ eval $(opam env)
 
 ```
 opam init -y --disable-sandboxing
-opam switch create 4.10.0
+opam switch create 4.14.0
 eval $(opam env)
 ```
 
