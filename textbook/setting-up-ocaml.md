@@ -21,7 +21,7 @@
 
 ## Windows について
 
-OCaml を Windows で動作させるのは従来かなり大変だったのだが，Windows 10 からは WSL をインストールして Ubuntu 環境を作ることでうまくいくようになっているようである．（末永は Windows を使っていないので，WSL がどのようなものかあまり分かっていない．）それ以前のバージョンの Windows では，[VMWare Workstation Player（個人利用は無料）](https://www.vmware.com/jp/products/workstation-player.html) や [VirtualBox（無料）](https://www.virtualbox.org/) 等を用いて，Linux 等の UNIX 系 OS の仮想環境を作った上で，その中で OCaml をインストールして開発を進めることになる．いずれにしても，まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/setup.html)を読んでセットアップすること．
+OCaml を Windows で動作させるのは従来かなり大変だったのだが，Windows 10 からは WSL をインストールして Ubuntu 環境を作ることでうまくいくようになっているようである．（末永は Windows を使っていないので，WSL がどのようなものかあまり分かっていない．）それ以前のバージョンの Windows では，[VMWare Workstation Player（個人利用は無料）](https://www.vmware.com/jp/products/workstation-player.html) や [VirtualBox（無料）](https://www.virtualbox.org/) 等を用いて，Linux 等の UNIX 系 OS の仮想環境を作った上で，その中で OCaml をインストールして開発を進めることになる．いずれにしても，まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://hackmd.io/BGPHkpvJRYCvA2j3D9KVhw)を読んでセットアップすること．
 
 というわけで，以下では，macOS か UNIX 系の環境があると仮定して話が進む．
 
@@ -33,7 +33,7 @@ OPAM のページに [OPAM のインストール方法](https://opam.ocaml.org/d
 
 ## OPAM の初期設定
 
-OPAM を使うには初期設定が必要である．[「プログラミング言語」の講義ページの環境設定に関する資料](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/setup.html)に書いてある通りにやればよいが，ここにも実行すべきコマンドを書いておく．
+OPAM を使うには初期設定が必要である．[「プログラミング言語」の講義ページの環境設定に関する資料](https://hackmd.io/BGPHkpvJRYCvA2j3D9KVhw)に書いてある通りにやればよいが，ここにも実行すべきコマンドを書いておく．
 
 ```
 opam init -y
