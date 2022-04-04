@@ -6,7 +6,7 @@
 
 ## 要するに
 
-- まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/setup.html)を読んで OPAM をセットアップ
+- まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://hackmd.io/BGPHkpvJRYCvA2j3D9KVhw)を読んで OPAM をセットアップ
 - 以下のコマンドを順に実行．ログの最後に `eval $(opam env)` を実行せよみたいなメッセージが出たら，`eval $(opam env)` を実行してから次のコマンドを実行．
   ```
   opam install depext
