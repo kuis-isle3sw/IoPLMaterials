@@ -9,10 +9,11 @@
 - まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://hackmd.io/BGPHkpvJRYCvA2j3D9KVhw)を読んで OPAM をセットアップ
 - 以下のコマンドを順に実行．ログの最後に `eval $(opam env)` を実行せよみたいなメッセージが出たら，`eval $(opam env)` を実行してから次のコマンドを実行．
   ```
-  opam install depext
-  opam install user-setup
-  opam depext menhir dune ounit tuareg
-  opam install menhir dune ounit tuareg
+  opam install -y user-setup menhir dune ounit tuareg
+      # 上のコマンドが失敗する場合（OPAMのバージョンが古い場合）は以下のコマンドを試すこと。
+      # それでもダメならOPAMのバージョンを2.1にしてから上のコマンドを試すこと。
+      # opam install depext && opam depext --install user-setup menhir dune ounit tuareg
+
   opam user-setup install
   ```
 - `ocaml` コマンドを実行して，インタプリタが起動すれば OK
@@ -55,6 +56,22 @@ WSL2はDocker for Mac/Windowsなどのように完全なLinuxカーネルなの�
 ## 授業に必要なライブラリやツールのインストール
 
 以下のコマンドを順に実行しよう．
+
+```
+opam install -y user-setup menhir dune ounit tuareg
+opam user-setup install
+```
+
+各コマンドの意味は次の通り．
+
+- `opam install -y user-setup menhir dune ounit tuareg`: 以下のソフトウェアをインストールする
+  - `menhir`: 構文解析ツール
+  - `dune`: 自動ビルドツール
+  - `ounit`: ユニットテストツール
+  - `user-setup`: `.bash_profile` や `.emacs` のような個人設定ファイルの書き換えを自動で行ってくれる．
+
+### 古いOPAM（バージョン2.0以前）を使用している場合
+古いOPAM（バージョン2.0以前）を使用している場合、`opam install`コマンドが失敗することがある。これは、システム側に必要なパッケージをOPAMが自動でインストールしてくれないためである。この場合は、次のコマンドを試す。
 
 ```
 opam install depext
