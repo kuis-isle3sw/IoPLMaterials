@@ -14,7 +14,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 - [この講義資料の GitHub のページ](https://github.com/kuis-isle3sw/IoPLMaterials)からリポジトリを clone しましょう．
 - [OCaml が使えるように環境を設定](textbook/setting-up-ocaml.md)しましょう．
 - 落ちてきたソースコード中の `textbook/interpreter/` ディレクトリの中にインタプリタのソースコードが入っているので，`dune`コマンドでビルドしましょう．
-- [教科書](#textbook)を読みながらもりもり演習問題を解きましょう．
+- [教科書](https://kuis-isle3sw.github.io/IoPLMaterials/)を読みながらもりもり演習問題を解きましょう．
   - 教科書にバグを見つけたら [issue](https://github.com/kuis-isle3sw/IoPLMaterials/issues) で報告しましょう．
   - 講義の履修者は講義用 Slack で質問してもよいですね．
 - プログラミング言語強者になりましょう．そのためには．．．
@@ -25,6 +25,12 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 ## 教科書 <a name="textbook"></a>
 
 （鋭意 Markdown 化中．）
+
+### リンク
+
+<https://kuis-isle3sw.github.io/IoPLMaterials/>
+
+### 目次
 
 <!-- - [オリエンテーション資料](misc/orientation.md) -->
 - [OCaml の環境設定](textbook/setting-up-ocaml.md) [(講義スライド)](textbook/slides/ocaml.pdf)
