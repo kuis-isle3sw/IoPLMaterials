@@ -40,6 +40,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
   - [OCaml で二分探索木を書く by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html)
   - [この資料の「多相二分木 in OCaml」のところ](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/09-polymorphism.html)
   - [高階関数 (OCamlに関するところのみ)](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/10-hofuns.html)
+  - [多相性についてもう少し & 例外処理 (OCamlに関するところのみ)](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/11-polyBST.html)
 - もう少しちゃんとした OCaml のテキスト: [OCaml入門テキスト by 五十嵐淳](textbook/mltext.pdf)
   - _1章は古くなっているので，2章から読むこと_
 - プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平
