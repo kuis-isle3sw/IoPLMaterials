@@ -100,3 +100,8 @@ opam user-setup install
   ```
   - また,作業ディレクトリに`.ocamlformat`ファイルを(空でもよいので)用意するとインデント等が自動的に整理されてよい.
     - `ocamlformat`をインストールしていない場合はエラーが発生するので,その場合は`opam install ocamlformat`を実行し,`ocamlformat`をインストールする.
+
+## よくある質問
+
+- 毎回`eval $(opam env)`をしないとOCamlを実行できない。
+  - `opam init`を`-y`オプションつきで（`opam init -y`あるいは`opam init -y --disable-sandboxing`）実行したか確認する。していない場合は`-y`つきで再度実行する。
