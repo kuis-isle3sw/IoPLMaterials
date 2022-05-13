@@ -1,3 +1,3 @@
-open Miniml.Cui
+open Cui
 
-let _ = read_eval_print initial_env
+let () = read_eval_print initial_env

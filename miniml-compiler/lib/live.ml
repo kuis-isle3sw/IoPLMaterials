@@ -1,5 +1,4 @@
 open Vm
-open Cfg
 open Dfa
 module Set = MySet
 
