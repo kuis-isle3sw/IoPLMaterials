@@ -130,10 +130,17 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 
 
 <!--
-jekyll 等メモ:
+Some notes on the documentation:
+- build commands:
+  ```sh
+  ❯ bundle install # required for the first time
+  [...]
 
-- Gemfile を置いて bundle exec jekyll s を実行．出てきた URL を開く．
-  - 初回は bundle install が必要?
+  ❯ bundle exec jekyll serve --livereload
+  [...]
+  # Open the local server address and keep editting.
+  # The `--livereload` option is particularly helpful to see update immediatelly when you make change.
+  ```
 - 各ファイルのはじめに \{\% include head.html \%\} がおいてある．`_includes/head.html` をここに読み込むことを表してる．
   - head.html には MathJax を使うための設定等が書いてある．
 -->
