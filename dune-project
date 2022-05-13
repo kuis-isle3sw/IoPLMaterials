@@ -13,6 +13,8 @@
 (source
  (github kuis-isle3sw/IoPLMaterials))
 
+(implicit_transitive_deps false)
+
 (package
  (name miniml-compiler)
  (synopsis "Dummy package context for MiniML compiler")
