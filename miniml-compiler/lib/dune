@@ -1,0 +1,12 @@
+(library
+ (name miniml_compiler)
+ (public_name miniml-compiler)
+ (wrapped false)
+ (flags
+  (:standard -w -27)))
+
+(ocamllex
+ (modules lexer))
+
+(menhir
+ (modules parser))

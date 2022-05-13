@@ -21,7 +21,7 @@ let rec fact n =
 ;;
 
 (* パターンマッチを使った例 *)
-let rec fact2 n =
+let fact2 n =
   match n with
   | 0 -> 1
   | _ -> n * (fact (n - 1))

@@ -5,7 +5,6 @@ open Syntax
 %token LPAREN RPAREN SEMISEMI
 %token PLUS MULT LT
 %token IF THEN ELSE TRUE FALSE
-%token EOF
 
 %token <int> INTV
 %token <Syntax.id> ID

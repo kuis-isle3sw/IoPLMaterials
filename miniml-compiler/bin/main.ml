@@ -6,9 +6,7 @@ let optimize = ref false
 
 let outfile = ref "-"
 
-let initial_decls = []
-
-let rec compile prompt ichan cont =
+let compile prompt ichan cont =
   print_string prompt; flush stdout;
 
   (* このmain.ml自体の説明(コンパイラの全体構成) (1章後半) *)
@@ -84,7 +82,7 @@ let main () =
     compile "# " c k
   else
     let c = open_in !srcfile in
-    let rec k () = close_in c in
+    let k () = close_in c in
     compile "" c k
 
 let () = main ()
