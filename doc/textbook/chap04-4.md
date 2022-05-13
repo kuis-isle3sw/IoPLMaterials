@@ -5,10 +5,13 @@
 ## 関数に関する型付け規則
 
 次に，`fun`式と関数適用式
+
 ```
   e  ::=  ... | fun x -> e | e_1 e_2
 ```
+
 で型推論アルゴリズムを拡張しよう．「$\tau_1$の値を受け取って（計算が停止すれば）$\tau_2$の値を返す関数」の型を$\tau_1 \rightarrow \tau_2$ とすると，型の定義は以下のように変更される．
+
 $$
  \tau  ::= \mathbf{int} \mid \mathbf{bool} \mid \tau_1 \rightarrow \tau_2.
 $$
@@ -68,6 +71,7 @@ $$
 そして，型推論アルゴリズムの出力として，型環境中に現れる型変数の「正体が何か」を返すことにする．上の例だと，とりあえず $x$ の型は $\alpha$ などと置いて，型推論を続ける．推論の結果，$x+1$ の型は $\mathbf{int}$ である，という情報に加え $\alpha = \mathbf{int}$という「型推論の結果$\alpha$は$\mathbf{int}$であることが判明しました」という情報が返ってくることになる．最終的に$\textrm{T-Fun}$より，全体の型は$\alpha \rightarrow \mathbf{int}$，つまり，$\mathbf{int} \rightarrow \mathbf{int}$ であることがわかる．
 
 また，$\mathbf{fun}\ x \rightarrow \mathbf{fun}\ y \rightarrow x\; y$のような式を考えると，以下のような手順で型推論がすすむ．
+
 - 新しい（つまり，他の型変数とカブらない）型変数$\alpha$を生成し，$x$の型を$\alpha$と置いて，本体，つまり $\mathbf{fun}\ y \rightarrow x\; y$の型推論を行う．
 - 新しい型変数$\beta$を生成し，$y$の型を$\beta$と置いて，本体，つまり $x\; y$ の型推論を行う．
 - $x\;y$ の型推論の結果，この式の型が別の新しい型変数 $\gamma$ を使って$\beta \rightarrow \gamma$と書け，$\alpha = \beta \rightarrow \gamma$であることが判明する．

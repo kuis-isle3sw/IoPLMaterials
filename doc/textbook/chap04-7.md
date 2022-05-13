@@ -5,7 +5,7 @@
 前節までの実装で実現される型(システム)は単相的であり，ひとつの変数をあたかも複数の型を持つように扱えない．例えば，
 
 {% highlight ocaml %}
-let f = fun x -> x  in
+let f = fun x -> x in
 if f true then f 2 else 3;;
 {% endhighlight %}
 
@@ -13,10 +13,10 @@ if f true then f 2 else 3;;
 
 本節を理解するためには OCaml の多相型の知識があったほうがよい．例えば，以下の二つのプログラムがどのように型付けされるか，あるいはされないかが理解できているだろうか．
 
-+ `let id x = x in (id 3, id true)`
-+ `(fun id -> (id 3, id true)) (fun x -> x)`
+- `let id x = x in (id 3, id true)`
+- `(fun id -> (id 3, id true)) (fun x -> x)`
 
-[OCaml入門テキスト](mltext.pdf) 4.2.1 節を復習してから，この先を読むことをおすすめする．
+[OCaml 入門テキスト](mltext.pdf) 4.2.1 節を復習してから，この先を読むことをおすすめする．
 
 ## 多相性と型スキーム
 
@@ -32,7 +32,6 @@ OCaml インタプリタに `let f = fun x -> x;;` を入力すると，その�
 
 ことで `f` の多相的な振る舞いを捉えることができる．
 
-
 より形式的には，型$\tau$と型スキーム$\sigma$の定義を以下のように変更する．
 
 $$
@@ -44,12 +43,11 @@ $$
 
 新しく導入された型スキーム $\sigma$ が（上の説明の通り）型 $\tau$ の前に有限個の $\forall\alpha$ がついた形になっていることを確認されたい．また，型 $\tau$ は型スキームともみなせることに注意されたい．（$\forall \alpha.$がひとつもついていない型スキームである．）型スキーム中，$\forall$のついている型変数を _束縛されている (bound)_ といい，束縛されていない型変数（これらは単相的な型変数である）を _(自由である (free)_，という． 例えば $\forall \alpha. \alpha \rightarrow \alpha \rightarrow \beta$ において，$\alpha$ は束縛されており，$\beta$ は自由である．
 
-その上で，型環境 $\Gamma$ を（変数の型への束縛の集合ではなく）変数の_型スキームへの_束縛の集合とする．これにより，`let` で束縛された変数には型スキーム$\forall\vec{\alpha}.\tau$を持たせておき，使用する際に$\vec{\alpha}$を適切な型で置き換えることで，多相的な振る舞いを型システムの上で表現することができる．
+その上で，型環境 $\Gamma$ を（変数の型への束縛の集合ではなく）変数の*型スキームへの*束縛の集合とする．これにより，`let` で束縛された変数には型スキーム$\forall\vec{\alpha}.\tau$を持たせておき，使用する際に$\vec{\alpha}$を適切な型で置き換えることで，多相的な振る舞いを型システムの上で表現することができる．
 
 ### 型と型スキームの区別
 
 ここまでの説明から分かるように，これから導入する型システムでは型と型スキームを区別する．この区別は，技術的には，型に相当するメタ変数 $\tau$ と型スキームに相当するメタ変数$\sigma$を区別していることから生じており，この区別のために$(\forall \alpha.\alpha) \rightarrow (\forall \alpha.\alpha)$ のような表現は型とはみなされないようになっている．
-
 
 なぜより素直（？）に，型の構文を
 
@@ -67,8 +65,8 @@ $$
 以下は `syntax.ml` に追加すべき，型スキームを表す型と，以下で使う補助関数の定義（の一部）である．
 
 {% highlight ocaml %}
-(* type scheme *)
-type tysc = TyScheme of tyvar list * ty
+(_ type scheme _)
+type tysc = TyScheme of tyvar list \* ty
 
 let tysc_of_ty ty = TyScheme ([], ty)
 
@@ -126,8 +124,8 @@ $$
 
 {% highlight ocaml %}
 (fun y ->
-  let f = fun () -> y in
-  f () + 1)
+let f = fun () -> y in
+f () + 1)
 true
 {% endhighlight %}
 
@@ -162,40 +160,40 @@ $$
 ### `typing.ml`
 
 {% highlight ocaml %}
-(* New! 型環境は型スキームへの束縛に *)
+(_ New! 型環境は型スキームへの束縛に _)
 type tyenv = tysc Environment.t
 
-(* New! 型スキームは束縛変数を含むので「自由に出現する型変数の集合」の計算方法を変える必要がある． *)
+(_ New! 型スキームは束縛変数を含むので「自由に出現する型変数の集合」の計算方法を変える必要がある． _)
 let rec freevar_tyenv tyenv = ...
 
-(* New! 下の説明を参照 *)
+(_ New! 下の説明を参照 _)
 let closure ty tyenv subst =
-  let fv_tyenv' = freevar_tyenv tyenv in
-  let fv_tyenv =
-    MySet.bigunion
-      (MySet.map
-          (fun id -> freevar_ty (subst_type subst (TyVar id)))
-          fv_tyenv') in
-  let ids = MySet.diff (freevar_ty ty) fv_tyenv in
-    TyScheme (MySet.to_list ids, ty)
+let fv_tyenv' = freevar_tyenv tyenv in
+let fv_tyenv =
+MySet.bigunion
+(MySet.map
+(fun id -> freevar_ty (subst_type subst (TyVar id)))
+fv_tyenv') in
+let ids = MySet.diff (freevar_ty ty) fv_tyenv in
+TyScheme (MySet.to_list ids, ty)
 
-(* New! 束縛変数を含むため，代入の定義を少し工夫する必要がある．*)
+(_ New! 束縛変数を含むため，代入の定義を少し工夫する必要がある．_)
 let rec subst_type subst = ...
 
 let rec ty_exp tyenv = function
-     Var x ->
-      (try 
-	    (* New! T-Var への変更を反映 *)
-        let TyScheme (vars, ty) = Environment.lookup x tyenv in
-        let s = List.map (fun id -> (id, TyVar (fresh_tyvar ()))) vars in
-          ([], subst_type s ty)
-       with Environment.Not_bound -> err ("variable not bound: " ^ x))
-   | ...
-   | LetExp (id, exp1, exp2) -> ... (* がんばって実装せよ*)
+Var x ->
+(try
+(_ New! T-Var への変更を反映 _)
+let TyScheme (vars, ty) = Environment.lookup x tyenv in
+let s = List.map (fun id -> (id, TyVar (fresh_tyvar ()))) vars in
+([], subst_type s ty)
+with Environment.Not_bound -> err ("variable not bound: " ^ x))
+| ...
+| LetExp (id, exp1, exp2) -> ... (_ がんばって実装せよ_)
 
-let ty_decl tyenv = function
-    Exp e -> let (_, ty) = ty_exp tyenv e in (tyenv, ty) (* New! *)
-  | Decl (id, e) -> ...
+let ty*decl tyenv = function
+Exp e -> let (*, ty) = ty_exp tyenv e in (tyenv, ty) (_ New! _)
+| Decl (id, e) -> ...
 {% endhighlight %}
 
 まず，変数式に関するケースを考えよう．型変数に代入する型（型付け規則中の$\tau_1,\ldots,\tau_n$）はこの時点では未知であり，変数が他の部分でどう使われるかに依存して決定される．そのため，ここでは$\tau_1,\dots,\tau_n$に相当する新しい型変数を用意し，それらを使って具体化を行う．
@@ -206,17 +204,17 @@ let ty_decl tyenv = function
 
 {% highlight ocaml %}
 let rec read_eval_print env tyenv =
-  print_string "# ";
-  flush stdout;
-  let decl = Parser.toplevel Lexer.main (Lexing.from_channel stdin) in
-  let (newtyenv, ty) = ty_decl tyenv decl in (* New! *)
-  let (id, newenv, v) = eval_decl env decl in
-    Printf.printf "val %s : " id;
-    pp_ty ty;
-    print_string " = ";
-    pp_val v;
-    print_newline();
-    read_eval_print newenv newtyenv (* New! *)
+print_string "# ";
+flush stdout;
+let decl = Parser.toplevel Lexer.main (Lexing.from_channel stdin) in
+let (newtyenv, ty) = ty_decl tyenv decl in (_ New! _)
+let (id, newenv, v) = eval_decl env decl in
+Printf.printf "val %s : " id;
+pp_ty ty;
+print_string " = ";
+pp_val v;
+print_newline();
+read_eval_print newenv newtyenv (_ New! _)
 {% endhighlight %}
 
 <!-- % \subsubsection{型スキームに対する型代入} -->
@@ -261,10 +259,12 @@ let rec read_eval_print env tyenv =
 TODO: ここまで書いた
 
 ### Exercise 4.4.1 [**]
-  多相的 `let` 式・宣言ともに扱える型推論アルゴリズムの実装を完成させよ．
+
+多相的 `let` 式・宣言ともに扱える型推論アルゴリズムの実装を完成させよ．
 
 ### Exercise 4.4.2 [*]
-  以下の型付け規則を参考にして，再帰関数が多相的に扱えるように，型推論機能を拡張せよ．
+
+以下の型付け規則を参考にして，再帰関数が多相的に扱えるように，型推論機能を拡張せよ．
 
 $$
 \begin{array}{c}
@@ -287,24 +287,22 @@ OCaml では，$: \tau$ という形式で，式や宣言された変数の型�
 
 ### Exercise 4.4.5 [*****]
 
-*実験3SW履修者向け: この問題は現在リポジトリ内に入っていないので，提出する際にはあらかじめ Slack で相談してください．*
+_実験 3SW 履修者向け: この問題は現在リポジトリ内に入っていないので，提出する際にはあらかじめ Slack で相談してください．_
 
 型推論時にエラーが発生した際に，元のプログラムのうち型エラーに関係している場所以外を `...` に変更してユーザに表示せよ．これにより，型エラーの原因をある意味わかりやすく表示することができる．例えば
 
 {% highlight ocaml %}
 let rec f = fun x -> fun y ->
-  let w = y + 1 in
-    w :: y
+let w = y + 1 in
+w :: y
 {% endhighlight %}
 
 に対して
 
 {% highlight ocaml %}
 ... y ->
-  ... y + ...
-    ... :: y
+... y + ...
+... :: y
 {% endhighlight %}
 
 が出力されるとよい．これにより，`y` が整数としてもリストとしても使われているのが型エラーの原因であると分かる．これは _型エラースライシング (type-error slicing)_ と呼ばれている手法で，[Christian Haack, Joe B. Wells: Type Error Slicing in Implicitly Typed Higher-Order Languages. ESOP 2003: 284-301](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.8.9985&rep=rep1&type=pdf)で提案されている手法である．
-
-	

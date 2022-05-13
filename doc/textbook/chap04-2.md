@@ -7,13 +7,14 @@
 ## 型の構文
 
 まず，MiniML2 の式に対しての型推論を考える．MiniML2 では，トップレベル入力として，式だけでなく`let`宣言を導入したが，ここではひとまず式についての型推論のみを考え，`let`宣言については最後に扱うことにする．[ここでまず MiniML2 の文法を見てほしい](chap03-2#bnf)．
+
 <!-- %
 \begin{eqnarray*}
   e & ::= & x \mid n \mid \ML{true} \mid
-  \ML{false} \mid e_1 \ \textit{op}\  e_2 \mid 
-  \ML{if}\ e_1\ \ML{ then }\ e_2\ \ML{ else }\ e_3 
+  \ML{false} \mid e_1 \ \textit{op}\  e_2 \mid
+  \ML{if}\ e_1\ \ML{ then }\ e_2\ \ML{ else }\ e_3
   \mid  \ML{let}\ x\ \ML{=}\ e_1\ \ML{in}\ e_2 \\
-  \textit{op} & ::= & \ML{+} \mid \ML{*} \mid \ML{<} 
+  \textit{op} & ::= & \ML{+} \mid \ML{*} \mid \ML{<}
 \end{eqnarray*}
 %
 % \AI{e と op のフォント揃えません？} -->
@@ -30,6 +31,7 @@
     いる」ことを表す英語の表現はいくつかあり，''Expressions are ranged
   over by metavariable $e$'' とか，''$e$ is the metavariable that
   represents an expression'' とか言ったりする．} -->
+
 この言語に対する型を考えるわけなのだが，何を型として扱えばよいだろうか．MiniML2 は関数を含まず，値は整数値とブール値のみなので，整数型と真偽値型があれば良さそうである．したがって，型の構文は，メタ変数を$\tau$として，以下のように定義しよう．
 
 $$
@@ -58,7 +60,7 @@ $\mathbf{int}$は整数型, $\mathbf{bool}$は真偽値型である．
 
 この状況は，[MiniML2 インタプリタを実装したとき](chap03-2#environment)に，自由変数の値への束縛を環境というデータ構造で管理したのと相似である．いわば，我々は今 _自由変数の型への束縛_ を管理するデータ構造を必要としているのである．この，変数の型への束縛を管理するデータ構造を _型環境 (type environment)_ と呼ぶ．(型環境を表すメタ変数として$\Gamma$を用いる．）これを使えば，変数に対する型判断は，例えば
 
-> $\Gamma(x) = \mathbf{int}$ の時 $x: \mathbf{int}$ である  
+> $\Gamma(x) = \mathbf{int}$ の時 $x: \mathbf{int}$ である
 
 のように設計すればよさそうである．このことを考慮に入れて，型判断は，$\Gamma \vdash e : \tau$ と記述し，
 
@@ -265,13 +267,12 @@ $$
 
 型付け規則を導入したところで，具体的にどのような型判断が「正しい」とされるのかを定義しよう．型判断
 $\Gamma \vdash e : \tau$ は，これが上記の型付け規則で _導出できる (derivable)_ ときに正しい型判断であると決める．この型判断が導出できる，とは，根が型判断$\Gamma \vdash e : \tau$で，上記のすべての辺が型付け規則に沿っている木が存在することである．（すべての葉は前提が無い型付け規則が適用された形になっている．）この木を型判断$\Gamma \vdash e : \tau$を導出する _導出木 (derivation tree)_ という．
- 
+
 例えば，以下は型判断$x : \mathbf{int} \vdash \mathbf{let}\ y = 3\ \mathbf{in}\ x + y : \mathbf{int}$の導出木である．
 
 TODO: 導出木の画像を貼る
 
 このように導出木が存在するので，型判断$x : \mathbf{int} \vdash \mathbf{let}\ y = 3\ \mathbf{in}\ x + y : \mathbf{int}$ は正しい．
-
 
 <!-- \[
 \infer[\rn{T-Let}]{
@@ -288,5 +289,3 @@ TODO: 導出木の画像を貼る
         }
 }
 \] -->
-
-

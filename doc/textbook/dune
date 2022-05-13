@@ -1,0 +1,11 @@
+(documentation
+ (package tutorial)
+ (mld_files :standard))
+
+(rule
+ (mode promote)
+ (deps
+  (:dep chap03-2.cpp.mld))
+ (target chap03-2.mld)
+ (action
+  (run cppo -n %{dep} -o %{target})))
