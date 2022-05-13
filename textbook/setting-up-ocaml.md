@@ -8,6 +8,7 @@
 
 - まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://hackmd.io/BGPHkpvJRYCvA2j3D9KVhw)を読んで OPAM をセットアップ
 - 以下のコマンドを順に実行．ログの最後に `eval $(opam env)` を実行せよみたいなメッセージが出たら，`eval $(opam env)` を実行してから次のコマンドを実行．
+
   ```
   opam install -y user-setup menhir dune ounit tuareg
       # 上のコマンドが失敗する場合（OPAMのバージョンが古い場合）は以下のコマンドを試すこと。
@@ -16,6 +17,7 @@
 
   opam user-setup install
   ```
+
 - `ocaml` コマンドを実行して，インタプリタが起動すれば OK
 - うまく行かなければ以下を読む．それでもダメなら，講義用 Slack か PandA かここに issue を立てて質問．
 - OPAM のセットアップのことはさておいても，履修者は講義用 Slack に入っておいてね．
@@ -30,7 +32,7 @@ OCaml を Windows で動作させるのは従来かなり大変だったのだ�
 
 [OPAM](https://opam.ocaml.org/) は OCaml のパッケージマネージャである．（ところで，Google で日本語を使う設定にしておいて OPAM を検索すると，[大分県立美術館](http://www.opam.jp/)が最初にヒットする．いつか行ってみたいものである．）これを導入するのが OCaml の開発環境を作る上で一番の早道である．
 
-OPAM のページに [OPAM のインストール方法](https://opam.ocaml.org/doc/Install.html) が載っている．基本的にはこれを読んでほしいのだが，一応2020年4月5日時点の内容を[和訳](install_opam.jp.md)しておいた．こっちを読んでもよい．
+OPAM のページに [OPAM のインストール方法](https://opam.ocaml.org/doc/Install.html) が載っている．基本的にはこれを読んでほしいのだが，一応 2020 年 4 月 5 日時点の内容を[和訳](install_opam.jp.md)しておいた．こっちを読んでもよい．
 
 ## OPAM の初期設定
 
@@ -50,8 +52,8 @@ opam switch create 4.14.0
 eval $(opam env)
 ```
 
-`--disable-sandboxing` は,Windows Cygwin,もしくはWSL1にインストールするならば必須．
-WSL2はDocker for Mac/Windowsなどのように完全なLinuxカーネルなので,opamの全ての機能が利用可能.
+`--disable-sandboxing` は,Windows Cygwin,もしくは WSL1 にインストールするならば必須．
+WSL2 は Docker for Mac/Windows などのように完全な Linux カーネルなので,opam の全ての機能が利用可能.
 
 ## 授業に必要なライブラリやツールのインストール
 
@@ -70,8 +72,9 @@ opam user-setup install
   - `ounit`: ユニットテストツール
   - `user-setup`: `.bash_profile` や `.emacs` のような個人設定ファイルの書き換えを自動で行ってくれる．
 
-### 古いOPAM（バージョン2.0以前）を使用している場合
-古いOPAM（バージョン2.0以前）を使用している場合、`opam install`コマンドが失敗することがある。これは、システム側に必要なパッケージをOPAMが自動でインストールしてくれないためである。この場合は、次のコマンドを試す。
+### 古い OPAM（バージョン 2.0 以前）を使用している場合
+
+古い OPAM（バージョン 2.0 以前）を使用している場合、`opam install`コマンドが失敗することがある。これは、システム側に必要なパッケージを OPAM が自動でインストールしてくれないためである。この場合は、次のコマンドを試す。
 
 ```
 opam install depext
@@ -103,5 +106,5 @@ opam user-setup install
 
 ## よくある質問
 
-- 毎回`eval $(opam env)`をしないとOCamlを実行できない。
+- 毎回`eval $(opam env)`をしないと OCaml を実行できない。
   - `opam init`を`-y`オプションつきで（`opam init -y`あるいは`opam init -y --disable-sandboxing`）実行したか確認する。していない場合は`-y`つきで再度実行する。

@@ -1,0 +1,156 @@
+{0 京都大学工学部専門科目「プログラミング言語処理系」講義資料}
+
+{1 お知らせ}
+
+- 4月1日: 本科目の履修を検討している人は、必ず {{:https://panda.ecs.kyoto-u.ac.jp/portal/site/2022-110-9128-000/page/23850a9f-f535-41a1-8cb9-147f9cba50bf}PandA の本科目のページ}をチェックしておいてください。
+- 4月1日: 2022年度版ページにしました。
+
+{1 学習の仕方}
+
+{e 計算機科学コースの学生には講義中に別途やり方を指示します．（実験 3SW もやるので．)}
+
+- {{:https://github.com/kuis-isle3sw/IoPLMaterials}この講義資料の GitHub のページ}からリポジトリを clone しましょう．
+- {{:textbook/setting-up-ocaml.md}OCaml が使えるように環境を設定}しましょう．
+- 落ちてきたソースコード中の [textbook/interpreter] ディレクトリの中にインタプリタのソースコードが入っているので，[dune]コマンドでビルドしましょう．
+
+- {{:https://kuis-isle3sw.github.io/IoPLMaterials}教科書}を読みながらもりもり演習問題を解きましょう．
++ 教科書にバグを見つけたら {{:https://github.com/kuis-isle3sw/IoPLMaterials/issues}issue} で報告しましょう．
++ 講義の履修者は講義用 Slack で質問してもよいですね．
+
+- プログラミング言語強者になりましょう．そのためには．．．
++ なにか自分で言語を作って処理系を作ってみましょう．作った処理系を自慢しましょう．世界中で自作の言語が使われるようになったらいいですね．
++ もしくは，プログラミング言語理論やプログラム検証を勉強してみましょう．
+
+{1:textbook 教科書}
+
+鋭意 Markdown 化中.
+
+{2 リンク}
+
+{:https://kuis-isle3sw.github.io/IoPLMaterials}
+
+{2 目次}
+
+{3 参考資料}
+
+- {{:textbook/setting-up-ocaml}OCaml の環境設定} {{:textbook/slides/ocaml.pdf}(講義スライド)}
+
+- OCaml あまり知らない人向け:
+前提となる OCaml の知識を身に付ける．
++ {{:http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html}OCaml 爆速入門 by 五十嵐淳}
++ {{:http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html}OCaml で二分探索木を書く by 五十嵐淳}
++ {{:http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/09-polymorphism.html}この資料の「多相二分木 in OCaml」のところ}
++ {{:http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/10-hofuns.html}高階関数 (OCaml に関するところのみ)}
++ {{:http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/11-polyBST.html}多相性についてもう少し & 例外処理 (OCaml に関するところのみ)}
+
+- もう少しちゃんとした OCaml のテキスト:
++ {{:textbook/mltext}OCaml 入門テキスト by 五十嵐淳}
+{e (1章は古くなっているので，2章から読むこと)}
+
+{3 プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平}
+
+{4 1章}
+{{!page-chap01}イントロダクション}
+
+{4 2章}
+{{!page-chap02}概論的な話} {{:textbook/slides/intro.pdf}(講義スライド)}
+
+{4 3章}
+型無し MiniML インタプリタの実装 {{:textbook/slides/interpreter.pdf}(講義スライド)}
++ {{!page-"chap03-1"}MiniML1 のシンタックス}
++ {{!page-"chap03-2"}各モジュールの機能 (1): [Syntax], [Eval], [Environment], [Cui]}
++ {{!page-"chap03-3"}各モジュールの機能 (2): [Parser], [Lexer]}
++ {{!page-"chap03-4"}MiniML2: 定義の導入}
++ {{!page-"chap03-5"}MiniML3: 関数の導入}
++ {{!page-"chap03-6"}MiniML4: 再帰関数}
++ {{!page-"chap03-7"}MiniML5 and beyond: やりこみのための演習問題}
+
+{4 4章}
+型推論機能付き MiniML インタプリタの実装（あるいは，型システムを用いた形式検証の初歩）{{:textbook/slides/typing.pdf}(講義スライド)}
++ {{:textbook/chap04-1}静的プログラム検証へのイントロダクション}
++ {{:textbook/chap04-2}MiniML2 のための型推論 (1): MiniML2 の型システム}
++ {{:textbook/chap04-3}MiniML2 のための型推論 (2): 型推論アルゴリズム}
++ {{:textbook/chap04-4}MiniML3,4 のための型推論 (1): Prelude}
++ {{:textbook/chap04-5}MiniML3,4 のための型推論 (2): 型の等式制約と単一化}
++ {{:textbook/chap04-6}MiniML3,4 のための型推論 (3): 型推論アルゴリズムの実装}
++ {{:textbook/chap04-7}多相的 [let] の型推論}
++ やりこみのための演習問題
+
+{4 5章}
+MiniML コンパイラの実装
++ {{:textbook/chap05-1}能書き}
++ {{:textbook/chap05-2}ソース言語 MiniML4 と中間言語C}
++ {{:textbook/chap05-3}MiniML4 からCへの変換I}
++ {{:textbook/chap05-4}MIPS アセンブリ言語入門}
++ {{:textbook/chap05-5}仮想マシンコードとその生成}
++ {{:textbook/chap05-6}アセンブリ生成}
++ Cの最適化（まだ）
++ Vにおけるデータフロー解析（まだ）
++ レジスタ割り付け（まだ）
++ 高階関数（まだ）
++ 動的メモリ管理（やるの？）
++ オブジェクト指向（やるの？）
++ 分割コンパイルとリンカ（やるの？）
+
+{4 6章}
+字句解析と構文解析のためのアルゴリズム（まだ．今学期はスライドで講義済み．）
++ 字句解析
++ LL(1)アルゴリズム
++ LR(0)アルゴリズム
++ SLR(1), LR(1)アルゴリズム
+
+{4 7章}
+さらに学びたい人のための参考文献
+
+{4 8章}
+{{:textbook/reference}参考文献}
+
+{1 リンク集}
+
+- {{:https://kuis-isle3sw.github.io/kuis-isle3sw-portal}実験3 ホームページ}
+
+- {{:https://github.com/aigarashi/PL-LectureNotes}専門科目「プログラミング言語」ホームページ}
++ {{:http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html}の中の OCaml のページ（最低このくらいはわかってないとキツイ）}
++ {{:http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html}の中の OCaml で二分探索木を書くページ（これもわかってないとキツイ）}
+
+- {{:textbook/chap03-2.md#standardLib}OCaml の標準ライブラリの話}を教科書に書いてあるので読んでおくととても良い違いない．
+
+{1 講義日程}
+
+- 4/11
+- 4/18
+- 4/25
+- 5/2
+- 5/9
+- 5/16
+- 5/23
+- 5/30
+- 6/6
+- 6/13
+- 6/20
+- 6/27
+- 7/4
+- 7/11
+- (7/25)
+
+{1 講義に関する情報}
+
+- 講義をする人: 末永幸平（{{:http://www.twitter.com/ksuenaga}\@ksuenaga}), {{:https://researchmap.jp/ksuenaga}Researchmap}）
+- 講義が行われる時間: 月曜2限
+- 講義が行われる場所: 総合研究7号館講義室1
+- Language used in the class: Japanese
+
+{1 ご寄付のお願い}
+
+本学学生以外の方で，もしこのページのマテリアルが有用であるとお思いになられたら，是非{{:https://payment.kikin.kyoto-u.ac.jp/kyoto-u/entry.php?purposeCode=406000}京都大学基金}へのご寄付をいただけると幸いです．運営費交付金が年々削減される中で，大学教員が教育と研究活動を両立させつつ，学外の方々にも有用な情報を発信し続けられるよう，ご支援をいただけると大変ありがたく思います．{{:https://www.kikin.kyoto-u.ac.jp/exemption}京都大学へのご寄付に対しましては，法人税法，所得税法による税制上の優遇措置が受けられます．}
+
+特に以下の基金へのご寄付をいただけますと大変ありがたいです．
+
+- {{:https://www.kikin.kyoto-u.ac.jp/contribution/student}京都大学修学支援基金}:
+意欲と能力のある学生が経済的理由で修学・進学を断念することなく，希望する教育を受けられるようにすることを目的とした基金です．
+
+- {{:https://www.kikin.kyoto-u.ac.jp/contribution/tachibana}男女共同参画支援たちばな基金}:
+男女共同参画支援を推進するための基金で，育児等支援の充実，保育施策の充実，男女共同参画推進事業の充実を目的とした基金です．
+
+- {{:https://www.kikin.kyoto-u.ac.jp/contribution/informatics}情報学研究科基金}:
+情報学研究科における大学院生の学修・研究支援，若手研究者支援，研究支援を目的とした基金です．
