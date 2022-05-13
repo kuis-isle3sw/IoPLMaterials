@@ -5,11 +5,15 @@ type nat
 
 (* 自然数 0 を表す値．*)
 val zero : nat
+
 (* 与えられた nat 型の値が 0 を表していれば true を，そうでなければ false を返す関数 *)
 val iszero : nat -> bool
+
 (* 与えられた nat 型の値が表す値に 1 を加えた自然数を返す *)
 val succ : nat -> nat
+
 (* 与えられた nat 型の値から 1 を引いた自然数を返す．0 が与えられると Failure 例外を投げる．*)
 val prev : nat -> nat
+
 (* 与えられた自然数を int 型に変換 *)
 val repr : nat -> int

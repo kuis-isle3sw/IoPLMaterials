@@ -1,13 +1,17 @@
 let debug = ref false
-let dprint s = if !debug then (print_string (s ()) ; flush stdout)
+
+let dprint s =
+  if !debug then (
+    print_string (s ());
+    flush stdout)
 
 let display_cfg = ref false
 let optimize = ref false
-
 let outfile = ref "-"
 
 let compile prompt ichan cont =
-  print_string prompt; flush stdout;
+  print_string prompt;
+  flush stdout;
 
   (* このmain.ml自体の説明(コンパイラの全体構成) (1章後半) *)
 
@@ -16,35 +20,31 @@ let compile prompt ichan cont =
 
   (* Normal form conversion (3章) *)
   let norm = Normal.convert prog in
-  dprint (fun () -> "(* [Normal form] *)\n" ^ (Normal.string_of_norm norm));
+  dprint (fun () -> "(* [Normal form] *)\n" ^ Normal.string_of_norm norm);
 
   (* Closure conversion (4章) *)
   let closed = Closure.convert norm in
-  dprint (fun () -> "\n(* [Closure] *)\n" ^ (Closure.string_of_closure closed));
+  dprint (fun () -> "\n(* [Closure] *)\n" ^ Closure.string_of_closure closed);
 
   (* Flattening (5章前半) *)
   let flat = Flat.flatten closed in
-  dprint (fun () -> "\n(* [Flat] *)\n" ^ (Flat.string_of_flat flat));
+  dprint (fun () -> "\n(* [Flat] *)\n" ^ Flat.string_of_flat flat);
 
   (* Translate to VM (5章後半) *)
   let vmcode = Vm.trans flat in
-  dprint (fun () -> "\n(* [VM code] *)\n" ^ (Vm.string_of_vm vmcode));
+  dprint (fun () -> "\n(* [VM code] *)\n" ^ Vm.string_of_vm vmcode);
 
   (* 制御フローグラフを表示 *)
-  if !display_cfg && not !optimize then
-    Cfg.display_cfg (Cfg.build vmcode) None;
+  if !display_cfg && not !optimize then Cfg.display_cfg (Cfg.build vmcode) None;
 
   let armcode =
-    if !optimize then
+    if !optimize then (
       (* Low-level opt. (7章 DFA & 最適化) *)
-
       let regcode = Opt.optimize !display_cfg Arm_spec.nreg vmcode in
-      dprint (fun () ->
-          "(* [Reg code] *)\n" ^ (Reg.string_of_reg regcode) ^ "\n");
+      dprint (fun () -> "(* [Reg code] *)\n" ^ Reg.string_of_reg regcode ^ "\n");
       (* Convert to ARM assembly (7章 コード生成(レジスタ利用版)) *)
-      Arm_reg.codegen regcode
-    else
-      (* Convert to ARM assembly (6章 コード生成) *)
+      Arm_reg.codegen regcode)
+    else (* Convert to ARM assembly (6章 コード生成) *)
       Arm_noreg.codegen vmcode
   in
 
@@ -56,23 +56,25 @@ let compile prompt ichan cont =
   (* continued... *)
   cont ()
 
-
 (* ==== main ==== *)
 
 let srcfile = ref "-"
-
 let usage = "Usage: " ^ Sys.argv.(0) ^ " [-vOG] [-o ofile] [file]"
 
-let aspec = Arg.align [
-    ("-o", Arg.Set_string outfile,
-     " Set output file (default: stdout)");
-    ("-O", Arg.Unit (fun () -> optimize := true),
-     " Perform optimization (default: " ^ (string_of_bool !optimize) ^ ")");
-    ("-G", Arg.Unit (fun () -> display_cfg := true),
-     " Display CFG (default: " ^ (string_of_bool !display_cfg) ^ ")");
-    ("-v", Arg.Unit (fun () -> debug := true),
-     " Print debug info (default: " ^ (string_of_bool !debug) ^ ")");
-  ]
+let aspec =
+  Arg.align
+    [
+      ("-o", Arg.Set_string outfile, " Set output file (default: stdout)");
+      ( "-O",
+        Arg.Unit (fun () -> optimize := true),
+        " Perform optimization (default: " ^ string_of_bool !optimize ^ ")" );
+      ( "-G",
+        Arg.Unit (fun () -> display_cfg := true),
+        " Display CFG (default: " ^ string_of_bool !display_cfg ^ ")" );
+      ( "-v",
+        Arg.Unit (fun () -> debug := true),
+        " Print debug info (default: " ^ string_of_bool !debug ^ ")" );
+    ]
 
 let main () =
   Arg.parse aspec (fun s -> srcfile := s) usage;
