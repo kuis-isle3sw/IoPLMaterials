@@ -18,4 +18,3 @@ _site/
 .bundle/
 .vscode/
 _build/
-dune-project
