@@ -129,6 +129,14 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 + [男女共同参画支援たちばな基金](https://www.kikin.kyoto-u.ac.jp/contribution/tachibana/): 男女共同参画支援を推進するための基金で，育児等支援の充実，保育施策の充実，男女共同参画推進事業の充実を目的とした基金です．
 + [情報学研究科基金](https://www.kikin.kyoto-u.ac.jp/contribution/informatics/): 情報学研究科における大学院生の学修・研究支援，若手研究者支援，研究支援を目的とした基金です．
 
+## ローカル環境でのビルド方法
+
+この資料は [Jekyll](http://jekyllrb-ja.github.io/) を使用して構築されています．動作確認などのためにこの資料をローカル環境で表示させる場合は，[Ruby](https://www.ruby-lang.org/ja/) を導入した上で，次の通りコマンドを実行してください．
+```
+$ gem install bundler jekyll
+$ bundle exec jekyll serve --baseurl '/IoPLMaterials'
+```
+その後 [http://127.0.0.1:4000/IoPLMaterials/](http://127.0.0.1:4000/IoPLMaterials/) にアクセスしてください。
 
 <!--
 Some notes on the documentation:
