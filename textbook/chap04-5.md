@@ -225,7 +225,7 @@ $$
   + $\tau_1$ と $\tau_2$ の片方が型変数だった場合，すなわち選んだ制約が $\alpha = \tau$ か $\tau = \alpha$ の形をしていた場合<sup>[$\alpha = \alpha$の場合についての注](#alphaeqalpha)</sup>: この場合，型変数$\alpha$は$\tau$でなければならないことがわかる．したがって，残りの制約$X'$中の$\alpha$に$\tau$を代入した制約$[\alpha\mapsto\tau] X'$を作り，これを再帰的に解き，得られた解に$\alpha$を$\tau$に代入する写像$[\alpha \mapsto \tau]$を合成して得られる写像$\mathit{Unify}([\alpha\mapsto\tau] X') \circ [\alpha\mapsto\tau]$を解として返せばよい．ところが，ここで注意すべきことが一つある．もし$\tau$中に$\alpha$が現れていた場合<sup>[$\alpha = \alpha$の場合の注2](#alphaeqalpha2)</sup>，ここでエラーを検出しなければならない．（なぜなのかを考察する課題を以下に用意している．）この条件のチェックのことを _オカーチェック (occur check)_ と呼ぶ．
 + これら以外の場合: エラーを報告する．
 
-<a name="alphaeqalpha">$\alpha = \alpha$ の形だった場合はこのケースではなく，一つ前のケースに当てはまる．</a>
+<a name="alphaeqalpha">$\alpha = \alpha$ の形だった場合はこのケースではなく，「$\tau_1$と$\tau_2$がすでに同じ形であった場合」のケースに当てはまる．</a>
 
 <a name="alphaeqalpha2">繰り返しになるが，$\tau$が$\alpha$自体であった場合はこのケースには当てはまらない．ここでエラーを報告しなければならないのは，例えば$\tau$が$\alpha \rightarrow \alpha$の場合である．</a>
 
