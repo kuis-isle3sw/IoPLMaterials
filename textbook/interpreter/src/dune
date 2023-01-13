@@ -1,9 +1,8 @@
 (menhir
-  (modules parser)
-)
+ (modules parser))
+
 (ocamllex
-  (modules lexer)
-)
+ (modules lexer))
+
 (library
-  (name miniml)
-)
+ (name miniml))
