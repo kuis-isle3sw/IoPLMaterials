@@ -15,6 +15,14 @@ let rec read_eval_print env =
   read_eval_print newenv
 
 let initial_env =
-  Environment.extend "i" (IntV 1)
-    (Environment.extend "v" (IntV 5)
-       (Environment.extend "x" (IntV 10) Environment.empty))
+  List.fold_left
+    (fun env (id, exval) -> Environment.extend id exval env)
+    Environment.empty
+    [
+      ("x", IntV 10);
+      ("v", IntV 5);
+      ("i", IntV 1);
+      ("ii", IntV 2);
+      ("iii", IntV 3);
+      ("iv", IntV 4);
+    ]
