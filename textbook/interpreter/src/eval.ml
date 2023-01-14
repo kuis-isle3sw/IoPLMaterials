@@ -47,10 +47,17 @@ let rec eval_exp env = function
       let value = eval_exp env exp1 in
       eval_exp (Environment.extend id value env) exp2
 
-let eval_decl env = function
+let eval_program env = function
   | Exp e ->
       let v = eval_exp env e in
-      ("-", env, v)
-  | Decl (id, e) ->
-      let v = eval_exp env e in
-      (id, Environment.extend id v env, v)
+      ([ ("-", v) ], env)
+  | Decls decls ->
+      let defs, newenv =
+        List.fold_left
+          (fun (defs, newenv) (id, e) ->
+            let v = eval_exp newenv e in
+            ((id, v) :: defs, Environment.extend id v newenv))
+          ([], env) decls
+      in
+      (* NOTE: Sort by declaration *)
+      (List.rev defs, newenv)

@@ -10,6 +10,6 @@ type exp =
   | IfExp of exp * exp * exp
   | LetExp of id * exp * exp
 
-type program = Exp of exp | Decl of id * exp
+type program = Exp of exp | Decls of (id * exp) list
 type tyvar = int
 type ty = TyInt | TyBool | TyVar of tyvar | TyFun of ty * ty | TyList of ty
