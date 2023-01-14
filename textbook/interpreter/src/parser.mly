@@ -3,9 +3,9 @@ open Syntax
 %}
 
 %token LPAREN RPAREN SEMISEMI
-%token PLUS MULT LT AND OR
+%token PLUS MULT LT LAND LOR
 %token IF THEN ELSE TRUE FALSE
-%token LET IN EQ
+%token LET IN EQ AND
 %token EOF
 
 %token <int> INTV
@@ -21,19 +21,19 @@ toplevel :
 
 Decls :
   | { [] }
-  | LET x=ID EQ e=Expr ds=Decls { (x, e) :: ds }
+  | LET bs=LetBindings ds=Decls { bs :: ds }
 
 Expr :
     e=IfExpr { e }
   | e=LetExpr { e }
-  | e=ORExpr { e }
+  | e=LORExpr { e }
 
-ORExpr :
-    l=ANDExpr OR r=ANDExpr { BinOp (Or, l, r) }
-  | e=ANDExpr { e }
+LORExpr :
+    l=LANDExpr LOR r=LANDExpr { BinOp (Or, l, r) }
+  | e=LANDExpr { e }
 
-ANDExpr :
-    l=LTExpr AND r=LTExpr { BinOp (And, l, r) }
+LANDExpr :
+    l=LTExpr LAND r=LTExpr { BinOp (And, l, r) }
   | e=LTExpr { e }
 
 LTExpr :
@@ -59,4 +59,8 @@ IfExpr :
     IF c=Expr THEN t=Expr ELSE e=Expr { IfExp (c, t, e) }
 
 LetExpr :
-    LET x=ID EQ e1=Expr IN e2=Expr { LetExp (x, e1, e2) }
+    LET bs=LetBindings IN e=Expr { LetExp (bs, e) }
+
+LetBindings :
+  | x=ID EQ e=Expr { [(x, e)] }
+  | x=ID EQ e=Expr AND l=LetBindings { (x, e) :: l }

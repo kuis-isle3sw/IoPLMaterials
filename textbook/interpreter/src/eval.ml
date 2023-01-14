@@ -43,9 +43,15 @@ let rec eval_exp env = function
       | BoolV true -> eval_exp env exp2
       | BoolV false -> eval_exp env exp3
       | _ -> err "Test expression must be boolean: if")
-  | LetExp (id, exp1, exp2) ->
-      let value = eval_exp env exp1 in
-      eval_exp (Environment.extend id value env) exp2
+  | LetExp (bindings, exp2) ->
+      let newenv =
+        bindings
+        |> List.map (fun (id, exp) -> (id, eval_exp env exp))
+        |> List.fold_left
+             (fun newenv (id, v) -> Environment.extend id v newenv)
+             env
+      in
+      eval_exp newenv exp2
 
 let eval_program env = function
   | Exp e ->
@@ -54,9 +60,17 @@ let eval_program env = function
   | Decls decls ->
       let defs, newenv =
         List.fold_left
-          (fun (defs, newenv) (id, e) ->
-            let v = eval_exp newenv e in
-            ((id, v) :: defs, Environment.extend id v newenv))
+          (fun (defs, newenv) bindings ->
+            (* NOTE:
+               In the original, variables of the same name cannot be defined using `and`,
+               but are assumed to be definable here for simplicity. *)
+            let newdefs =
+              bindings |> List.map (fun (id, e) -> (id, eval_exp newenv e))
+            in
+            ( List.rev_append newdefs defs,
+              List.fold_left
+                (fun newenv (id, v) -> Environment.extend id v newenv)
+                newenv newdefs ))
           ([], env) decls
       in
       (* NOTE: Sort by declaration *)
