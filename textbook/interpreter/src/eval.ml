@@ -1,7 +1,7 @@
 open Syntax
 
-type exval = IntV of int | BoolV of bool
-and dnval = exval
+type exval = IntV of int | BoolV of bool [@@deriving show]
+and dnval = exval [@@deriving show]
 
 exception Error of string
 
