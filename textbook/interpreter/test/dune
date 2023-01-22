@@ -1,0 +1,3 @@
+(tests
+ (names evalTest lexerTest parserTest)
+ (libraries miniml alcotest))
