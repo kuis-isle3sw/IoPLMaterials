@@ -1,3 +1,11 @@
 (lang dune 3.0)
+
 (name miniml)
+
 (using menhir 2.1)
+
+(generate_opam_files true)
+
+(package
+ (name miniml)
+ (depends ocaml dune alcotest ppx_deriving menhir))
