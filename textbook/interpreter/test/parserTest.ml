@@ -21,7 +21,12 @@ let () =
                       ( Or,
                         BinOp (And, BinOp (Lt, ILit 1, ILit 2), BLit false),
                         BLit true )))
-              @@ program_of_string "1 < 2 && false || true;;");
+              @@ program_of_string "1 < 2 && false || true;;";
+              (* c.f. Chapter 3.5 #関数式と適用式の構文 *)
+              check
+                (Syntax.Exp
+                   (BinOp (Plus, AppExp (FunExp ("x", Var "x"), ILit 1), ILit 1)))
+              @@ program_of_string "(fun x -> x) 1 + 1;;");
           test_case
             "The order in which variables are declared and the order of \
              elements in the list are the same"

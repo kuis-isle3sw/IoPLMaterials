@@ -17,3 +17,4 @@ val fold_right : ('a -> 'b -> 'b) -> 'a t -> 'b -> 'b
    Currently, care should be taken not to call this function from production code.
 *)
 val show : (Format.formatter -> 'a -> unit) -> 'a t -> string
+val pp : (Format.formatter -> 'a -> unit) -> Format.formatter -> 'a t -> unit

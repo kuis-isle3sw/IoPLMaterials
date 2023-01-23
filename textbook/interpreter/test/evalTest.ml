@@ -119,6 +119,28 @@ let () =
                    (LetExp
                       ( [ ("x", ILit 100); ("y", Var "x") ],
                         BinOp (Plus, Var "x", Var "y") )));
+          test_case
+            "The value representing a function is a function closure (c.f. \
+             Chapter3.5 #評価器の拡張: 関数値の表現の仕方)"
+            `Quick (fun () ->
+              check (Eval.IntV 6)
+              @@ Eval.eval_exp
+                   (init_env [ ("x", Eval.IntV 10) ])
+                   (LetExp
+                      ( [
+                          ( "f",
+                            LetExp
+                              ( [ ("x", ILit 2) ],
+                                LetExp
+                                  ( [
+                                      ( "addx",
+                                        FunExp
+                                          ("y", BinOp (Plus, Var "x", Var "y"))
+                                      );
+                                    ],
+                                    Var "addx" ) ) );
+                        ],
+                        AppExp (Var "f", ILit 4) )));
         ] );
       ( "eval_program",
         let check = check environment "" in

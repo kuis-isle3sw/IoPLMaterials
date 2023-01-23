@@ -6,6 +6,7 @@ open Syntax
 %token PLUS MULT LT LAND LOR
 %token IF THEN ELSE TRUE FALSE
 %token LET IN EQ AND
+%token RARROW FUN
 %token EOF
 
 %token <int> INTV
@@ -27,6 +28,7 @@ Expr :
     e=IfExpr { e }
   | e=LetExpr { e }
   | e=LORExpr { e }
+  | e=FunExpr { e }
 
 LORExpr :
     l=LANDExpr LOR r=LANDExpr { BinOp (Or, l, r) }
@@ -45,7 +47,12 @@ PExpr :
   | e=MExpr { e }
 
 MExpr :
-    l=MExpr MULT r=AExpr { BinOp (Mult, l, r) }
+    l=MExpr MULT r=AppExpr { BinOp (Mult, l, r) }
+  | e=AppExpr { e }
+  | e=AExpr { e }
+
+AppExpr :
+  | e1=AppExpr e2=AExpr { AppExp (e1, e2) }
   | e=AExpr { e }
 
 AExpr :
@@ -57,6 +64,9 @@ AExpr :
 
 IfExpr :
     IF c=Expr THEN t=Expr ELSE e=Expr { IfExp (c, t, e) }
+
+FunExpr :
+  | FUN x=ID RARROW e=Expr { FunExp (x, e) }
 
 LetExpr :
     LET bs=LetBindings IN e=Expr { LetExp (bs, e) }
