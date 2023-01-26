@@ -1,5 +1,8 @@
 %{
 open Syntax
+
+let curry parameters expression =
+  List.fold_right (fun x acc -> FunExp (x, acc)) parameters expression
 %}
 
 %token LPAREN RPAREN SEMISEMI
@@ -76,14 +79,21 @@ IfExpr :
     IF c=Expr THEN t=Expr ELSE e=Expr { IfExp (c, t, e) }
 
 FunExpr :
-  | FUN x=ID RARROW e=Expr { FunExp (x, e) }
+  | FUN params=ParametersPlus RARROW e=Expr { curry params e }
+
+ParametersPlus :
+  | x=ID params=Parameters { x :: params }
+
+Parameters :
+  | { [] }
+  | x=ID params=Parameters { x :: params }
 
 LetExpr :
     LET bs=LetBindings IN e=Expr { LetExp (bs, e) }
 
 LetBindings :
-  | x=ValueName EQ e=Expr { [(x, e)] }
-  | x=ValueName EQ e=Expr AND l=LetBindings { (x, e) :: l }
+  | x=ValueName params=Parameters EQ e=Expr { [(x, curry params e)] }
+  | x=ValueName params=Parameters EQ e=Expr AND l=LetBindings { (x, curry params e) :: l }
 
 ValueName :
   | i=ID { i }

@@ -45,5 +45,21 @@ let () =
               @@ program_of_string "( + ) 1 1;;";
               check (Syntax.Decls [ [ ("+", ILit 1) ] ])
               @@ program_of_string "let ( + ) = 1;;");
+          test_case
+            "`fun x1 x2 ... xn -> e` is the syntax sugar of `fun x1 -> fun x2 \
+             -> ... -> fun xn -> e` (c.f. Exercise 3.4.3)"
+            `Quick (fun () ->
+              check (program_of_string "fun x1 -> fun x2 -> 1;;")
+              @@ program_of_string "fun x1 x2 -> 1;;";
+              check (program_of_string "fun x1 -> fun x2 -> fun x3 -> 1;;")
+              @@ program_of_string "fun x1 x2 x3 -> 1;;");
+          test_case
+            "`let f x1 x2 ... xn = e` is the syntax sugar of `let f = fun x1 \
+             x2 ... xn -> e` (c.f. Exercise 3.4.3)"
+            `Quick (fun () ->
+              check (program_of_string "let f x1 = 1;;")
+              @@ program_of_string "let f = fun x1 -> 1;;";
+              check (program_of_string "let f x1 x2 = 1;;")
+              @@ program_of_string "let f = fun x1 x2 -> 1;;");
         ] );
     ]
