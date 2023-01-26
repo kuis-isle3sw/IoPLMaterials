@@ -14,4 +14,4 @@ let rec eval_print env lexbuf =
 (* NOTE: No exception handling to perform the same behavior as the original *)
 let read_eval_print filename =
   filename |> MyFile.read_whole |> Lexing.from_string
-  |> eval_print Environment.empty
+  |> eval_print (snd @@ eval_program Environment.empty MyStdlib.program)

@@ -21,7 +21,7 @@ let rec read_eval_print env =
 let initial_env =
   List.fold_left
     (fun env (id, exval) -> Environment.extend id exval env)
-    Environment.empty
+    (snd @@ eval_program Environment.empty MyStdlib.program)
     [
       ("x", IntV 10);
       ("v", IntV 5);

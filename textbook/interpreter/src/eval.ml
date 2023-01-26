@@ -36,7 +36,7 @@ let rec apply_prim op arg1 arg2 =
 let rec eval_exp env = function
   | Var x -> (
       try Environment.lookup x env
-      with Environment.Not_bound -> err ("Variable not bound: " ^ x))
+      with Environment.Not_bound -> err ("Unbounded value " ^ x))
   | ILit i -> IntV i
   | BLit b -> BoolV b
   | BinOp (op, exp1, exp2) ->

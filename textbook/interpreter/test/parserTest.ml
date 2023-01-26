@@ -37,5 +37,13 @@ let () =
                 (Syntax.Decls
                    [ [ ("x", ILit 1); ("y", ILit 1) ]; [ ("z", ILit 1) ] ])
               @@ program_of_string "let x = 1 and y = 1 let z = 1;;");
+          test_case
+            "Operators enclosed in round brackets are parsed as variable names \
+             (c.f. Exercise 3.4.2)"
+            `Quick (fun () ->
+              check (Syntax.Exp (AppExp (AppExp (Var "+", ILit 1), ILit 1)))
+              @@ program_of_string "( + ) 1 1;;";
+              check (Syntax.Decls [ [ ("+", ILit 1) ] ])
+              @@ program_of_string "let ( + ) = 1;;");
         ] );
     ]

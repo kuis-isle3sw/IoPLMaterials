@@ -49,7 +49,6 @@ PExpr :
 MExpr :
     l=MExpr MULT r=AppExpr { BinOp (Mult, l, r) }
   | e=AppExpr { e }
-  | e=AExpr { e }
 
 AppExpr :
   | e1=AppExpr e2=AExpr { AppExp (e1, e2) }
@@ -59,8 +58,18 @@ AExpr :
     i=INTV { ILit i }
   | TRUE   { BLit true }
   | FALSE  { BLit false }
-  | i=ID   { Var i }
+  | name=ValueName   { Var name }
   | LPAREN e=Expr RPAREN { e }
+
+// NOTE:
+// Since I don't know how to convert the token back to the original string,
+// I'm writing it directly, even though it doesn't seem very good.
+BinOp :
+  | PLUS { "+" }
+  | MULT { "*" }
+  | LT { "<" }
+  | LAND { "&&" }
+  | LOR { "||" }
 
 IfExpr :
     IF c=Expr THEN t=Expr ELSE e=Expr { IfExp (c, t, e) }
@@ -72,5 +81,9 @@ LetExpr :
     LET bs=LetBindings IN e=Expr { LetExp (bs, e) }
 
 LetBindings :
-  | x=ID EQ e=Expr { [(x, e)] }
-  | x=ID EQ e=Expr AND l=LetBindings { (x, e) :: l }
+  | x=ValueName EQ e=Expr { [(x, e)] }
+  | x=ValueName EQ e=Expr AND l=LetBindings { (x, e) :: l }
+
+ValueName :
+  | i=ID { i }
+  | LPAREN binOp=BinOp RPAREN { binOp }
