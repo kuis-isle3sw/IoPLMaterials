@@ -9,7 +9,7 @@ let curry parameters expression =
 %token PLUS MULT LT LAND LOR
 %token IF THEN ELSE TRUE FALSE
 %token LET IN EQ AND
-%token RARROW FUN
+%token RARROW FUN DFUN
 %token EOF
 
 %token <int> INTV
@@ -33,6 +33,7 @@ Expr :
   | e=LetExpr { e }
   | e=LORExpr { e }
   | e=FunExpr { e }
+  | e=DFunExpr { e }
 
 LORExpr :
     l=LANDExpr LOR r=LANDExpr { BinOp (Or, l, r) }
@@ -80,6 +81,9 @@ IfExpr :
 
 FunExpr :
   | FUN params=ParametersPlus RARROW e=Expr { curry params e }
+
+DFunExpr :
+  | DFUN params=ParametersPlus RARROW e=Expr { List.fold_right (fun x acc -> DFunExp (x, acc)) params e }
 
 ParametersPlus :
   | x=ID params=Parameters { x :: params }

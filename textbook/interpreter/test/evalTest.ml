@@ -141,6 +141,23 @@ let () =
                                     Var "addx" ) ) );
                         ],
                         AppExp (Var "f", ILit 4) )));
+          test_case
+            "Support functions that perform dynamic binding (c.f. Exercise \
+             3.4.5)"
+            `Quick (fun () ->
+              check (Eval.IntV 35)
+              @@ Eval.eval_exp Environment.empty
+                   (LetExp
+                      ( [ ("a", ILit 3) ],
+                        LetExp
+                          ( [
+                              ( "p",
+                                DFunExp ("x", BinOp (Plus, Var "x", Var "a")) );
+                            ],
+                            LetExp
+                              ( [ ("a", ILit 5) ],
+                                BinOp (Mult, Var "a", AppExp (Var "p", ILit 2))
+                              ) ) )));
         ] );
       ( "eval_program",
         let check = check environment "" in

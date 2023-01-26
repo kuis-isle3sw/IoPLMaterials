@@ -61,5 +61,13 @@ let () =
               @@ program_of_string "let f = fun x1 -> 1;;";
               check (program_of_string "let f x1 x2 = 1;;")
               @@ program_of_string "let f = fun x1 x2 -> 1;;");
+          test_case
+            "`dfun x1 x2 ... xn -> e` is the syntax sugar of `dfun x1 -> dfun \
+             x2 -> ... -> dfun xn -> e` (c.f. Exercise 3.4.5)"
+            `Quick (fun () ->
+              check (program_of_string "dfun x1 -> dfun x2 -> 1;;")
+              @@ program_of_string "dfun x1 x2 -> 1;;";
+              check (program_of_string "dfun x1 -> dfun x2 -> dfun x3 -> 1;;")
+              @@ program_of_string "dfun x1 x2 x3 -> 1;;");
         ] );
     ]
