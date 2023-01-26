@@ -19,6 +19,7 @@ open Syntax
 toplevel :
     e=Expr SEMISEMI { Exp e }
   | ds=Decls SEMISEMI { Decls ds }
+  | { failwith "Syntax error" }
 
 Decls :
   | { [] }
