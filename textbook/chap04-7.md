@@ -179,9 +179,6 @@ let closure ty tyenv subst =
   let ids = MySet.diff (freevar_ty ty) fv_tyenv in
     TyScheme (MySet.to_list ids, ty)
 
-(* New! 束縛変数を含むため，代入の定義を少し工夫する必要がある．*)
-let rec subst_type subst = ...
-
 let rec ty_exp tyenv = function
      Var x ->
       (try 

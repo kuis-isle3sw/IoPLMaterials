@@ -6,7 +6,7 @@
 
 - $\Gamma, e_1$ を入力として型推論を行い，$\theta_1$，$\tau_1$ を得る．
 - $\Gamma, e_2$ を入力として型推論を行い，$\theta_2$，$\tau_2$ を得る．
-- 型代入 $\theta_1, \theta_2$ を $\alpha = \tau$ という形の方程式の集まりとみなして，$\theta_1 \cup \theta_2 \cup \{\tau_1 = \mathbf{int}, (\tau_2, \mathbf{int})\}$ を単一化し，型代入$\theta_3$を得る．
+- 型代入 $\theta_1, \theta_2$ を $\alpha = \tau$ という形の方程式の集まりとみなして， $\theta_1 \cup \theta_2 \cup \\{\tau_1 = \mathbf{int}, \tau_2 = \mathbf{int}\\}$ を単一化し，型代入$\theta_3$を得る．
 - $\theta_3$ と $\mathbf{int}$ を出力として返す．
 
 となる．部分式の型推論で得られた型代入を方程式とみなして，再び単一化を行うのは，ひとつの部分式から $[\alpha \mapsto \tau_1]$，もうひとつからは $[\alpha \mapsto \tau_2]$ という代入が得られた時に$\tau_1$ と$\tau_2$ の整合性が取れているか（単一化できるか）を検査するためである．
