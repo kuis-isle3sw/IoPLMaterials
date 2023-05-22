@@ -21,7 +21,7 @@ $$
 \begin{array}{c}
 \Gamma, x:\tau_1 \vdash e : \tau_2\\
 \rule{10cm}{1pt}\\
-\Gamma \vdash \mathbf{fun} x \rightarrow e : \tau_1 \rightarrow \tau_2
+\Gamma \vdash \mathbf{fun}\ x \rightarrow e : \tau_1 \rightarrow \tau_2
 \end{array}
 \textrm{T-Fun}
 $$

@@ -44,7 +44,7 @@ type ty =
 (* ty 型の値のための pretty printer *)
 let pp_ty typ =
   match typ with
-    TyInt -> print_srtring "int"
+    TyInt -> print_string "int"
   | TyBool -> print_string "bool"
 {% endhighlight %}
 
