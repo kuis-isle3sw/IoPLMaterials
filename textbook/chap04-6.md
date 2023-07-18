@@ -65,7 +65,7 @@ let rec ty_exp tyenv exp =
         ty_exp (Environment.extend id domty tyenv) exp in
         (s, TyFun (subst_type s domty, ranty))
   | AppExp (exp1, exp2) -> ...
-  | _ -> Error.typing ("Not Implemented!")
+  | _ -> err "Not Implemented!"
 {% endhighlight %}
 
 ### Exercise 4.3.6 [**]
