@@ -71,7 +71,7 @@ $\Gamma(x_1)=\tau_1,\dots,\Gamma(x_n)=\tau_n$を満たし，それ以外の変�
 
 ### 型がつく，型付け可能，型付け不能
 
-式$\Gamma \vdash e : \tau$が成り立つような$\Gamma$と$\tau$が存在するときに，$e$に _型がつく (well-typed)_，あるいは$e$は _型付け可能 (typable)_ という．逆にそのような$\Gamma$と$\tau$が存在しないときに，$e$は _型がつかない (ill-typed)_，あるいは$e$は _型付け不能 (untypable)_ という．
+型判断$\Gamma \vdash e : \tau$が成り立つような$\Gamma$と$\tau$が存在するときに，$e$に _型がつく (well-typed)_，あるいは$e$は _型付け可能 (typable)_ という．逆にそのような$\Gamma$と$\tau$が存在しないときに，$e$は _型がつかない (ill-typed)_，あるいは$e$は _型付け不能 (untypable)_ という．
 
 ## 型付け規則
 
