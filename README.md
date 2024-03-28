@@ -6,7 +6,26 @@
 
 ## お知らせ
 
-- 4月1日: 2023年度版ページにしました．
+- 4月1日: 2024年度版ページにしました．
+
+## 2024年度 講義スケジュール
+
+|回| 日付 | 内容（予定） | 資料 | その他 |
+|------|------|-------------|------|-------|
+|01| 4/8 | イントロダクション | [1章: イントロダクション](textbook/chap01.md) [2章: 概論的な話](textbook/chap02.md) | |
+|02| 4/15 | インタプリタ 1 | [3.1: MiniML1 のシンタックス](textbook/chap03-1.md) [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md) [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md) | |
+|03| 4/22 | インタプリタ 2 | [3.4: MiniML2: 定義の導入](textbook/chap03-4.md) | |
+|04| 5/2 | インタプリタ 3 | [3.5: MiniML3: 関数の導入](textbook/chap03-5.md) [3.6: MiniML4: 再帰関数](textbook/chap03-6.md) | |
+|05| 5/13 | 型システム 1 |  [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md) [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md) | |
+|06| 5/20 | 型システム 2 | [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md) [4.4: MiniML3,4 のための型推論 (1): Prelude](textbook/chap04-4.md) | |
+|07| 5/27 | 型システム 3 | [4.5: MiniML3,4 のための型推論 (2): 型の等式制約と単一化](textbook/chap04-5.md) [4.6: MiniML3,4 のための型推論 (3): 型推論アルゴリズムの実装](textbook/chap04-6.md) | |
+|08| 6/3 | 型システム 4 | [4.7: 多相的 `let` の型推論](textbook/chap04-7.md) | |
+|09| 6/10 | 字句解析 | |（字句解析と構文解析パートの資料は PandA で配布する）|
+|10| 6/17 | LL(1)構文解析 | | |
+|11| 6/24 | LR(0)構文解析 | | |
+|12| 7/1 | LR(0), SLR(1), LR(1)構文解析 | | |
+|13| 7/8 | コンパイラ 1 | [5.1: 能書き](textbook/chap05-1.md) [5.2: ソース言語 MiniML4- と中間言語$\mathcal{C}$](textbook/chap05-2.md) [5.3: MiniML4- から$\mathcal{C}$への変換$\mathcal{I}$](textbook/chap05-3.md) [5.6: アセンブリ生成](textbook/chap05-6.md) | [5.4: MIPS アセンブリ言語入門](textbook/chap05-4.md) を事前に理解しておくこと |
+|14| 7/22 | [MinCaml コンパイラ](https://esumii.github.io/min-caml/)概説 | | [ソースコード](https://github.com/esumii/min-caml)をダウンロードして手元で試しておくとよい |
 
 ## 学習の仕方
 
@@ -46,8 +65,8 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
   - _1章は古くなっているので，2章から読むこと_
 - プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平
   - [1章: イントロダクション](textbook/chap01.md)
-  - [2章: 概論的な話](textbook/chap02.md) [(講義スライド)](textbook/slides/intro.pdf)
-  - 3章: 型無し MiniML インタプリタの実装 [(講義スライド)](textbook/slides/interpreter.pdf)
+  - [2章: 概論的な話](textbook/chap02.md)
+  - 3章: 型無し MiniML インタプリタの実装
     - [3.1: MiniML1 のシンタックス](textbook/chap03-1.md)
     - [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md)
     - [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md)
@@ -55,7 +74,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
     - [3.5: MiniML3: 関数の導入](textbook/chap03-5.md)
     - [3.6: MiniML4: 再帰関数](textbook/chap03-6.md)
     - [3.7: MiniML5 and beyond: やりこみのための演習問題](textbook/chap03-7.md)
-  - 4章: 型推論機能付き MiniML インタプリタの実装（あるいは，型システムを用いた形式検証の初歩）[(講義スライド)](textbook/slides/typing.pdf)
+  - 4章: 型推論機能付き MiniML インタプリタの実装（あるいは，型システムを用いた形式検証の初歩）
     - [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md)
     - [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md)
     - [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md)
