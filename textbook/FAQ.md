@@ -1892,7 +1892,7 @@ LL(1)に関しては入力がかかれたストリームの先頭の終端記号
 
 > 不動点での各集合は制約を満たす最大の集合であることは証明できますか？
 
-はい，証明できます．くわしくは[この](https://m.kulib.kyoto-u.ac.jp/webopac/EB05951457)教科書の4章や8章を読むと良いかもしれません．（実は[和訳](https://m.kulib.kyoto-u.ac.jp/webopac/BB08694195)もある．お，監訳者の名前が．．．）あとは，[Knaster-Tarskiの定理](https://en.wikipedia.org/wiki/Knaster%E2%80%93Tarski_theorem)とかをよいかも．
+はい，証明できます．くわしくは[この](https://m.kulib.kyoto-u.ac.jp/webopac/EB05951457)教科書の4章や8章を読むと良いかもしれません．（実は[和訳](https://m.kulib.kyoto-u.ac.jp/webopac/BB08694195)もある．お，監訳者の名前が．．．）あとは，[Knaster-Tarskiの定理](https://en.wikipedia.org/wiki/Knaster%E2%80%93Tarski_theorem)とかを読むとよいかも．
 
 ### LL(k)のk
 
