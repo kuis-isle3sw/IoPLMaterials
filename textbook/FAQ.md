@@ -26,7 +26,7 @@ let rec sum n = if n = 0 then 0 else n + (sum (n-1))
 ```
 という書き方と
 ```ocaml=
-let rec sum n =
+let sum n =
   let i = ref n in
   let sum = ref 0 in
   while !i > 0 do
