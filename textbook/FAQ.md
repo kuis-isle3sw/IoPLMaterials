@@ -26,27 +26,27 @@ let rec sum n = if n = 0 then 0 else n + (sum (n-1))
 ```
 という書き方と
 ```ocaml=
-let rec sum n =
+let sum n =
   let i = ref n in
-  let sum = ref 0 in
+  let s = ref 0 in
   while !i > 0 do
-    sum := !sum + !i;
+    s := !s + !i;
     i := !i - 1
   done;
-  !sum
+  !s
 ```
 という2つの書き方がありますが，1からnまでの和という計算結果に意味があるこのような計算では後者より前者の方がスッキリしています．
 
 他方，"Hello!"とn回画面に表示するようなプログラムは
 ```ocaml=
-let rec hello n =
+let hello n =
   if n = 0 then () 
   else Printf.printf "Hello!\n"; hello (n-1)
 ```
 という書き方と
 ```ocaml=
-let rec hello n =
-  for i = 0 to n do
+let hello n =
+  for i = 0 to n-1 do
     Printf.printf "Hello!\n"
   done
 ```
@@ -56,7 +56,7 @@ let rec hello n =
 
 > 調べてみたところ、OCamlだけでなく関数型言語一般において、あまりfor文を使わないということは分かったのですが、その理由はどのようなものでしょうか。
 
-が，おそらく再帰関数を使う方が for 文や while 文よりもより柔軟な繰り返しのパターンが書けるからかなあと思います．例えばアッカーマン関数という
+おそらく再帰関数を使う方が for 文や while 文よりもより柔軟な繰り返しのパターンが書けるからかなあと思います．例えばアッカーマン関数という
 ```ocaml=
 let rec ack m n =
   if m = 0 then 
@@ -79,13 +79,15 @@ let rec mc91 n =
 
 ### 仮引数の `()`
 
-関数に引数として与える `()` を省略できるかという質問でしょうか．OCaml では（Scala 等のように）`()` を省略することはできません．
+> 仮引数として与える `()` は省略できますか？
+
+OCaml では（Scala 等のように）`()` を省略することはできません．
 
 なお，質問からするとオフトピックですが，OCaml には[ラベル付き引数があり](https://ocaml.org/learn/tutorials/labels.ja.html)，これを使って省略可能な引数を持つ関数を実装することができます．
 
 ### OCamlのリソース
 
-たくさんあるのと僕も少ししかないのでなかなか紹介しきれませんが，例えば[opam の全パッケージを人気順に並べたページ](http://opam.ocaml.org/packages/index-popularity.html)を眺めてみたり，[GitHub の OCaml で書かれたリポジトリのトレンド](https://github.com/trending/ocaml?since=monthly)を眺めてみると面白いものが見つかったりするかもしれません．また，[OCaml のメーリングリストやフォーラム](https://ocaml.org/community/mailing_lists.html)も情報収集に良いと思います．[OCamlの日本語Slack](https://slackin-ocaml-jp.herokuapp.com/)もあります．また，[StackOverflowのocamlの質問集](https://stackoverflow.com/questions/tagged/ocaml)もそのような情報が流れていそうな気がします．
+たくさんあるのと僕も少ししかないのでなかなか紹介しきれませんが，例えば[opam の全パッケージを人気順に並べたページ](http://opam.ocaml.org/packages/index-popularity.html)を眺めてみたり，[GitHub の OCaml で書かれたリポジトリのトレンド](https://github.com/trending/ocaml?since=monthly)を眺めてみると面白いものが見つかったりするかもしれません．また，[OCaml のメーリングリストやフォーラム](https://ocaml.org/community/mailing_lists.html)も情報収集に良いと思います．[OCamlの日本語Slack](https://slackin-ocaml-jp.herokuapp.com/)もあります．また，[StackOverflowのocamlの質問集](https://stackoverflow.com/questions/tagged/ocaml)もそのような情報が流れていそうな気がします．[OCaml のフォーラム](https://discuss.ocaml.org/)でも活発に議論が行われているようです．
 
 ### コンストラクタと関数適用
 
