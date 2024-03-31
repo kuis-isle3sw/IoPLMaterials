@@ -954,7 +954,7 @@ Procedure value のつもりです．
 
 [OCaml入門](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/mltext.pdf)の3.2.2節と5.2節に目をまず通してみてください．
 
-[OCamlの文法でパターンとして書けるものが決められています．](https://ocaml.org/manual/patterns.html)BNFを読むよりはその後のいろいろなパターンの累計を読むのがおすすめです．
+[OCamlの文法でパターンとして書けるものが決められています．](https://ocaml.org/manual/patterns.html)BNFを読むよりはその後のいろいろなパターンの類型を読むのがおすすめです．
 
 ```ocaml=
 let is_empty l =
