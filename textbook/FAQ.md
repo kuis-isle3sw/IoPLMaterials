@@ -45,7 +45,7 @@ let rec hello n =
 ```
 という書き方と
 ```ocaml=
-let rec hello n =
+let hello n =
   for i = 0 to n do
     Printf.printf "Hello!\n"
   done
