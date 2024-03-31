@@ -1066,7 +1066,7 @@ let x = 3;;
 
 > parserやlexerがどうしてあのように書けるのかがわかりません．OCamlのプログラムではないのでしょうか?
 
-ocamllex や menhir は通常の OCaml とは文法の異なる .mll ファイルや .mly ファイルを OCaml のプログラムに変換する処理系です．すなわち，.mll や .mly 自体は OCaml プログラムではありません．しかし，これらから生成されるプログラムは通常の OCaml プログラムです．実際に演習用リポジトリで `dune build` をして `_build/default/src` の中の `parser.mli` や `parser.ml` や `lexer.ml` を見てみると，（人間には理解しんくいですが）通常の OCaml プログラムになっています．
+ocamllex や menhir は通常の OCaml とは文法の異なる .mll ファイルや .mly ファイルを OCaml のプログラムに変換する処理系です．すなわち，.mll や .mly 自体は OCaml プログラムではありません．しかし，これらから生成されるプログラムは通常の OCaml プログラムです．実際に演習用リポジトリで `dune build` をして `_build/default/src` の中の `parser.mli` や `parser.ml` や `lexer.ml` を見てみると，（人間には理解しにくいですが）通常の OCaml プログラムになっています．
 
 ### `LetRecExp` の型について
 
