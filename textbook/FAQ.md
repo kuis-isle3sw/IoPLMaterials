@@ -133,7 +133,7 @@ convenient, I would argue it is often hard to read. Writing
 
 はい，末尾再帰で表現できます．
 ```ocaml=
-for i = e1 to e2 do
+for i = e1 to e2 - 1 do
   e3
 done
 ```
