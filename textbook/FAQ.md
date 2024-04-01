@@ -2001,6 +2001,8 @@ Warning: 2 shift/reduce conflicts were arbitrarily resolved.実験中、パー�
 
 ちょっとググった感じだと http://homepage.cs.uiowa.edu/~tinelli/classes/111/Fall08/Notes/ch11.pdf この資料が結構良さげです．あと，Java については https://community.ibm.com/community/user/wasdevops/blogs/gary-deval/2022/01/18/java-garbage-collection-fundamentals これも良さげです．
 
+あと，[THe 67th Yokohama kernel reading party](https://www.youtube.com/watch?v=0-vWT-t0UHg) の動画も過去のTAさんから推薦してもらいました．
+
 ### 静的型検査のメリット
 
 > 静的型検査について、教科書に上がっていた1億回のループを含むようなプログラムに対してだと、実行前に静的型検査を行うのはとても有意義だと思いましたが、それほど長くないプログラムの場合だと、むしろ型検査なしで実行を始めてしまって、実行していく中でエラーがあれば落ちる方式のほうが効率が上がるのではないかと思いました
