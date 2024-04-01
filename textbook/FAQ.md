@@ -827,8 +827,8 @@ let f () = (print_string "hoge", print_string "hoge") in
 は良い視点なのですが，実はこれでは一般にはうまくいきません．挙げてもらった例では `x` の束縛先が `3` というすでに値になっている式なので置き換えてしまう方法で上手くいくのですが，
 
 ```
-let x = print_string "hoge" in
-let f () = (x, x) in
+let x = (fun () -> print_string "hoge") in
+let f () = (x (), x ()) in
   f ()
 ```
 
