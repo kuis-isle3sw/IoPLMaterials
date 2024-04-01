@@ -1600,6 +1600,8 @@ let map_pair p (x,y) = (p.f x, p.f y);;
 
 - Jeffrey R. Lewis, John Launchbury, Erik Meijer, and Mark B. Shields. 2000. Implicit parameters: dynamic scoping with static types. In Proceedings of the 27th ACM SIGPLAN-SIGACT symposium on Principles of programming languages (POPL '00). Association for Computing Machinery, New York, NY, USA, 108–118. DOI:https://doi.org/10.1145/325694.325708
 
+Implicit parameter は実際に Scala 等の実用的な言語にも採用されているそうです．
+
 うちの研究室メンバーから，以下のコメントがありました．
 > あと，静的束縛ではクロージャが定義時点での環境を保持するためによりメモリを消費します．これはメモリが貴重だったコンピュータ黎明期では大きなコストで，それを避けるために動的束縛が好まれたという歴史的な経緯があるようです．しかしメモリが潤沢にある現在では，そのようなコストを理由に動的束縛を採用することはほぼないでしょう．（要出典）
 
