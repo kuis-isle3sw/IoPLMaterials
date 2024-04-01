@@ -2,6 +2,12 @@
 
 # (F)AQ
 
+<nav>
+  <h4>Table of Contents</h4>
+  * this unordered seed list will be replaced by toc as unordered list
+  {:toc}
+</nav>
+
 ## OCaml に関する質問
 
 ### `eval $(opam env)`
@@ -352,7 +358,13 @@ OCaml では `fun f -> f 1` は
 > `(+);;` に対して `- : int -> int -> int = <fun>` が返ってくるということについて、
 `let sum a b= a+b;;` に対しても同じように `- : int -> int -> int = <fun>` が返ってくるため、`+` はこのような形で２つ引数をとる関数と同じ型のものだと考えたのですが、`+ 3 2` のように関数と同じ形で使おうとするとエラーになりました。`+` というのは関数とは別にocamlの中で特別に扱われるものであって、`+` の型が `int -> int -> int = <fun>` のように表されるのは便宜上そう返すようにしているだけということなのでしょうか？また、中置演算子のように使える形で新たに関数をプログラマが定義することは可能なのでしょうか？
     
-というより，`(+)` や `( * )` が中置演算子を普通の関数として使うための OCaml の記法と考える方がわかり良いかもしれません． OCaml には[中置演算子や前置演算子として使えるシンボルやその結合や優先度があらかじめ定められています](https://ocaml.org/manual/lex.html#infix-symbol)．これらのシンボルは[`Stdlib` モジュールで定義](https://ocaml.org/api/Stdlib.html)されていて，`(+)`や`( * )`はここで定義されています．`Stdlib` は特別なモジュールで，この中の定義はプログラム開始時点ですべて使えることになっています．
+というより，`(+)` や `( * )` が中置演算子を普通の関数として使うための OCaml の記法と考える方がわかり良いかもしれません． OCaml には[中置演算子や前置演算子として使えるシンボルやその結合や優先度があらかじめ定められています](https://ocaml.org/manual/lex.html#infix-symbol)．これらのシンボルは[`Stdlib` モジュールで定義](https://ocaml.org/api/Stdlib.html)されていて，`(+)`や`( * )`はここで定義されています．`Stdlib` は特別なモジュールで，この中の定義はプログラム開始時点ですべて使えることになっています．たとえば
+```ocaml=
+(+) 1 2
+```
+と入力して評価してみましょう．
+
+（ところで，なぜ `(*)` ではなく `( * )` と書いているのでしょう．）
     
 自分で演算子を定義することも可能で
 
@@ -591,25 +603,6 @@ Structural ordering functions. These functions coincide with the usual orderings
 ```
 
 のように，どのように比較されるかが明示化されていませんが，実装では辞書式順序になっているようです．
-
-### OCaml の文法
-
-> "講義に直接関係があるわけではない質問になってしまいますが...。
-> OCaml 公式 Web サイトのこのあたり：
-> https://v2.ocaml.org/releases/5.0/htmlman/language.html
-> で言語の BNF が書かれていたりしますが、この BNF で記述されているルールについて、並列に記されているルールは下にあるものほど優先される、あるいは上にあるものほど優先される、というような決まりはあるのでしょうか？
-> というのも、例えば
-> print_int +5
-> という式は、
-> https://v2.ocaml.org/releases/5.0/htmlman/expr.html
-> に記されている expr の生成規則のうち
-> expr ::= expr {argument}*
-> でも
-> expr ::= expr infix-op expr
-> でも、どちらの規則でも当てはまりそうで、じゃあ別に追加のルールがないとどちらの規則に当てはめてパースするか決められないなあ、と思ったので気になった次第です。
-> ちなみに実際に動かしてみたところ、この例で出した式は後者でパースされるようでした。"
-
-これ，いろいろ考えてみたのですが，よくわかりませんでした．そもそもなんで `+` が prefix symbol として扱えるんだろう．．．
 
 ## インタプリタについて
 
@@ -1254,7 +1247,7 @@ private static ref int Error(ref int x, int n)
 
 言語処理系レベルでサポートしているものはすぐには思いつきません．
 
-関連するトピックとして，高階関数型言語のためのモデル検査を型に基づく解析で行う手法が東大の小林直樹先生によって研究されています．[Naoki Kobayashi, C.-H. Luke Ong: A Type System Equivalent to the Modal Mu-Calculus Model Checking of Higher-Order Recursion Schemes. LICS 2009: 179-188](https://www-kb.is.s.u-tokyo.ac.jp/~koba/papers/hors-type.pdf) いわゆる普通のモデル検査はシステムをオートマトンでモデル化して検証することが多いように思うのですが，関数型プログラムをこのようにモデル化するのは困難なため，関数型言語での検証手法には型が用いられることが多いです．（プッシュダウンオートマトンを使う方
+関連するトピックとして，高階関数型言語のためのモデル検査を型に基づく解析で行う手法が東大の小林直樹先生によって研究されています．[Naoki Kobayashi, C.-H. Luke Ong: A Type System Equivalent to the Modal Mu-Calculus Model Checking of Higher-Order Recursion Schemes. LICS 2009: 179-188](https://www-kb.is.s.u-tokyo.ac.jp/~koba/papers/hors-type.pdf) いわゆる普通のモデル検査はシステムをオートマトンでモデル化して検証することが多いように思うのですが，関数型プログラムをこのようにモデル化するのは困難なため，関数型言語での検証手法には型が用いられることが多いかなと思います．
 
 ### 型推論の停止性
 
@@ -1594,12 +1587,12 @@ let map_pair p (x,y) = (p.f x, p.f y);;
 ### 動的束縛のメリット？
 
 > 動的束縛の例として以下の例が授業で説明されていました．
-let g f = let b = 5 in f 5;;
-let f = fan a -> a + b in g f;;
-この場合，fの引数をa,bの２つにすれば良いと感じます．そのうえで，引数を１つずつ固定したいならばカリー化すれば良いように思います．
+> let g f = let b = 5 in f 5;;
+> let f = fan a -> a + b in g f;;
+> この場合，fの引数をa,bの２つにすれば良いと感じます．そのうえで，引数を１つずつ固定したいならばカリー化すれば良いように思います．
 > つまるところ，私には動的束縛のメリットが感じられないです．ただ，コードが読みにくくなるだけのような気がします(単に静的束縛になれてしまっているからかもしれませんが)．動的束縛が静的束縛よりも有用である例があれば，教えて欲しいです．
 
-はい，個人的には同意です．ただ，環境変数やファイルから読み込んだ設定情報など，すべての関数から参照する必要があるが，それをいちいち全関数に引数として渡したくないようなときは，動的スコープも使い所があるかなと思います．（この例だとそういう用途はちょっと見えにくいですが．）
+はい，個人的には同意です．ただ，環境変数やファイルから読み込んだ設定情報など，すべての関数から参照する必要があるが，それをいちいち全ての関数に引数として渡したくないようなときは，動的スコープも使い所があるかなと思います．（この例だとそういう用途はちょっと見えにくいですが．）
 
 [StackOverflow にも同じようなディスカッションがありました．](https://stackoverflow.com/questions/321000/what-are-the-advantages-of-dynamic-scoping?rq=1)僕はまだ追ってないですが，興味があれば見てみてもよいかもしれません．
 
@@ -1607,8 +1600,12 @@ let f = fan a -> a + b in g f;;
 
 - Jeffrey R. Lewis, John Launchbury, Erik Meijer, and Mark B. Shields. 2000. Implicit parameters: dynamic scoping with static types. In Proceedings of the 27th ACM SIGPLAN-SIGACT symposium on Principles of programming languages (POPL '00). Association for Computing Machinery, New York, NY, USA, 108–118. DOI:https://doi.org/10.1145/325694.325708
 
+Implicit parameter は実際に Scala 等の実用的な言語にも採用されているそうです．
+
 うちの研究室メンバーから，以下のコメントがありました．
 > あと，静的束縛ではクロージャが定義時点での環境を保持するためによりメモリを消費します．これはメモリが貴重だったコンピュータ黎明期では大きなコストで，それを避けるために動的束縛が好まれたという歴史的な経緯があるようです．しかしメモリが潤沢にある現在では，そのようなコストを理由に動的束縛を採用することはほぼないでしょう．（要出典）
+
+もう一つ以下のコメントも貰いました．Emacs Lisp は Emacs でライブラリを書いたり設定ファイルを書いたりするのに使われる言語ですが，動的束縛が使われています．Emacs Lisp が動的束縛を採用している利点としては https://www.gnu.org/software/emacs/emacs-paper.html#SEC17 や https://www.emacswiki.org/emacs/DynamicBindingVsLexicalBinding を見てみるとよいです．また，和賀先生が[ちょっとしたデモ](https://gist.github.com/MasWag/337f91bfe149ad2e1083f142dd3f124a)を書いています．
 
 ### 型環境内の束縛の順序
 
@@ -2007,6 +2004,8 @@ Warning: 2 shift/reduce conflicts were arbitrarily resolved.実験中、パー�
 これは深い質問で，やはり僕は詳しくないのですが，詳しくないなりに答えを書いてみます．これはメモリの空き領域をどのように管理するか & GC をどのように行うかの組み合わせで決まるように思います．講義で少し喋った Copy GC だと，GC は現在生きているメモリ領域だけを別の領域にコピーすることで行われるので，GC が完了したタイミングではメモリ領域は詰まった状態になっているように思います．Mark & sweep とか，手動で free を行ってかつ free された領域に再割当てが行われる可能性がある場合には，生きている領域が歯抜けのように配置される可能性があります．このような場合には，メモリのどの領域が生きているかをビットマップ等で管理しておいて，メモリ割り当ての際に空き領域中の必要な領域分を割り当てたり，空いているメモリ領域に「次の空いているメモリ領域へのポインタ」をつけておいて，割り当て時にこのポインタをたどりながら必要なサイズ分空いている領域を探す，みたいなことをするんだった気がします．
 
 ちょっとググった感じだと http://homepage.cs.uiowa.edu/~tinelli/classes/111/Fall08/Notes/ch11.pdf この資料が結構良さげです．あと，Java については https://community.ibm.com/community/user/wasdevops/blogs/gary-deval/2022/01/18/java-garbage-collection-fundamentals これも良さげです．
+
+あと，[THe 67th Yokohama kernel reading party](https://www.youtube.com/watch?v=0-vWT-t0UHg) の動画も過去のTAさんから推薦してもらいました．
 
 ### 静的型検査のメリット
 
