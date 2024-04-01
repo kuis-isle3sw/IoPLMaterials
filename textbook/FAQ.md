@@ -871,6 +871,10 @@ let f () = (print_string "hoge", print_string "hoge") in
 
 ### denoted value と expressed value の違い
 
+> eval.mlで定義されているdnvalという型はなんの目的で用意されたものですか？
+
+これは denoted value の略です．変数が指す (denote する) 値ということです．[教科書](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap03-2.html)を見てもらうとよいかなと思います．講義中にも少し言及したので，必要であればそちらも．（どの回だったっけ...）
+
 OCaml では一旦変数を束縛すると，その束縛先を変更することはできません．他方，C言語では変更することができます．
 ```C=
 int main(int argc, char **argv) {
@@ -882,12 +886,6 @@ int main(int argc, char **argv) {
 したがって，`x`は変更可能なデータ，すなわち OCaml で言うところの参照っぽいものに束縛されているはずです．他方，上記ソースコードの `(A)` の行では，`=`の右辺で`x`が評価されていますが，その評価結果は（参照ではなく）現在参照に入っている値です．すなわち，`x`が束縛されている先の値 (denoted value) は参照であるのに，`x`を評価して出てくる値 (expressed value) は参照ではないということが起こっています．言語によってはこのような区別をする必要があるので，今回のソースコードでは分けています．
 
 実際に，今回のソースコードでは環境は変数の `dnval` への束縛であるのに対して，`eval_exp`で返ってくる評価結果は`exval`になっています．
-
-### `exval` と `dnval`
-
-> eval.mlで定義されているdnvalという型はなんの目的で用意されたものですか？
-
-これは denoted value の略です．変数が指す (denote する) 値ということです．[教科書](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap03-2.html)を見てもらうとよいかなと思います．講義中にも少し言及したので，必要であればそちらも．（どの回だったっけ...）
 
 ### 関数閉包を使わなくてもよい関数
 
