@@ -364,18 +364,25 @@ val ( ^^^ ) : int -> int -> int = <fun>
 
 ### `|> 演算子
 
-#### `|>` の話
-    
+   
 > `|>` はどういう役割を持つ演算子なのでしょうか？
     
-[`Stdlib` で定義されている演算子](https://ocaml.org/api/Stdlib.html)です．説明を見ると
+[`Stdlib` で定義されている演算子](https://ocaml.org/api/Stdlib.html)です．一般にはパイプライン演算子と呼ばれています．説明を見ると
 
 > `val (|>) : 'a -> ('a -> 'b) -> 'b`
 > Reverse-application operator: x |> f |> g is exactly equivalent to g (f (x)). Left-associative operator, see Ocaml_operators for more information.
     
 と書いてあります．つまり `x |> f |> g` のように書くと `g (f x)` と同じ意味です． `|>` の方がカッコが少ないのと，`x` という値が処理 `f` と処理 `g` をこの順番に通過するという感じがあって，こっちの方が読みやすい場合があったりします．組み込み等で注目されている[Elixir](https://elixir-lang.org/)という言語でもこの演算子がフィーチャーされていますね．
 
-
+例えば，以下のコード
+```ocaml=
+String.split_on_char ' ' (String.uppercase_ascii (String.trim "Hello, world")) 
+``` 
+は，パイプライン演算子を使うと
+```ocaml=
+Hello, world  " |> String.trim |> String.uppercase_ascii |> String.split_on_char ' '  
+```
+と書き換えられます．この書き方だと処理の流れが文字の流れと同じ方向になって読みやすくなっていますね．
 
 ### 参照型
 
@@ -1936,7 +1943,6 @@ LL(k)だと左再帰を含む文法は本質的に扱えないので，LL(k)に�
 * Alfred V. Aho, Jeffrey D. Ullman: The theory of parsing, translation, and compiling
 https://dl.acm.org/doi/book/10.5555/578789
 
-
 ### FIRST や FOLLOW を計算するツール
 
 > 構文解析結果を実験したいときに有用なツール等があれば教えていただけますと幸いです。
@@ -1946,6 +1952,10 @@ https://dl.acm.org/doi/book/10.5555/578789
 
 と言いながら適当に調べて出てきたものを書いておきます．無保証です．
 - https://www.npmjs.com/package/first-follow?activeTab=dependencies
+
+あと，以前の TA の方からは，以下のコメントをもらいました．
+
+> 自分が TA をしていた時に色々調べた中では https://mikedevice.github.io/first-follow/ が一番便利だったっぽいです。講義の記法と微妙にずれていた気もしますが、一応使えました。あとこういうのを参照してました。https://knsm.net/follow-%E3%81%AE%E8%A8%88%E7%AE%97%E3%82%92%E9%96%93%E9%81%95%E3%81%88%E3%81%AB%E3%81%8F%E3%81%8F%E3%81%99%E3%82%8B%E5%B7%A5%E5%A4%AB-d1d978ce96ec
 
 ### LR(k)
 
