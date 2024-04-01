@@ -604,25 +604,6 @@ Structural ordering functions. These functions coincide with the usual orderings
 
 のように，どのように比較されるかが明示化されていませんが，実装では辞書式順序になっているようです．
 
-### OCaml の文法
-
-> "講義に直接関係があるわけではない質問になってしまいますが...。
-> OCaml 公式 Web サイトのこのあたり：
-> https://v2.ocaml.org/releases/5.0/htmlman/language.html
-> で言語の BNF が書かれていたりしますが、この BNF で記述されているルールについて、並列に記されているルールは下にあるものほど優先される、あるいは上にあるものほど優先される、というような決まりはあるのでしょうか？
-> というのも、例えば
-> print_int +5
-> という式は、
-> https://v2.ocaml.org/releases/5.0/htmlman/expr.html
-> に記されている expr の生成規則のうち
-> expr ::= expr {argument}*
-> でも
-> expr ::= expr infix-op expr
-> でも、どちらの規則でも当てはまりそうで、じゃあ別に追加のルールがないとどちらの規則に当てはめてパースするか決められないなあ、と思ったので気になった次第です。
-> ちなみに実際に動かしてみたところ、この例で出した式は後者でパースされるようでした。"
-
-これ，いろいろ考えてみたのですが，よくわかりませんでした．そもそもなんで `+` が prefix symbol として扱えるんだろう．．．
-
 ## インタプリタについて
 
 ### 遅延評価と if 式
