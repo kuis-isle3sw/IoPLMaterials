@@ -244,6 +244,8 @@ val f : int -> ('a ref as 'a) -> 'a = <fun>
 
 おすすめは[五十嵐先生の教科書](https://www.fos.kuis.kyoto-u.ac.jp/~igarashi/OCaml/)です．あるいは，[計算機科学コースの実験3SWで使用している教科書](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/mltext.pdf)もよいです．
 
+あと，最近は[こういう教科書](https://nextpublishing.jp/book/17485.html)も出ています．（まだ読んではいないのですが．）
+
 ### Working directory を取得する方法
 
 > #useのコマンドを使うときに、現在のディレクトリが分からなくて困っていますが、現在のディレクトリを表示するコマンドはありますか？(＃pwd;;などがあれば嬉しいです。)
@@ -1605,6 +1607,9 @@ let f = fan a -> a + b in g f;;
 また，関数の implicit parameter を型に含めることで，動的スコープを持つ変数の意図しない束縛が起こりにくいようにするような型システムがあるようです．（知らんかった．）ぱっと見で結構わかりやすい論文のようだったので読んでみるとよいかもしれません．
 
 - Jeffrey R. Lewis, John Launchbury, Erik Meijer, and Mark B. Shields. 2000. Implicit parameters: dynamic scoping with static types. In Proceedings of the 27th ACM SIGPLAN-SIGACT symposium on Principles of programming languages (POPL '00). Association for Computing Machinery, New York, NY, USA, 108–118. DOI:https://doi.org/10.1145/325694.325708
+
+うちの研究室メンバーから，以下のコメントがありました．
+> あと，静的束縛ではクロージャが定義時点での環境を保持するためによりメモリを消費します．これはメモリが貴重だったコンピュータ黎明期では大きなコストで，それを避けるために動的束縛が好まれたという歴史的な経緯があるようです．しかしメモリが潤沢にある現在では，そのようなコストを理由に動的束縛を採用することはほぼないでしょう．（要出典）
 
 ### 型環境内の束縛の順序
 
