@@ -2,6 +2,12 @@
 
 # (F)AQ
 
+git<nav>
+  <h4>Table of Contents</h4>
+  * this unordered seed list will be replaced by toc as unordered list
+  {:toc}
+</nav>
+
 ## OCaml に関する質問
 
 ### `eval $(opam env)`
