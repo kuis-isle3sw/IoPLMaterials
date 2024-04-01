@@ -1247,7 +1247,7 @@ private static ref int Error(ref int x, int n)
 
 言語処理系レベルでサポートしているものはすぐには思いつきません．
 
-関連するトピックとして，高階関数型言語のためのモデル検査を型に基づく解析で行う手法が東大の小林直樹先生によって研究されています．[Naoki Kobayashi, C.-H. Luke Ong: A Type System Equivalent to the Modal Mu-Calculus Model Checking of Higher-Order Recursion Schemes. LICS 2009: 179-188](https://www-kb.is.s.u-tokyo.ac.jp/~koba/papers/hors-type.pdf) いわゆる普通のモデル検査はシステムをオートマトンでモデル化して検証することが多いように思うのですが，関数型プログラムをこのようにモデル化するのは困難なため，関数型言語での検証手法には型が用いられることが多いです．（プッシュダウンオートマトンを使う方
+関連するトピックとして，高階関数型言語のためのモデル検査を型に基づく解析で行う手法が東大の小林直樹先生によって研究されています．[Naoki Kobayashi, C.-H. Luke Ong: A Type System Equivalent to the Modal Mu-Calculus Model Checking of Higher-Order Recursion Schemes. LICS 2009: 179-188](https://www-kb.is.s.u-tokyo.ac.jp/~koba/papers/hors-type.pdf) いわゆる普通のモデル検査はシステムをオートマトンでモデル化して検証することが多いように思うのですが，関数型プログラムをこのようにモデル化するのは困難なため，関数型言語での検証手法には型が用いられることが多いかなと思います．
 
 ### 型推論の停止性
 
