@@ -302,6 +302,6 @@ let rec f = fun x -> fun y ->
     ... :: y
 {% endhighlight %}
 
-が出力されるとよい．これにより，`y` が整数としてもリストとしても使われているのが型エラーの原因であると分かる．これは _型エラースライシング (type-error slicing)_ と呼ばれている手法で，[Christian Haack, Joe B. Wells: Type Error Slicing in Implicitly Typed Higher-Order Languages. ESOP 2003: 284-301](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.8.9985&rep=rep1&type=pdf)で提案されている手法である．
+が出力されるとよい．これにより，`y` が整数としてもリストとしても使われているのが型エラーの原因であると分かる．これは _型エラースライシング (type-error slicing)_ と呼ばれている手法で，[Christian Haack, Joe B. Wells: Type Error Slicing in Implicitly Typed Higher-Order Languages. ESOP 2003: 284-301](https://doi.org/10.1007/3-540-36575-3_20)で提案されている手法である． (論文 PDF はリンク先のページ中ほどの "Download to read the full chapter text" というところからダウンロードできる．)
 
 	
