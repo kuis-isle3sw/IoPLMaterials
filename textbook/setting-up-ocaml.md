@@ -105,3 +105,6 @@ opam user-setup install
 
 - 毎回`eval $(opam env)`をしないとOCamlを実行できない。
   - `opam init`を`-y`オプションつきで（`opam init -y`あるいは`opam init -y --disable-sandboxing`）実行したか確認する。していない場合は`-y`つきで再度実行する。
+  - どうやらこれでも上手く設定が反映されない場合もあるらしい。そういう場合は `~/.profile` や `~/.bash_profile` などに `eval "$(opam env)"` という行を手動で追加する。
+    - これらのファイルのどれに書けば良さそうか、は例えば https://blog1.mammb.com/entry/2019/12/01/090000 を参照
+
