@@ -1,0 +1,5 @@
+(executable
+ (name main)
+ (public_name miniml-interpreter)
+ (package miniml-interpreter)
+ (libraries miniml_interpreter))
