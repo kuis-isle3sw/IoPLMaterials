@@ -1,0 +1,5 @@
+(executable
+ (name main)
+ (package miniml-compiler)
+ (public_name miniml-compiler)
+ (libraries miniml_compiler))

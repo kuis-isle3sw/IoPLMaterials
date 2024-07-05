@@ -1,0 +1,10 @@
+(library
+ (name miniml_interpreter)
+ (public_name miniml-interpreter)
+ (wrapped false))
+
+(ocamllex
+ (modules lexer))
+
+(menhir
+ (modules parser))

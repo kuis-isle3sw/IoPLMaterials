@@ -10,13 +10,13 @@ exception Error of string
 let err s = raise (Error s)
 
 (* pretty printing *)
-let rec string_of_exval = function
+let string_of_exval = function
     IntV i -> string_of_int i
   | BoolV b -> string_of_bool b
 
 let pp_val v = print_string (string_of_exval v)
 
-let rec apply_prim op arg1 arg2 = match op, arg1, arg2 with
+let apply_prim op arg1 arg2 = match op, arg1, arg2 with
     Plus, IntV i1, IntV i2 -> IntV (i1 + i2)
   | Plus, _, _ -> err ("Both arguments must be integer: +")
   | Mult, IntV i1, IntV i2 -> IntV (i1 * i2)

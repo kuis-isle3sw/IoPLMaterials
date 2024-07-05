@@ -1,0 +1,4 @@
+(library
+ (flags
+  (:standard -w -32-27-8))
+ (name tutorial))
