@@ -10,6 +10,5 @@ val union : 'a t -> 'a t -> 'a t
 val remove : 'a -> 'a t -> 'a t
 val diff : 'a t -> 'a t -> 'a t
 val member : 'a -> 'a t -> bool
-
 val map : ('a -> 'b) -> 'a t -> 'b t
 val bigunion : 'a t t -> 'a t

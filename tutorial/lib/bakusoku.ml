@@ -242,7 +242,7 @@ let m4 = Add { d = Rice Shake; next = m3 }
 (* ごはんのおかわりつき *)
 
 (*
-let price_of_menu m =
+   let price_of_menu m =
   match m with
     Smile -> 0
   | Add {d = d1; next = m'} -> ???
@@ -295,29 +295,29 @@ print_int (5 + 15)
 let p1 = { x = 0; y = 1 };;
 
 (*
-  p1 ----> {x=0; y=1}
+   p1 ----> {x=0; y=1}
 *)
 
 p1.x <- 2
 
 (*
-  p1 ----> {x=2; y=1}
+   p1 ----> {x=2; y=1}
 *)
 
 let p2 = p1;;
 
 (*
-  p1 ----+
-         |---> {x=2; y=1}
-  p2 ----+
+   p1 ----+
+          |---> {x=2; y=1}
+   p2 ----+
 *)
 
 p2.y <- 3;;
 
 (*
-  p1 ----+
-         |---> {x=2; y=3}
-  p2 ----+
+   p1 ----+
+          |---> {x=2; y=3}
+   p2 ----+
 *)
 
 p1.y
@@ -330,15 +330,15 @@ p1.y
 let p3 = { p2 with x = 2 };;
 
 (*
-  p1 ----+
-         |---> {x=2; y=3}
-  p2 ----+
+   p1 ----+
+          |---> {x=2; y=3}
+   p2 ----+
 
-  p3 --------> {x=2; y=3}
+   p3 --------> {x=2; y=3}
 *)
 
 (*
-let p = {origin with y = 3};; (* 破壊的でないアップデート *)
+   let p = {origin with y = 3};; (* 破壊的でないアップデート *)
 origin;;
 *)
 
@@ -403,10 +403,10 @@ is_positive' (-100)
 
 (* ハマりどころ: セミコロンと if-then-else の結合 *)
 (*
-let is_positive n =
-  if n > 0 then print_int n; print_string " is positive"
-  else print_int n; print_string " isn't positive"
-;;
+   let is_positive n =
+   if n > 0 then print_int n; print_string " is positive"
+   else print_int n; print_string " isn't positive"
+   ;;
 *)
 
 (* はまらないように修正するには *)
@@ -479,18 +479,18 @@ let c = sigma ((fun n -> n * n), 20)
 let d = sigma ((fun n -> n * n * n), 20);;
 
 (*
-let cube = fun n -> n * n * n
-;;
+   let cube = fun n -> n * n * n
+   ;;
 *)
 
 fun (x, y) -> (x +. y) /. 2.0;;
 
 (*
-fun c ->
-  match c with
-  | Nil -> 0
-  | Cons(n,tl) -> 1
-;;
+   fun c ->
+   match c with
+   | Nil -> 0
+   | Cons(n,tl) -> 1
+   ;;
 *)
 
 function Nil -> 0 | Cons (n, tl) -> 1
