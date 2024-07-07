@@ -31,5 +31,3 @@ rule main = parse
       _ -> Parser.ID id
      }
 | eof { exit 0 }
-
-

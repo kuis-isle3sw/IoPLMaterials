@@ -21,7 +21,11 @@
  (depends
   ocaml
   menhir
-  (ocaml-lsp-server :with-dev-setup)))
+  (ocaml-lsp-server :with-dev-setup)
+  (ocamlformat
+   (and
+    :with-dev-setup
+    (= 0.26.2)))))
 
 (package
  (name miniml-interpreter)
@@ -29,11 +33,19 @@
  (depends
   ocaml
   menhir
-  (ocaml-lsp-server :with-dev-setup)))
+  (ocaml-lsp-server :with-dev-setup)
+  (ocamlformat
+   (and
+    :with-dev-setup
+    (= 0.26.2)))))
 
 (package
  (name tutorial)
  (synopsis "Dummy package context for OCaml tutorial")
  (depends
   ocaml
-  (ocaml-lsp-server :with-dev-setup)))
+  (ocaml-lsp-server :with-dev-setup)
+  (ocamlformat
+   (and
+    :with-dev-setup
+    (= 0.26.2)))))
