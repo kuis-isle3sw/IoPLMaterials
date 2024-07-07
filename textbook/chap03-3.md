@@ -5,7 +5,7 @@
 この節では`Parser`モジュールと`Lexer`モジュールの機能
 と`parser.mly`と`lexer.mll`の構成について説明する．字句解析と構文解析を行うための具体的なアルゴリズムは講義の終盤で扱うが，ここではツールを使って（具体的なアルゴリズムがわからなくても）とりあえずこれらのモジュールを作る方法を説明する．
 
-この節は[parser.mly](../interpreter/src/parser.mly)と[lexer.mll](../interpreter/src/lexer.mll)とを見ながら読むと良い．
+この節は[parser.mly](miniml-interpreter/lib/parser.mly)と[lexer.mll](miniml-interpreter/lib/lexer.mll)とを見ながら読むと良い．
 
 `Parser`と`Lexer`はそれぞれ構文解析と字句解析を行うモジュールである．
 `Parser`モジュールは [Menhir](http://gallium.inria.fr/~fpottier/menhir/) というツールを用いて`parser.mly`とい
@@ -38,7 +38,7 @@ Menhir は _LR(1)構文解析 (LR(1) parsing)_ という手法を用いて，BNF
 
 それでは `parser.mly` を見てみよう．
 {% highlight ocaml %}
-{% include_relative interpreter/src/parser.mly %}
+{% include_relative miniml-interpreter/lib/parser.mly %}
 {% endhighlight %}
 この文法定義ファイルではトレイラは空になっていて，その前の`%%`は省略されている．
 
@@ -137,7 +137,7 @@ _AExpr_ SEMISEMI
 ocamllex は正則表現を使ってどのような文字列からどのようなトークンを生成すべきかを指定する．（正則表現は lex や flex においても同様に用いられる．）この指定は拡張子 `.mll` を持つファイルに記述する．今回用いる `lexer.mll`を見てみよう．
 
 {% highlight ocaml %}
-{% include_relative interpreter/src/lexer.mll %}
+{% include_relative miniml-interpreter/lib/lexer.mll %}
 {% endhighlight %}
 
 `.mll`ファイルは以下の形をしている．
