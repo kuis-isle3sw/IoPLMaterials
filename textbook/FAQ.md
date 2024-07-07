@@ -1605,7 +1605,7 @@ Implicit parameter は実際に Scala 等の実用的な言語にも採用され
 うちの研究室メンバーから，以下のコメントがありました．
 > あと，静的束縛ではクロージャが定義時点での環境を保持するためによりメモリを消費します．これはメモリが貴重だったコンピュータ黎明期では大きなコストで，それを避けるために動的束縛が好まれたという歴史的な経緯があるようです．しかしメモリが潤沢にある現在では，そのようなコストを理由に動的束縛を採用することはほぼないでしょう．（要出典）
 
-もう一つ以下のコメントも貰いました．Emacs Lisp は Emacs でライブラリを書いたり設定ファイルを書いたりするのに使われる言語ですが，動的束縛が使われています．Emacs Lisp が動的束縛を採用している利点としては https://www.gnu.org/software/emacs/emacs-paper.html#SEC17 や https://www.emacswiki.org/emacs/DynamicBindingVsLexicalBinding を見てみるとよいです．また，和賀先生が[ちょっとしたデモ](https://gist.github.com/MasWag/337f91bfe149ad2e1083f142dd3f124a)を書いています．
+もう一つ以下のコメントも貰いました．Emacs Lisp は Emacs でライブラリを書いたり設定ファイルを書いたりするのに使われる言語ですが，動的束縛が使われています．Emacs Lisp が動的束縛を採用している利点としては https://www.gnu.org/software/emacs/emacs-paper.html#SEC17 や https://www.emacswiki.org/emacs/DynamicBindingVsLexicalBinding を見てみるとよいです．また，和賀先生が[ちょっとしたデモ](https://gist.github.com/MasWag/337f91bfe149ad2e1083f142dd3f124a) と [二引数(?)足し算のデモ](https://gist.github.com/MasWag/d01fea7173994259304f50fe86102b0b) を書いています．
 
 ### 型環境内の束縛の順序
 
