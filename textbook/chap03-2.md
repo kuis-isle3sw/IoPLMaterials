@@ -15,7 +15,7 @@
 `Syntax`モジュールはファイル`syntax.ml`に定義されており，抽象構文木を表すデータ型を定義している．具体的には，このモジュールでは上の BNF に対応する抽象構文木を表す以下の型が定義されている．型定義が含まれている．以下に`syntax.ml`の中身を示す．
 
 {% highlight ocaml %}
-{% include_relative ../miniml-interpreter/lib/syntax.ml %}
+{% include_relative miniml-interpreter/lib/syntax.ml %}
 {% endhighlight %}
 
 以下では`Syntax`モジュールで定義されている型は変数を説明する．実際に`syntax.ml`と[前出のBNF](./chap03-1.md#bnf)を見ながら読んでみてほしい．
@@ -37,7 +37,7 @@
 `Eval`モジュールはインタプリタの動作のメイン部分であり，字句解析と構文解析によって生成された構文木を解釈する．（したがって，この部分をインタプリタの _解釈部_ と呼ぶ．）解釈部の動作によって，言語処理系は定義される言語のセマンティクスを定めている．以下に`Eval`モジュールの中身を示す．
 
 {% highlight ocaml %}
-{% include_relative ../miniml-interpreter/lib/eval.ml %}
+{% include_relative miniml-interpreter/lib/eval.ml %}
 {% endhighlight %}
 
 プログラミング言語のセマンティクスを定めるに当たって重要なことの一つは，どんな類いの _値 (value)_ を（定義される言語の）プログラムが操作できるかを定義することである．例えば，C言語であれば整数値，浮動小数値，ポインタなどが値として扱えるし，OCaml であれば整数値，浮動小数値，レコード，ヴァリアントなどが値として扱える．
@@ -70,7 +70,7 @@ OCaml で MiniML の言語処理系を実装する上では，環境をどのよ
 
 環境を操作する値や関数の型，これらの環境から送出されか可能性のある例外は，`environment.mli`に以下のように定められている．
 {% highlight ocaml %}
-{% include_relative ../miniml-interpreter/lib/environment.mli %}
+{% include_relative miniml-interpreter/lib/environment.mli %}
 {% endhighlight %}
 - 最初の値 `empty` は，何の変数も束縛されていない，空の環境である．
 - 次の`extend` は，環境に新しい束縛をひとつ付け加えるための関数で，`extend id dnval env`で，環境 `env` に対して，変数 `id` を denoted value `dnval` に束縛したような新しい環境を表す．
@@ -80,7 +80,7 @@ OCaml で MiniML の言語処理系を実装する上では，環境をどのよ
 
 この関数群を実装したものが以下の`environment.ml`である．
 {% highlight ocaml %}
-{% include_relative ../miniml-interpreter/lib/environment.ml %}
+{% include_relative miniml-interpreter/lib/environment.ml %}
 {% endhighlight %}
 環境のデータ表現は，変数と，その変数が束縛されているデータのペアのリストである．例えば上に出てきた環境$\{x \mapsto 1, y \mapsto 3\}$はリスト`[(x,1); (y,3)]`で表現される．ただし `environment.mli` では型 `'a t` が定義のない抽象的な型として宣言されているので，環境を使う側からは環境の実体がこのように実装されていることを使うことはできず，環境の操作は`Environment`モジュール中の関数を介して行う必要がある．（例えば，環境`env`に対して`match env with [] -> ... | hd::tl -> ...`のようにリストのパターンマッチを適用することはできない．）
 
@@ -130,7 +130,7 @@ let initial_env =
 
 メインプログラム `main.ml` は `Cui`モジュール中で定義されている`read_eval_print`という関数を呼び出している．`Cui` モジュールは以下のようになっている．
 {% highlight ocaml %}
-{% include_relative ../miniml-interpreter/lib/cui.ml %}
+{% include_relative miniml-interpreter/lib/cui.ml %}
 {% endhighlight %}
 関数`read_eval_print`は，
 + 入力文字列の読み込み・構文解析
