@@ -6,10 +6,9 @@
 
 $\mathcal{C}$から直接にアセンブリを生成することもできるのだが，アセンブリ言語は書かれている命令を順番に実行していく**命令形言語 (imperative language)**なので，関数型言語である$\mathcal{C}$とはギャップがまだ大きい．そこで，$\mathcal{C}$とアセンブリ言語の間に**仮想マシン言語**<sup>[「仮想マシン言語」という名称についての注](#vmlang)</sup>$\mathcal{V}$という中間言語を挟むことにする．<sup>[中間言語に関する注](#il)</sup>
 
-<a name="vmlang">注：「仮想マシン言語」という名前は，命令形の中間言語の  名前として本書で便宜的に使っている名前である．このような中間言語に相当する言語は多くのコンパイラやコンパイラの教科書で用いられているが，その名前は様々である．
+<a name="vmlang">注：「仮想マシン言語」という名前は，命令形の中間言語の 名前として本書で便宜的に使っている名前である．このような中間言語に相当する言語は多くのコンパイラやコンパイラの教科書で用いられているが，その名前は様々である．
 
 <a name="il">注：ソース言語とターゲット言語の間にどのような中間言語を挟むかはコンパイラを作る上で重要なデザインチョイスである．本書では$\mathcal{C}$と$\mathcal{V}$を中間言語として挟むが，より多くの中間言語を挟むコンパイラもある．
-
 
 $\mathcal{V}$の定義を示す前に，$\mathcal{V}$がどんな感じの言語かを見てみよう．以下のプログラムは，言語$\mathcal{V}$で書かれた，$3$に$1$を加えるプログラムである．
 
@@ -25,6 +24,7 @@ $$
 $$
 
 プログラムは命令の列である．プログラム中の$l_f$や$l_{\mathit{main}}$は**ラベル (label)**と呼ばれる識別子で，プログラム中の位置を表している．ラベルは処理のジャンプ先を指定する際に用いられる．
+
 <!-- 例えば，プログラム中の$\dots \leftarrow \mathbf{call} \; \mathbf{labimm}(l_f), \dots$命令は関数呼び出しをするために$l_f$に処理を移す命令である．-->
 
 このプログラム中の各命令の動作を順番に見てみよう．ラベル$l_f$から始まる部分にかかれている命令は以下のとおりである．
@@ -74,7 +74,7 @@ $\mathcal{C}$の式に対する変換$\mathcal{T}_{\delta,\mathit{tgt}}(e)$は�
 
 $$
 \begin{array}{rcl}
-  \mathcal{T}_{\delta,\mathit{tgt}}(x) &=& \mathit{tgt} \leftarrow \delta(x)\\ 
+  \mathcal{T}_{\delta,\mathit{tgt}}(x) &=& \mathit{tgt} \leftarrow \delta(x)\\
   \mathcal{T}_{\delta,\mathit{tgt}}(n) &=& \mathit{tgt} \leftarrow \mathbf{imm}(n)\\
   \mathcal{T}_{\delta,\mathit{tgt}}(\mathbf{true}) &=& \mathit{tgt} \leftarrow \mathbf{imm}(1)\\
   \mathcal{T}_{\delta,\mathit{tgt}}(\mathbf{false}) &=& \mathit{tgt} \leftarrow \mathbf{imm}(0)\\
@@ -112,6 +112,7 @@ $$
 関数定義$\mathbf{let} \; \mathbf{rec} \; f = \mathbf{fun} \; x \rightarrow e$は，(1) 関数 $f$ に対応する命令列の始まる場所を示すラベル，(2) 関数本体式の評価結果を$\mathbf{local}(0)$に格納する命令列，(3) $\mathbf{local}(0)$を返り値として返す命令を順番に並べた命令列に変換される．その際に，後でアセンブリに変換する際に必要になるため，関数$f$の実行に必要なローカル変数の記憶領域のサイズも計算する．
 
 具体的には，関数定義$\mathbf{let} \; \mathbf{rec} \; f = \mathbf{fun} \; x \rightarrow e$の変換結果$\mathcal{T}_\delta(\mathbf{let}\ \mathbf{rec}\ f\ = \mathbf{fun}\ x \rightarrow e)$は
+
 $$
   \left(
   \begin{array}{l}
@@ -122,7 +123,9 @@ $$
   4n+4
   \right)
 $$
+
 と定義される．ただし，
+
 - $\delta_1$は$\{x \mapsto \mathbf{param}(1)\}$を表す．
 - $\{x_1,\dots,x_n\}$を$e$中に出現する変数として，$\delta_2$は$\{x_1 \mapsto \mathbf{local}(4), x_2 \mapsto \mathbf{local}(8), \dots, x_n \mapsto \mathbf{local}(4n)\}$である．
 - また，$\delta(f)$は$\mathbf{labimm}(l_f)$であると仮定する．
@@ -155,6 +158,7 @@ $$
 $$
 
 ここで，
+
 - 各$i$について，$\mathcal{T}_\delta(d_i) = \left(I_i, n_i\right)$である．
 - $\{f_1,\dots,f_n\}$は，$d_1,\dots,d_n$ で定義されている関数名である．
 - $\{x_1,\dots,x_m\}$は$e$中の変数の集合である．

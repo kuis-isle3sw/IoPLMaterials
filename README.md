@@ -11,22 +11,22 @@
 
 ## 2024年度 講義スケジュール
 
-|回| 日付 | 内容（予定） | 資料 | その他 |
-|------|------|-------------|------|-------|
-|01| 4/8 | イントロダクション | [1章: イントロダクション](textbook/chap01.md) [2章: 概論的な話](textbook/chap02.md) | |
-|02| 4/15 | インタプリタ 1 | [3.1: MiniML1 のシンタックスとセマンティックス](textbook/chap03-1.md) [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md) [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md) | |
-|03| 4/22 | インタプリタ 2 | [3.4: MiniML2: 定義の導入](textbook/chap03-4.md) | |
-|04| 5/2 | インタプリタ 3 | [3.5: MiniML3: 関数の導入](textbook/chap03-5.md) [3.6: MiniML4: 再帰関数](textbook/chap03-6.md) | |
-|05| 5/13 | 型システム 1 |  [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md) [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md) | |
-|06| 5/20 | 型システム 2 | [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md) [4.4: MiniML3,4 のための型推論 (1): Prelude](textbook/chap04-4.md) | |
-|07| 5/27 | 型システム 3 | [4.5: MiniML3,4 のための型推論 (2): 型の等式制約と単一化](textbook/chap04-5.md) [4.6: MiniML3,4 のための型推論 (3): 型推論アルゴリズムの実装](textbook/chap04-6.md) | |
-|08| 6/3 | 型システム 4 | [4.7: 多相的 `let` の型推論](textbook/chap04-7.md) | |
-|09| 6/10 | 字句解析 | |（字句解析と構文解析パートの資料は PandA で配布する）|
-|10| 6/17 | LL(1)構文解析 | | |
-|11| 6/24 | LR(0)構文解析 | | |
-|12| 7/1 | LR(0), SLR(1), LR(1)構文解析 | | |
-|13| 7/8 | コンパイラ 1 | [5.1: 能書き](textbook/chap05-1.md) [5.2: ソース言語 MiniML4- と中間言語$\mathcal{C}$](textbook/chap05-2.md) [5.3: MiniML4- から$\mathcal{C}$への変換$\mathcal{I}$](textbook/chap05-3.md) [5.6: アセンブリ生成](textbook/chap05-6.md) | [5.4: MIPS アセンブリ言語入門](textbook/chap05-4.md) を事前に理解しておくこと |
-|14| 7/22 | [MinCaml コンパイラ](https://esumii.github.io/min-caml/)概説 | | [ソースコード](https://github.com/esumii/min-caml)をダウンロードして手元で試しておくとよい |
+| 回 | 日付 | 内容（予定） | 資料 | その他 |
+| --- | --- | --- | --- | --- |
+| 01 | 4/8 | イントロダクション | [1章: イントロダクション](textbook/chap01.md) [2章: 概論的な話](textbook/chap02.md) |  |
+| 02 | 4/15 | インタプリタ 1 | [3.1: MiniML1 のシンタックスとセマンティックス](textbook/chap03-1.md) [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md) [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md) |  |
+| 03 | 4/22 | インタプリタ 2 | [3.4: MiniML2: 定義の導入](textbook/chap03-4.md) |  |
+| 04 | 5/2 | インタプリタ 3 | [3.5: MiniML3: 関数の導入](textbook/chap03-5.md) [3.6: MiniML4: 再帰関数](textbook/chap03-6.md) |  |
+| 05 | 5/13 | 型システム 1 | [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md) [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md) |  |
+| 06 | 5/20 | 型システム 2 | [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md) [4.4: MiniML3,4 のための型推論 (1): Prelude](textbook/chap04-4.md) |  |
+| 07 | 5/27 | 型システム 3 | [4.5: MiniML3,4 のための型推論 (2): 型の等式制約と単一化](textbook/chap04-5.md) [4.6: MiniML3,4 のための型推論 (3): 型推論アルゴリズムの実装](textbook/chap04-6.md) |  |
+| 08 | 6/3 | 型システム 4 | [4.7: 多相的 `let` の型推論](textbook/chap04-7.md) |  |
+| 09 | 6/10 | 字句解析 |  | （字句解析と構文解析パートの資料は PandA で配布する） |
+| 10 | 6/17 | LL(1)構文解析 |  |  |
+| 11 | 6/24 | LR(0)構文解析 |  |  |
+| 12 | 7/1 | LR(0), SLR(1), LR(1)構文解析 |  |  |
+| 13 | 7/8 | コンパイラ 1 | [5.1: 能書き](textbook/chap05-1.md) [5.2: ソース言語 MiniML4- と中間言語$\mathcal{C}$](textbook/chap05-2.md) [5.3: MiniML4- から$\mathcal{C}$への変換$\mathcal{I}$](textbook/chap05-3.md) [5.6: アセンブリ生成](textbook/chap05-6.md) | [5.4: MIPS アセンブリ言語入門](textbook/chap05-4.md) を事前に理解しておくこと |
+| 14 | 7/22 | [MinCaml コンパイラ](https://esumii.github.io/min-caml/)概説 |  | [ソースコード](https://github.com/esumii/min-caml)をダウンロードして手元で試しておくとよい |
 
 ## 学習の仕方
 
@@ -41,7 +41,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 - プログラミング言語強者になりましょう．そのためには．．．
   - なにか自分で言語を作って処理系を作ってみましょう．作った処理系を自慢しましょう．世界中で自作の言語が使われるようになったらいいですね．
   - もしくは，プログラミング言語理論やプログラム検証を勉強してみましょう．
-    TODO: 参考文献
+  - TODO: 参考文献
 
 ## 教科書 <a name="textbook"></a>
 
@@ -54,6 +54,7 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 ### 目次
 
 <!-- - [オリエンテーション資料](misc/orientation.md) -->
+
 - [OCaml の環境設定](textbook/setting-up-ocaml.md) [(講義スライド)](textbook/slides/ocaml.pdf)
 <!--  - [opamのインストール方法](textbook/install_opam.jp.md) -->
 - OCaml あまり知らない人向け: 前提となる OCaml の知識を身に付ける．
@@ -132,15 +133,17 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 
 特に以下の基金へのご寄付をいただけますと大変ありがたいです．
 
-+ [京都大学修学支援基金](https://www.kikin.kyoto-u.ac.jp/contribution/student/): 意欲と能力のある学生が経済的理由で修学・進学を断念することなく，希望する教育を受けられるようにすることを目的とした基金です．
-+ [男女共同参画支援たちばな基金](https://www.kikin.kyoto-u.ac.jp/contribution/tachibana/): 男女共同参画支援を推進するための基金で，育児等支援の充実，保育施策の充実，男女共同参画推進事業の充実を目的とした基金です．
-+ [情報学研究科基金](https://www.kikin.kyoto-u.ac.jp/contribution/informatics/): 情報学研究科における大学院生の学修・研究支援，若手研究者支援，研究支援を目的とした基金です．
+- [京都大学修学支援基金](https://www.kikin.kyoto-u.ac.jp/contribution/student/): 意欲と能力のある学生が経済的理由で修学・進学を断念することなく，希望する教育を受けられるようにすることを目的とした基金です．
+- [男女共同参画支援たちばな基金](https://www.kikin.kyoto-u.ac.jp/contribution/tachibana/): 男女共同参画支援を推進するための基金で，育児等支援の充実，保育施策の充実，男女共同参画推進事業の充実を目的とした基金です．
+- [情報学研究科基金](https://www.kikin.kyoto-u.ac.jp/contribution/informatics/): 情報学研究科における大学院生の学修・研究支援，若手研究者支援，研究支援を目的とした基金です．
 
 ## ローカル環境でのビルド方法
 
 この資料は [Jekyll](http://jekyllrb-ja.github.io/) を使用して構築されています．動作確認などのためにこの資料をローカル環境で表示させる場合は，[Ruby](https://www.ruby-lang.org/ja/) を導入した上で，次の通りコマンドを実行してください．
+
 ```sh
 bundle install
 bundle exec -- jekyll serve
 ```
+
 その後 [http://127.0.0.1:4000](http://127.0.0.1:4000) にアクセスしてください。
