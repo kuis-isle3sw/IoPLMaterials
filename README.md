@@ -139,24 +139,8 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 ## ローカル環境でのビルド方法
 
 この資料は [Jekyll](http://jekyllrb-ja.github.io/) を使用して構築されています．動作確認などのためにこの資料をローカル環境で表示させる場合は，[Ruby](https://www.ruby-lang.org/ja/) を導入した上で，次の通りコマンドを実行してください．
+```sh
+bundle install
+bundle exec -- jekyll serve
 ```
-$ gem install bundler jekyll
-$ bundle exec jekyll serve --baseurl '/IoPLMaterials'
-```
-その後 [http://127.0.0.1:4000/IoPLMaterials/](http://127.0.0.1:4000/IoPLMaterials/) にアクセスしてください。
-
-<!--
-Some notes on the documentation:
-- build commands:
-  ```sh
-  ❯ bundle install # required for the first time
-  [...]
-
-  ❯ bundle exec jekyll serve --livereload
-  [...]
-  # Open the local server address and keep editting.
-  # The `--livereload` option is particularly helpful to see update immediatelly when you make change.
-  ```
-- 各ファイルのはじめに \{\% include head.html \%\} がおいてある．`_includes/head.html` をここに読み込むことを表してる．
-  - head.html には MathJax を使うための設定等が書いてある．
--->
+その後 [http://127.0.0.1:4000](http://127.0.0.1:4000) にアクセスしてください。

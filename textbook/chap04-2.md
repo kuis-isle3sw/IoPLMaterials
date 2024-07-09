@@ -10,10 +10,10 @@
 <!-- %
 \begin{eqnarray*}
   e & ::= & x \mid n \mid \ML{true} \mid
-  \ML{false} \mid e_1 \ \textit{op}\  e_2 \mid 
-  \ML{if}\ e_1\ \ML{ then }\ e_2\ \ML{ else }\ e_3 
+  \ML{false} \mid e_1 \ \textit{op}\  e_2 \mid
+  \ML{if}\ e_1\ \ML{ then }\ e_2\ \ML{ else }\ e_3
   \mid  \ML{let}\ x\ \ML{=}\ e_1\ \ML{in}\ e_2 \\
-  \textit{op} & ::= & \ML{+} \mid \ML{*} \mid \ML{<} 
+  \textit{op} & ::= & \ML{+} \mid \ML{*} \mid \ML{<}
 \end{eqnarray*}
 %
 % \AI{e と op のフォント揃えません？} -->
@@ -58,7 +58,7 @@ $\mathbf{int}$は整数型, $\mathbf{bool}$は真偽値型である．
 
 この状況は，[MiniML2 インタプリタを実装したとき](chap03-2#environment)に，自由変数の値への束縛を環境というデータ構造で管理したのと相似である．いわば，我々は今 _自由変数の型への束縛_ を管理するデータ構造を必要としているのである．この，変数の型への束縛を管理するデータ構造を _型環境 (type environment)_ と呼ぶ．(型環境を表すメタ変数として$\Gamma$を用いる．）これを使えば，変数に対する型判断は，例えば
 
-> $\Gamma(x) = \mathbf{int}$ の時 $x: \mathbf{int}$ である  
+> $\Gamma(x) = \mathbf{int}$ の時 $x: \mathbf{int}$ である
 
 のように設計すればよさそうである．このことを考慮に入れて，型判断は，$\Gamma \vdash e : \tau$ と記述し，
 
@@ -218,9 +218,9 @@ $$
 型環境$\Gamma$の下で式$e$が$\mathbf{bool}$を持ち，式$e_1$と式$e_2$が**同一の**型$\tau$を持つならば，$\mathbf{if}\ e\ \mathbf{then}\ e_1\ \mathbf{else}\ e_2$がその型$\tau$を持つことを導出してよい．式$e$は$\mathbf{if}$式の条件部分なので，型$\mathbf{bool}$を持つべきであることは容易に納得できるであろう．
 
 式$e_2$と式$e_3$が同一の型$\tau$を持つべきとされていること，`if`式全体としてその型$\tau$を持つとされていることについては少し注意が必要である．これは，条件式$e_1$が`true`と`false`のどちらに評価されても実行時型エラーが起こらないようにするために設けられている条件である．これにより，_実際は絶対に実行時型エラーが起こらないのに型付け可能ではないプログラムが生じる．_ たとえば，
-{% highlight ocaml %}
+```ocaml
 (if true then 1 else false) + 3
-{% endhighlight %}
+```
 というプログラムを考えてみよう．このプログラムは，`if`式が必ず`1`に評価されるため，実行時型エラーは起こらない．しかし，この`if`式の`then`節の式`1`には型$\mathbf{int}$がつき，`else`節の式`false`には型$\mathbf{bool}$がつくので，`if`式は型付け不能である．<sup>[「型付け不能」についての注](#untypable)</sup>
 
 <a name="untypable">「型付け不能」について</a>: ある式$e$が型付け不能であることを言うには，_いかなる$\Gamma$と$\tau$をもってきても_，$\Gamma \vdash e : \tau$を導けないことを言わなければならないので，この説明は厳密には不十分である．
@@ -265,7 +265,7 @@ $$
 
 型付け規則を導入したところで，具体的にどのような型判断が「正しい」とされるのかを定義しよう．型判断
 $\Gamma \vdash e : \tau$ は，これが上記の型付け規則で _導出できる (derivable)_ ときに正しい型判断であると決める．この型判断が導出できる，とは，根が型判断$\Gamma \vdash e : \tau$で，上記のすべての辺が型付け規則に沿っている木が存在することである．（すべての葉は前提が無い型付け規則が適用された形になっている．）この木を型判断$\Gamma \vdash e : \tau$を導出する _導出木 (derivation tree)_ という．
- 
+
 例えば，以下は型判断$x : \mathbf{int} \vdash \mathbf{let}\ y = 3\ \mathbf{in}\ x + y : \mathbf{int}$の導出木である．
 
 TODO: 導出木の画像を貼る
@@ -288,5 +288,3 @@ TODO: 導出木の画像を貼る
         }
 }
 \] -->
-
-

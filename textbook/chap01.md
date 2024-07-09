@@ -17,9 +17,9 @@
 ### Exercise 1.1
 
 OCamlインタプリタに以下の入力を与えたところ，
-```
+```ocaml
 # let rec f x = if x = 0 then x else false;;
-Error: This expression has type bool but an expression was expected of type int. 
+Error: This expression has type bool but an expression was expected of type int.
 ```
 という応答が返ってきた．この応答の意味するところを，エラーメッセージ中の `This` が何を指すかを明らかにしつつ，説明せよ．
 

@@ -14,9 +14,9 @@
 
 `Syntax`モジュールはファイル`syntax.ml`に定義されており，抽象構文木を表すデータ型を定義している．具体的には，このモジュールでは上の BNF に対応する抽象構文木を表す以下の型が定義されている．型定義が含まれている．以下に`syntax.ml`の中身を示す．
 
-{% highlight ocaml %}
+```ocaml
 {% include_relative miniml-interpreter/lib/syntax.ml %}
-{% endhighlight %}
+```
 
 以下では`Syntax`モジュールで定義されている型は変数を説明する．実際に`syntax.ml`と[前出のBNF](./chap03-1.md#bnf)を見ながら読んでみてほしい．
 - `id` は変数の識別子を示すための型で，その実体はここでは変数の名前を表す文字列としている．(より現実的なインタプリタやコンパイラでは，変数の型や変数が現れたファイル名と行数などの情報も加わることが多い．)
@@ -36,9 +36,9 @@
 
 `Eval`モジュールはインタプリタの動作のメイン部分であり，字句解析と構文解析によって生成された構文木を解釈する．（したがって，この部分をインタプリタの _解釈部_ と呼ぶ．）解釈部の動作によって，言語処理系は定義される言語のセマンティクスを定めている．以下に`Eval`モジュールの中身を示す．
 
-{% highlight ocaml %}
+```ocaml
 {% include_relative miniml-interpreter/lib/eval.ml %}
-{% endhighlight %}
+```
 
 プログラミング言語のセマンティクスを定めるに当たって重要なことの一つは，どんな類いの _値 (value)_ を（定義される言語の）プログラムが操作できるかを定義することである．例えば，C言語であれば整数値，浮動小数値，ポインタなどが値として扱えるし，OCaml であれば整数値，浮動小数値，レコード，ヴァリアントなどが値として扱える．
 
@@ -49,13 +49,13 @@
 MiniML1 の場合，式の値 expressed value の集合は$\{\dots, -2, -1, 0, 1, 2, 3, \ldots\} \oplus \mbox{真偽値の集合}$であり，denoted value の集合は expressed value の集合に等しい．ここで，$\oplus$ は直和を示している．
 
 `eval.ml`には値を表す OCaml の型である`exval`と`dnval`が定義されている．インタプリタ内では，MiniML の値をこれらの形の（OCamlの）値として表すことになる．型宣言は，初めは以下の通りになっている．
-{% highlight ocaml %}
+```ocaml
 (* Expressed values *)
-type exval = 
+type exval =
     IntV of int
   | BoolV of bool
 and dnval = exval
-{% endhighlight %}
+```
 `exval`がexpressed valueの型，`dnval`がdenoted valueの型である．
 
 ### <a name="environment">環境</a>
@@ -69,9 +69,9 @@ and dnval = exval
 OCaml で MiniML の言語処理系を実装する上では，環境をどのような型の値として表現するかが重要である．環境を実装する上では，変数と denoted value の束縛を表現できれば充分なのだが，あとで用いる型推論においても，変数に割当てられた型を表現するために同様の構造を用いるので，汎用性を考えて，環境の型を多相型`'a t`とする．ここで`'a`は変数に関連付けられる情報（ここでは denoted value）の型である．こうすることで，同じデータ構造を変数のdenoted valueへの束縛としても，変数の別の情報への束縛としても使用することができるようになる．
 
 環境を操作する値や関数の型，これらの環境から送出されか可能性のある例外は，`environment.mli`に以下のように定められている．
-{% highlight ocaml %}
+```ocaml
 {% include_relative miniml-interpreter/lib/environment.mli %}
-{% endhighlight %}
+```
 - 最初の値 `empty` は，何の変数も束縛されていない，空の環境である．
 - 次の`extend` は，環境に新しい束縛をひとつ付け加えるための関数で，`extend id dnval env`で，環境 `env` に対して，変数 `id` を denoted value `dnval` に束縛したような新しい環境を表す．
 - 関数 `lookup` は，環境から変数が束縛された値を取り出すもので，`lookup id env` で，環境`env` の中を，新しく加わった束縛から順に変数 `id` を探し，束縛されている値を返す．変数が環境中に無い場合は，例外 `Not_bound` が発生する．
@@ -79,12 +79,12 @@ OCaml で MiniML の言語処理系を実装する上では，環境をどのよ
 - `fold_right` は環境中の値を新しいものから順に左から並べたようなリストに対して`fold_right` を行なう．これらは，後に型推論の実装などで使われる．
 
 この関数群を実装したものが以下の`environment.ml`である．
-{% highlight ocaml %}
+```ocaml
 {% include_relative miniml-interpreter/lib/environment.ml %}
-{% endhighlight %}
+```
 環境のデータ表現は，変数と，その変数が束縛されているデータのペアのリストである．例えば上に出てきた環境$\{x \mapsto 1, y \mapsto 3\}$はリスト`[(x,1); (y,3)]`で表現される．ただし `environment.mli` では型 `'a t` が定義のない抽象的な型として宣言されているので，環境を使う側からは環境の実体がこのように実装されていることを使うことはできず，環境の操作は`Environment`モジュール中の関数を介して行う必要がある．（例えば，環境`env`に対して`match env with [] -> ... | hd::tl -> ...`のようにリストのパターンマッチを適用することはできない．）
 
-<!-- 
+<!--
 \begin{figure}
   \centering
 \begin{boxedminipage}{\textwidth}
@@ -97,12 +97,12 @@ OCaml で MiniML の言語処理系を実装する上では，環境をどのよ
 \end{figure} -->
 
 環境の作り方の例を見てみよう．以下は後述する `cui.ml` に記述されている，プログラム実行開始時の環境(大域環境)の定義である．
-{% highlight ocaml %}
-let initial_env = 
+```ocaml
+let initial_env =
   Environment.extend "i" (IntV 1)
-    (Environment.extend "v" (IntV 5) 
+    (Environment.extend "v" (IntV 5)
        (Environment.extend "x" (IntV 10) Environment.empty))
-{% endhighlight %}
+```
 `empty` と `extend` を用いて `i`，`v`，`x` が，それぞれ `1`，`5`，`10` に束縛されている環境を作成している．`cui.ml`は`Environment`モジュールの外側にいるので，`empty`と`extend`を用いる際には`Environment.empty`, `Environment.extend`のように用いている．この大域環境は主に変数参照のテスト用で，(空でなければ)何でもよい．
 
 #### `.ml`ファイルと`.mli`ファイルの関係について（あるいは，「実装の隠蔽」について）
@@ -129,9 +129,9 @@ let initial_env =
 <!-- この節は[cui.ml](../interpreter/src/cui.ml)と[main.ml](../interpreter/src/main.ml)を見ながら読むとよい． -->
 
 メインプログラム `main.ml` は `Cui`モジュール中で定義されている`read_eval_print`という関数を呼び出している．`Cui` モジュールは以下のようになっている．
-{% highlight ocaml %}
+```ocaml
 {% include_relative miniml-interpreter/lib/cui.ml %}
-{% endhighlight %}
+```
 関数`read_eval_print`は，
 + 入力文字列の読み込み・構文解析
 + 解釈
@@ -140,7 +140,7 @@ let initial_env =
 という処理を繰返している．
 
 （以下の説明は，わからなければとりあえず飛ばしてもよい．）まず，`let decl = ` の右辺にある式
-```
+```ocaml
 Parser.toplevel Lexer.main (Lexing.from_channel stdin)
 ```
 を見てみよう．この式は，標準入力から入力された文字列を抽象構文木（すなわち`Syntax.exp`型の値）に変換して返す．
