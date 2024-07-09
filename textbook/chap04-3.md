@@ -35,7 +35,7 @@ MiniML2 のための型推論アルゴリズムを実装するためにコード
 
 #### `syntax.ml` への変更
 
-{% highlight ocaml %}
+```ocaml
 (* MiniML の型を表す OCaml の値の型 *)
 type ty =
   TyInt
@@ -46,11 +46,11 @@ let pp_ty typ =
   match typ with
     TyInt -> print_string "int"
   | TyBool -> print_string "bool"
-{% endhighlight %}
+```
 
 #### `cui.ml` への変更
 
-{% highlight ocaml %}
+```ocaml
 open Typing
 
 let rec read_eval_print env tyenv = (* New! 型環境を REPL で保持 *)
@@ -66,24 +66,24 @@ let rec read_eval_print env tyenv = (* New! 型環境を REPL で保持 *)
      pp_val v;
      print_newline();
      (* 型環境を次のループに渡す．let 宣言はまだないので，tyenv を新しくする必要はない． *)
-     read_eval_print newenv tyenv 
+     read_eval_print newenv tyenv
 
 (* New! initial_env のための型環境を作る *)
 let initial_tyenv =
    Environment.extend "i" TyInt
      (Environment.extend "v" TyInt
        (Environment.extend "x" TyInt Environment.empty))
-{% endhighlight %}
+```
 
 ### `main.ml` への変更
-{% highlight ocaml %}
+```ocaml
 (* New! initial_tyenv を REPL の最初の呼び出しで渡す *)
 let _ = read_eval_print initial_env initial_tyenv
-{% endhighlight %}
+```
 
 ### `typing.ml` への変更
 
-{% highlight ocaml %}
+```ocaml
 open Syntax
 
 exception Error of string
@@ -94,13 +94,13 @@ let err s = raise (Error s)
 type tyenv = ty Environment.t
 
 let ty_prim op ty1 ty2 = match op with
-    Plus -> (match ty1, ty2 with 
+    Plus -> (match ty1, ty2 with
                  TyInt, TyInt -> TyInt
                | _ -> err ("Argument must be of integer: +"))
     ...
 
 let rec ty_exp tyenv = function
-    Var x -> 
+    Var x ->
       (try Environment.lookup x tyenv with
           Environment.Not_bound -> err ("variable not bound: " ^ x))
   | ILit _ -> TyInt
@@ -118,4 +118,4 @@ let rec ty_exp tyenv = function
 let ty_decl tyenv = function
     Exp e -> ty_exp tyenv e
   | _ -> err ("Not Implemented!")
-{% endhighlight %}
+```

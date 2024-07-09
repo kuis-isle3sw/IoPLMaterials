@@ -8,7 +8,7 @@
 
 - まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://hackmd.io/BGPHkpvJRYCvA2j3D9KVhw)を読んで OPAM をセットアップ
 - 以下のコマンドを順に実行．ログの最後に `eval $(opam env)` を実行せよみたいなメッセージが出たら，`eval $(opam env)` を実行してから次のコマンドを実行．
-  ```
+  ```sh
   opam install -y user-setup menhir dune ounit tuareg
       # 上のコマンドが失敗する場合（OPAMのバージョンが古い場合）は以下のコマンドを試すこと。
       # それでもダメならOPAMのバージョンを2.1にしてから上のコマンドを試すこと。
@@ -36,7 +36,7 @@ OPAM のページに [OPAM のインストール方法](https://opam.ocaml.org/d
 
 OPAM を使うには初期設定が必要である．[「プログラミング言語」の講義ページの環境設定に関する資料](https://hackmd.io/BGPHkpvJRYCvA2j3D9KVhw)に書いてある通りにやればよいが，ここにも実行すべきコマンドを書いておく．
 
-```
+```sh
 opam init -y
 opam switch create 4.14.0
 eval $(opam env)
@@ -44,7 +44,7 @@ eval $(opam env)
 
 もしくは
 
-```
+```sh
 opam init -y --disable-sandboxing
 opam switch create 4.14.0
 eval $(opam env)
@@ -57,7 +57,7 @@ WSL2はDocker for Mac/Windowsなどのように完全なLinuxカーネルなの�
 
 以下のコマンドを順に実行しよう．
 
-```
+```sh
 opam install -y user-setup menhir dune ounit tuareg
 opam user-setup install
 ```
@@ -73,7 +73,7 @@ opam user-setup install
 ### 古いOPAM（バージョン2.0以前）を使用している場合
 古いOPAM（バージョン2.0以前）を使用している場合、`opam install`コマンドが失敗することがある。これは、システム側に必要なパッケージをOPAMが自動でインストールしてくれないためである。この場合は、次のコマンドを試す。
 
-```
+```sh
 opam install depext
 opam install user-setup
 opam depext menhir dune ounit
@@ -95,8 +95,8 @@ opam user-setup install
   - Sublime-Text バージョンもベータ版として提供されている
 - VSCode で OCaml を使う場合には [`vscode-ocaml-platform`](https://github.com/ocamllabs/vscode-ocaml-platform) を使うとよい.
   - また, `vscode-ocaml-platform` が必要とする [`ocaml-lsp`](https://github.com/ocaml/ocaml-lsp) を別途インストールする必要がある. 以下の手順でインストールができる.
-  ```bash
-  $ opam install ocaml-lsp-server
+  ```sh
+  opam install ocaml-lsp-server
   ```
   - また,作業ディレクトリに`.ocamlformat`ファイルを(空でもよいので)用意するとインデント等が自動的に整理されてよい.
     - `ocamlformat`をインストールしていない場合はエラーが発生するので,その場合は`opam install ocamlformat`を実行し,`ocamlformat`をインストールする.
@@ -107,4 +107,3 @@ opam user-setup install
   - `opam init`を`-y`オプションつきで（`opam init -y`あるいは`opam init -y --disable-sandboxing`）実行したか確認する。していない場合は`-y`つきで再度実行する。
   - どうやらこれでも上手く設定が反映されない場合もあるらしい。そういう場合は `~/.profile` や `~/.bash_profile` などに `eval "$(opam env)"` という行を手動で追加する。
     - これらのファイルのどれに書けば良さそうか、は例えば https://blog1.mammb.com/entry/2019/12/01/090000 を参照
-

@@ -7,11 +7,11 @@
 ## 変数宣言と有効範囲
 
 OCaml の `let` 式は変数の定義と，その定義の下で評価される式が対になっている．例えば，以下の OCaml プログラム
-{% highlight ocaml %}
+```ocaml
 let x = 1 in
 let y = 2 + 2 in
   (x + y) * v
-{% endhighlight %}
+```
 は，変数`x`を式`1`の評価結果（つまり整数値$1$）に，変数`y`を 式`2+2`の評価結果（つまり整数値$4$）に束縛した上で，式`(x + y) * v`を評価する，という意味である．（変数`v`は初めに定義されている環境で`5`に束縛されていたことを思い出されたい．）
 
 通常，大体の言語には，変数定義には，定義が有効な場所・期間としての _有効範囲・スコープ (scope)_ という概念が定まる．定義された変数を，そのスコープの外で参照することはできない．上の `let` 式中で，変数 `x`，`y`のスコープは式`(x+y)*v`である．
@@ -27,14 +27,14 @@ MiniML（や，OCaml）のように，プログラムの文面のみから宣言
 い変数を _自由変数 (free variable)_ と呼ぶ．
 
 また，多くのプログラミング言語と同様に，MiniML2 では，ある変数の有効範囲の中に，同じ名前の変数が宣言された場合，内側の宣言の有効範囲では，外側の宣言を参照できない．このような場合，内側の有効範囲では，外側の宣言の _シャドウイング (shadowing)_ が発生しているという．例えば，
-{% highlight ocaml %}
+```ocaml
 (* 一つ目のxの定義 *)
 let x = 2 in
 let y = 3 in
 (* 二つ目のxの定義 *)
 let x = x + y in
   x * y
-{% endhighlight %}
+```
 
 という`2`の式において，一つ目の`x`の定義の有効範囲は，内側の `let` 式全体（すなわち`let y = 3 in let x = x + y in x * y`）であるが，二つ目の `x` の定義によって一つ目の定義がシャドウイングされるので，式 `x * y` 中では一つ目の `x` の定義を参照することはで
 きない．また二つ目の `x` の定義の右辺に現れる `x + y` 中の `x` は一つ目の `x` の定義を参照しているので，この式の値は `15` である．実は，最初の例でも `x` の宣言は，大域環境で束縛されている `x` のシャドウイングが発生しているといえる．
@@ -67,21 +67,21 @@ Expressed value, denoted value ともに以前と同じ，つまり，`let` に�
 
 ### `syntax.ml`
 
-{% highlight ocaml %}
-type exp = 
+```ocaml
+type exp =
    ...
 | LetExp of id * exp * exp (* <-- New! *)
 
-type program = 
+type program =
   Exp of exp
 | Decl of id * exp (* <-- New! *)
-{% endhighlight %}
+```
 
 構文の拡張に伴い，`exp`型と`program`型にコンストラクタを追加している．
 
-### `parser.mly` 
+### `parser.mly`
 
-{% highlight ocaml %}
+```ocaml
 %token LET IN EQ (* <-- New! *)
 toplevel :
      e=Expr SEMISEMI { Exp e }
@@ -94,13 +94,13 @@ Expr :
 
 LetExpr :
      LET x=ID EQ e1=Expr IN e2=Expr { LetExp (x, e1, e2) } (* <-- New! *)
-{% endhighlight %}
+```
 
 具体的な構文規則(`let`は結合が `if`と同程度に弱い)が追加されている．
 
 ### `lexer.mll`
 
-{% highlight ocaml %}
+```ocaml
 let reservedWords = [
    ...
   ("in", Parser.IN);   (* New! *)
@@ -111,13 +111,13 @@ let reservedWords = [
 
 | "<" { Parser.LT }
 | "=" { Parser.EQ } (* New! *)
-{% endhighlight %}
+```
 
 予約語と記号の追加を行っている．
 
 ### `eval.ml`
 
-{% highlight ocaml %}
+```ocaml
 let rec eval_exp env = function
    ...
    | LetExp (id, exp1, exp2) ->
@@ -130,22 +130,22 @@ let eval_decl env = function
      Exp e -> let v = eval_exp env e in ("-", env, v)
    | Decl (id, e) ->
        let v = eval_exp env e in (id, Environment.extend id v env, v)
-{% endhighlight %}
+```
 
 `eval_decl`の`let` 式を扱う部分では，最初に，束縛変数名，式をパターンマッチで取りだし，各式を評価する．その値を使って，現在の環境を拡張し，本体式を評価している．また，`eval_decl`では新たに束縛された変数，拡張後の環境，と評価結果の組を返している．
 
 ### Exercise 3.3.1 [必修]
-MiniML1 インタプリタを拡張して，MiniML2 インタプリタを作成し，テストせよ．  
+MiniML1 インタプリタを拡張して，MiniML2 インタプリタを作成し，テストせよ．
 
 ### Exercise 3.3.2 [**]
 OCaml では，`let`宣言の列を一度に入力することができる．この機能を実装せよ．以下は動作例である．
 
-{% highlight ocaml %}
-# let x = 1 
+```ocaml
+# let x = 1
   let y = x + 1;;
 val x = 1
 val y = 2
-{% endhighlight %}
+```
 
 ### Exercise 3.3.3 [**]
 バッチインタプリタを作成せよ．具体的には `miniml` コマンドの引数とし
@@ -156,10 +156,10 @@ val y = 2
 
 ### Exercise 3.3.4 [**]
 `and`を使って変数を同時にふたつ以上宣言できるように `let`式・宣言を拡張せよ．例えば以下のプログラム
-{% highlight ocaml %}
+```ocaml
 let x = 100
 and y = x in x+y
-{% endhighlight %}
+```
 の実行結果は `200` ではなく，(`x`が大域環境で `10`に束縛されているので) `110` である．
 
 <!-- %% \begin{optexercise}{2}

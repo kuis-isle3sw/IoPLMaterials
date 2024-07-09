@@ -27,11 +27,11 @@
 > OCamlにおいて繰り返し構文の中身が unit 型に限定されているなど、機能が限定されているのは何故でしょうか。
 
 正しい答えと言えるかどうか自信がないですが，繰り返し構文の本体部分を unit 型に制限することで，評価結果に意味のある繰り返しを伴う計算は再帰関数で，評価結果に意味はなく繰り返すこと自体に意味がある（つまり副作用を使って計算する）ような繰り返し計算は`for`や`while`などの繰り返し構文で書かせることを推奨できるというのはあるかもしれません．例えば1からnまでの整数の和を計算するプログラムの書き方として
-```ocaml=
+```ocaml
 let rec sum n = if n = 0 then 0 else n + (sum (n-1))
 ```
 という書き方と
-```ocaml=
+```ocaml
 let sum n =
   let i = ref n in
   let s = ref 0 in
@@ -44,13 +44,13 @@ let sum n =
 という2つの書き方がありますが，1からnまでの和という計算結果に意味があるこのような計算では後者より前者の方がスッキリしています．
 
 他方，"Hello!"とn回画面に表示するようなプログラムは
-```ocaml=
+```ocaml
 let hello n =
-  if n = 0 then () 
+  if n = 0 then ()
   else Printf.printf "Hello!\n"; hello (n-1)
 ```
 という書き方と
-```ocaml=
+```ocaml
 let hello n =
   for i = 0 to n - 1 do
     Printf.printf "Hello!\n"
@@ -63,21 +63,21 @@ let hello n =
 > 調べてみたところ、OCamlだけでなく関数型言語一般において、あまりfor文を使わないということは分かったのですが、その理由はどのようなものでしょうか。
 
 おそらく再帰関数を使う方が for 文や while 文よりもより柔軟な繰り返しのパターンが書けるからかなあと思います．例えばアッカーマン関数という
-```ocaml=
+```ocaml
 let rec ack m n =
-  if m = 0 then 
-    n+1 
-  else if n = 0 then 
-    ack (m-1) 1 
-  else 
+  if m = 0 then
+    n+1
+  else if n = 0 then
+    ack (m-1) 1
+  else
     ack (m-1) (ack m (n-1));;
 ```
 で定義される関数があるのですが，これを while や for で表現するの大変そう．（ところで，これのmを大きくしたときの振る舞いと，nを大きくしたときの振る舞いをそれぞれチェックしてみるといいですよ．）また，マッカーシーの91関数という
-```ocaml=
-let rec mc91 n = 
-  if n > 100 then 
-    n - 10 
-  else 
+```ocaml
+let rec mc91 n =
+  if n > 100 then
+    n - 10
+  else
     mc91 (mc91 (n+11));;
 ```
 こういう関数があるのですが，これも for や while で書くの大変そうですね．（さあこの関数に101以下の整数を与えてみましょう．）
@@ -138,13 +138,13 @@ convenient, I would argue it is often hard to read. Writing
 ### 末尾再帰とループ
 
 はい，末尾再帰で表現できます．
-```ocaml=
+```ocaml
 for i = e1 to e2 - 1 do
   e3
 done
 ```
 は
-```ocaml=
+```ocaml
 (* loop : int -> unit *)
 let rec loop i =
   if i = e2 then
@@ -157,13 +157,13 @@ in
 loop e1
 ```
 という末尾再帰な関数`loop`で表現できますし，
-```ocaml=
+```ocaml
 while e1 do
   e2
 done
 ```
 は
-```ocaml=
+```ocaml
 let rec loop b =
   if b then begin
     e2; loop e1
@@ -190,7 +190,7 @@ let rec loop b =
 > のように`x`を束縛した際にどのようにして`ⅹ`の`Z`にアクセスするのか教えていただきたいです。爆速入門では、定義の際に`S of {?? : nat}`という形で定義されていたので上記の例のアクセスの仕方がわかりませんでした。
 
 パターンマッチを使うのが一番良いと思います．
-```ocaml=
+```ocaml
 let x = S Z in
   match x with
   | Z -> ...
@@ -202,28 +202,28 @@ let x = S Z in
 ### 参照への参照
 
 はい，できます．参照への参照もこんなふうに作れます．
-```ocaml=
+```ocaml
 # ref (ref 1);;
 - : int ref ref = {contents = {contents = 1}}
 ```
 中身は `contents` フィールドの中身が再び `contents` フィールドを持つレコードになっているような値になっていますね．
 
 少し余談ですが，
-```ocaml=
+```ocaml
 type a = a ref
 ```
 は参照への参照への参照への．．．と延々と続くような型になっていそうですが，このような型の定義は OCaml では許されません．
-```ocaml=
+```ocaml
 # type a = a ref;;
 Error: The type abbreviation a is cyclic
 ```
 が，OCaml インタプリタを `ocaml -rectypes` のように `rectypes` オプションをつけて起動すると定義することができます．
-```ocaml=
+```ocaml
 # type a = a ref;;
 type a = a ref
 ```
 では，このような `a` 型の値を作るにはどうしたらよいでしょうか．`let rec`を使うと作ることができます．
-```ocaml=
+```ocaml
 # let rec (x:a ref) = ref x;;
 val x : a = {contents = <cycle>}
 # x;;
@@ -236,7 +236,7 @@ val x : a = {contents = <cycle>}
 - : a = {contents = <cycle>}
 ```
 指定した回数だけ参照の中を見る関数も書けます．
-```ocaml=
+```ocaml
 # let rec f n x = if n = 0 then x else f (n-1) !x;;
 val f : int -> ('a ref as 'a) -> 'a = <fun>
 # f 100 x;;
@@ -269,17 +269,17 @@ val f : int -> ('a ref as 'a) -> 'a = <fun>
 > ocamlのコードをかいている際にたまに出てくる'_weak1のような型（型なのか？）が何なのかきになった。
 
 これは単相的な型変数です．[OCaml 教科書](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/mltext.pdf)の7.1.4節に解説してあるのですが，参照と多相性が共存する言語では，どのような場合に変数に多相型を与えて良いのかを注意深く設計しなければなりません．OCaml ではこのために値多相という方針を設けています．この教科書や講義でも解説しましたが，これは
-```ocaml=
+```ocaml
 let x = e in
 ...
 ```
 のように `let` での束縛で式 `e` が評価が起こることのない*構文的に値である場合のみ*に`x`が多相型になりうるというポリシーです．したがって
-```ocaml=
+```ocaml
 let f = fun x -> x in
 (f 3, f true)
 ```
 は，`f`に多相型 $\forall \alpha. \alpha \rightarrow \alpha$ が与えられるため，型付け可能となります．他方
-```ocaml=
+```ocaml
 let f = (fun x -> x) (fun x -> x) in
 (f 3, f true)
 ```
@@ -287,19 +287,19 @@ let f = (fun x -> x) (fun x -> x) in
 
 このときに
 
-```ocaml=
+```ocaml
 let f = (fun x -> x) (fun x -> x);;
 ```
 
 を REPL に渡したときに返ってくる
 
-```ocaml=
+```ocaml
 val f : '_weak1 -> '_weak1 = <fun>
 ```
 
 は，`f` は多相型ではないが，`(fun x -> x) (fun x -> x)` のみからは型を完全には決めることができないので，`f` の型は仮置きの型変数 `'_weak1` を用いて　`'_weak1 -> '_weak1'` と表されるということを言っています．この `'_weak1'` は単相的なので，以下の例が示すように，他の型と一度単一化されると，もはやその型としてしか使えません．
 
-```ocaml=
+```ocaml
 # let f = (fun x -> x) (fun x -> x);;
 val f : '_weak1 -> '_weak1 = <fun>
 # f 3;;
@@ -324,7 +324,7 @@ OCaml の REPL には `#install_printer` というディレクティブがあっ
 > 演算子 :: の意味は知らなかったので、五十嵐先生の Objective Caml 入門を読み直して復習しようと思います。インタプリタとコンパイラが「一行ずつ解釈」／「全体を翻訳」、という相対する概念であるという考え方を修正することが出来たのが今回最大の学びでした。
 
 `::`はリストを作るときに使うコンストラクタです．
-```ocaml=
+```ocaml
 # 1 :: [];;
 - : int list = [1]
 # 1 :: 2 :: 3 :: [];;
@@ -346,7 +346,7 @@ OCaml の REPL には `#install_printer` というディレクティブがあっ
 
 OCaml では `fun f -> f 1` は
 
-```=
+```ocaml
 # fun f -> f 1;;
 - : (int -> 'a) -> 'a = <fun>
 ```
@@ -357,18 +357,18 @@ OCaml では `fun f -> f 1` は
 
 > `(+);;` に対して `- : int -> int -> int = <fun>` が返ってくるということについて、
 `let sum a b= a+b;;` に対しても同じように `- : int -> int -> int = <fun>` が返ってくるため、`+` はこのような形で２つ引数をとる関数と同じ型のものだと考えたのですが、`+ 3 2` のように関数と同じ形で使おうとするとエラーになりました。`+` というのは関数とは別にocamlの中で特別に扱われるものであって、`+` の型が `int -> int -> int = <fun>` のように表されるのは便宜上そう返すようにしているだけということなのでしょうか？また、中置演算子のように使える形で新たに関数をプログラマが定義することは可能なのでしょうか？
-    
+
 というより，`(+)` や `( * )` が中置演算子を普通の関数として使うための OCaml の記法と考える方がわかり良いかもしれません． OCaml には[中置演算子や前置演算子として使えるシンボルやその結合や優先度があらかじめ定められています](https://ocaml.org/manual/lex.html#infix-symbol)．これらのシンボルは[`Stdlib` モジュールで定義](https://ocaml.org/api/Stdlib.html)されていて，`(+)`や`( * )`はここで定義されています．`Stdlib` は特別なモジュールで，この中の定義はプログラム開始時点ですべて使えることになっています．たとえば
-```ocaml=
+```ocaml
 (+) 1 2
 ```
 と入力して評価してみましょう．
 
 （ところで，なぜ `(*)` ではなく `( * )` と書いているのでしょう．）
-    
+
 自分で演算子を定義することも可能で
 
-```ocaml=
+```ocaml
 # let rec (^^^) x n = if n = 0 then 1 else x * (x ^^^ (n-1));;
 val ( ^^^ ) : int -> int -> int = <fun>
 # 5 ^^^ 4;;
@@ -379,23 +379,23 @@ val ( ^^^ ) : int -> int -> int = <fun>
 
 ### `|> 演算子
 
-   
+
 > `|>` はどういう役割を持つ演算子なのでしょうか？
-    
+
 [`Stdlib` で定義されている演算子](https://ocaml.org/api/Stdlib.html)です．一般にはパイプライン演算子と呼ばれています．説明を見ると
 
 > `val (|>) : 'a -> ('a -> 'b) -> 'b`
 > Reverse-application operator: x |> f |> g is exactly equivalent to g (f (x)). Left-associative operator, see Ocaml_operators for more information.
-    
+
 と書いてあります．つまり `x |> f |> g` のように書くと `g (f x)` と同じ意味です． `|>` の方がカッコが少ないのと，`x` という値が処理 `f` と処理 `g` をこの順番に通過するという感じがあって，こっちの方が読みやすい場合があったりします．組み込み等で注目されている[Elixir](https://elixir-lang.org/)という言語でもこの演算子がフィーチャーされていますね．
 
 例えば，以下のコード
-```ocaml=
-String.split_on_char ' ' (String.uppercase_ascii (String.trim "Hello, world")) 
-``` 
+```ocaml
+String.split_on_char ' ' (String.uppercase_ascii (String.trim "Hello, world"))
+```
 は，パイプライン演算子を使うと
-```ocaml=
-Hello, world  " |> String.trim |> String.uppercase_ascii |> String.split_on_char ' '  
+```ocaml
+Hello, world  " |> String.trim |> String.uppercase_ascii |> String.split_on_char ' '
 ```
 と書き換えられます．この書き方だと処理の流れが文字の流れと同じ方向になって読みやすくなっていますね．
 
@@ -423,7 +423,7 @@ Hello, world  " |> String.trim |> String.uppercase_ascii |> String.split_on_char
 > MiniML4: 再帰的関数定義の導入のページに，「単純化のため再帰的定義の対象を関数に限定する」とあるが，関数以外の再帰とはどのようなものがあるのか．
 
 例えば
-```ocaml=
+```ocaml
 type t = { head: int; tail: t}
 let rec x = { head = 1; tail = x}
 ```
@@ -437,7 +437,7 @@ let rec x = { head = 1; tail = x}
 
 ### OCaml での並行プログラミング
 
-> OCamlでマルチスレッドのプログラムを書くのが大変だという風な話（処理系がサポートしていない？）を噂程度に聞いたことがあるのですが、いま現在もOCamlでマルチスレッドのプログラミングを行うことはできないのでしょうか。 
+> OCamlでマルチスレッドのプログラムを書くのが大変だという風な話（処理系がサポートしていない？）を噂程度に聞いたことがあるのですが、いま現在もOCamlでマルチスレッドのプログラミングを行うことはできないのでしょうか。
 
 OCaml 5 ではマルチコアでのプログラムの実行がサポートされています．OCaml 5 はこれ以外にもエフェクトハンドラなど先進的な機構がサポートされているので，試してみてください．
 
@@ -447,7 +447,7 @@ OCaml 5 ではマルチコアでのプログラムの実行がサポートされ
 
 C言語のポインタと参照の一番の違いとしてはポインタ演算ができるかどうかという点があります．C言語だと
 
-```c=
+```c
 int a[10];
 int *p = a;
 ```
@@ -460,7 +460,7 @@ int *p = a;
 > "再帰関数の実装について、説明を読む限りは大まかなイメージができたと思ったのですが、実際にOCamlで実装するとなるとややこしいと思いました。OCamlと違ってC#やHaskellなどは再帰関数を定義するときにrecで区別することがないので実装が少し違うのか気になりました。"
 
 `rec` で区別する理由は，OCaml で以下のようなイディオムを使うことが多いためです．
-```ocaml=
+```ocaml
 let rec fact n res = if n = 0 then res else fact (n-1) (n*res) in
 let fact n = fact n 1 in
 fact 5
@@ -481,7 +481,7 @@ fact 5
 
 関数を末尾再帰で書くのが一番簡単な解決策です．ちなみに，一般に再帰関数を「関数が返ったあとに行われるべき計算」を渡すスタイル（継続渡し）で書き直すと末尾再帰にできます．例えば
 
-```ocaml=
+```ocaml
 let rec fact n =
   if n = 0 then
     1
@@ -491,7 +491,7 @@ let rec fact n =
 
 という関数は
 
-```ocaml=
+```ocaml
 let fact n =
   let rec fact_cont n k =
     if n = 0 then
@@ -506,7 +506,7 @@ let fact n =
 
 この例に関しては，継続で行うべき計算は実際のところここまでの計算で求めた整数一個で余すことなく表現することができます．そのため，いちいちクロージャを作る必要はなく
 
-```ocaml=
+```ocaml
 let fact n =
   let rec fact_cont n res =
     if n = 0 then
@@ -538,7 +538,7 @@ let fact n =
 ### 関数適用と結合
 
 > repr S(S(S(S(Z))))とすると
-> ```ocaml=
+> ```ocaml
 > this function has type nat-> int
 > it is applied to too many arguments; maybe you forgot a';'
 > ```
@@ -549,22 +549,22 @@ let fact n =
 `repr S(S(S(S(Z))))` は OCaml の文法では　`(repr S) (S(S(S(Z))))` のように解釈されています．すなわち，1引数関数の`repr`を2つの値に適用しようとしていると解釈されているので，このようなエラーが出ているわけです．
 
 ### `else`
-	
+
 > 例えば，
-> ```ocaml=
+> ```ocaml
 > let x = ref 0;;
 > let set v = x := v;;
 > ```
 > という関数があったとき，`set v`の結果は`unit`型なので`else`文を省略して
-> ```ocaml=
+> ```ocaml
 > if (!x = 0) then set 1;;
 > ```
 > と書けますが，
-> ```ocaml=
+> ```ocaml
 > let set_ v = x := v; v;;
 > ```
 > と，値を代入したついでにその値を返すような関数の場合，`set_ v` の結果は`int`型なので
-> ```ocaml=
+> ```ocaml
 > if (!x = 0) then set_ 1;;
 > ```
 > と書くとエラーになります．
@@ -572,7 +572,7 @@ let fact n =
 
 `ignore`という，値を無視する関数があります．型は`'a -> unit`です．これを使うと
 
-```ocaml=
+```ocaml
 # if (!x = 0) then ignore(set_ 1);;
 - : unit = ()
 ```
@@ -612,7 +612,7 @@ Structural ordering functions. These functions coincide with the usual orderings
 
 可能です．こんなかんじ．
 
-```haskell=
+```haskell
 ghci> myif b e1 e2 = if b then e1 else e2
 ghci> fact n = myif (n==0) 1 (n*(fact (n-1)))
 ghci> (fact 0, fact 5)
@@ -622,13 +622,13 @@ ghci> (fact 0, fact 5)
 ### バッチインタプリタ
 
 > Exercise3.3.3について、バッチインタプリンタが何かわかりません。例えば、以下のプログラム
-> ```ocaml=
+> ```ocaml
 > let x = 2 ;;
 > x;;
 > true;;
 > ```
 > が書かれたファイルmain.mlがあったとして、これを `miniml main.ml`により、実行したときに
-> ```ocaml=
+> ```ocaml
 > val x : int = 2
 > - : int = 2
 > - : bool = true
@@ -741,7 +741,7 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
 > MiniMLで今後"i"や"v"などを変数として宣言することはできないのでしょうか？
 
 `let`宣言を実装すれば可能です．普通の OCaml と同様に，
-```ocaml=
+```ocaml
 # let i = 100;;
 ```
 のように入力すると`i`が`100`に再定義されます．
@@ -775,7 +775,7 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
 ### 再帰関数の実装方法
 
 > 静的束縛関する質問です。関数を表す値に環境を入れるという方法を取るのではなく、関数を定義したときにその定義式に現れる自由変数を評価し、即値として関数に入れておく、という考え方はよくないのでしょうか。例えば問題 2 で例として使ったコードにおいて:
-> ```
+> ```ocaml
 > let f =
 >     let x = 2 in
 >     fun y -> x
@@ -785,7 +785,7 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
 
 はい，これはよい気づきで，再帰関数の扱いを工夫すればMiniMLくらいであればうまくいくかもしれないのですが，一般にはうまくいきません．挙げてもらった例では `x` の束縛先が `3` というすでに値になっている式なので置き換えてしまう方法で上手くいくのですが，
 
-```
+```ocaml
 let x = print_string "hoge" in
 let f () = (x, x) in
   f ()
@@ -793,7 +793,7 @@ let f () = (x, x) in
 
 のようなプログラムを考えて見てください．このプログラムを OCaml に入力すると，`hoge` という文字列が一回だけ実行されますが，`f`中の`x`を単純に置き換えると
 
-```
+```ocaml
 let f () = (print_string "hoge", print_string "hoge") in
 ```
 
@@ -810,14 +810,14 @@ let f () = (print_string "hoge", print_string "hoge") in
 ### 関数の定義時に変数をその値に置き換えれば関数閉包はいらない？
 
 > 	関数作成時の環境をまるごとクロージャとして保存したのでは，関数で参照しない変数の情報まで保存することになり，無駄な情報が多すぎるので，関数の定義時に変数をその値に置き換えるほうが効率的ではないかと思った．例えば，
-> ```
+> ```ocaml
 > let x = 3 in
 > let f () = print_int x in
 > let x = 4 in
 >   f ()
 > ```
 > において，fを定義した時点で，xに3を代入して
-> ```
+> ```ocaml
 > let f () = print_int 3 in
 > ```
 > と解釈してしまったほうが良いのではないか．
@@ -831,7 +831,7 @@ let f () = (print_string "hoge", print_string "hoge") in
 
 は良い視点なのですが，実はこれでは一般にはうまくいきません．挙げてもらった例では `x` の束縛先が `3` というすでに値になっている式なので置き換えてしまう方法で上手くいくのですが，
 
-```
+```ocaml
 let x = (fun () -> print_string "hoge") in
 let f () = (x (), x ()) in
   f ()
@@ -839,7 +839,7 @@ let f () = (x (), x ()) in
 
 のようなプログラムを考えて見てください．このプログラムを OCaml に入力すると，`hoge` という文字列が一回だけ実行されますが，`f`中の`x`を単純に置き換えると
 
-```
+```ocaml
 let f () = (print_string "hoge", print_string "hoge") in
 ```
 
@@ -848,7 +848,7 @@ let f () = (print_string "hoge", print_string "hoge") in
 ### `Environment.t`
 
 > 	miniml3の関数の導入のところでeval.ml内の、
-> ```
+> ```ocaml
 > type exval =
 > IntV of int
 > | BoolV of bool
@@ -869,7 +869,7 @@ let f () = (print_string "hoge", print_string "hoge") in
 これは denoted value の略です．変数が指す (denote する) 値ということです．[教科書](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap03-2.html)を見てもらうとよいかなと思います．講義中にも少し言及したので，必要であればそちらも．（どの回だったっけ...）
 
 OCaml では一旦変数を束縛すると，その束縛先を変更することはできません．他方，C言語では変更することができます．
-```C=
+```c
 int main(int argc, char **argv) {
     int x = 0;
     x = x + 1; /* (A) */
@@ -947,7 +947,7 @@ Procedure value のつもりです．
 #### パターン
 
 > パターンマッチングを用いた関数の引数は型そのものなのかそういう型を持った値なのかどちらでしょうか。また、パターンマッチングで使えるのはヴァリアント型だけなのでしょうか。つまり、例えば `int` や `bool` などの基本型を用いて
-> ```ocaml=
+> ```ocaml
 > match x with
 > | int -> 0
 > | bool -> int -> 1
@@ -959,14 +959,14 @@ Procedure value のつもりです．
 
 [OCamlの文法でパターンとして書けるものが決められています．](https://ocaml.org/manual/patterns.html)BNFを読むよりはその後のいろいろなパターンの類型を読むのがおすすめです．
 
-```ocaml=
+```ocaml
 let is_empty l =
   match l with [] -> true | _ :: _ -> false
 ```
 
 のように空リストにマッチするパターンや，空でないリストにマッチするパターンが書けたりします．また，
 
-```ocaml=
+```ocaml
 let string_to_bool s =
   match s with
   | "true" -> true
@@ -976,7 +976,7 @@ let string_to_bool s =
 
 のように，定数にマッチするパターンを書くことも可能です．その他いろいろあるのですが，型にマッチさせることはできません．型はパターンではないからです．
 
-```ocaml=
+```ocaml
 let plus x y =
   match typeof(x), typeof(y) with
   | int, int -> x + y
@@ -995,13 +995,13 @@ let plus x y =
 
 多分こっちの例の方がわかりやすいかもです．
 
-```ocaml=
+```ocaml
 type nat = Zero | Succ of nat
 ```
 
 この `Zero` や `Succ` は「コンストラクタ」と呼ばれるもので，必要な値を引数にとって式を構築するものです．`Zero`は引数が0個，`Succ`は`nat`型の引数を一個取るので，
 
-```ocaml=
+```ocaml
 Zero
 Succ(Zero)
 Succ(Succ(Zero))
@@ -1021,7 +1021,7 @@ OCaml コンパイラは（そしていろんな言語のコンパイラは）�
 
 どのくらい納得いくかわかりませんが，以下のようなことはできます．
 
-```ocaml=
+```ocaml
 # List.map ((+) 1) [1; 2; 3; 4];;
 - : int list = [2; 3; 4; 5]
 ```
@@ -1056,11 +1056,11 @@ OCaml ではアドホック多相のサポートがありません．一般に�
 > eval.ml のeval_declの役割がよくわかりません。eval_expなどでは、式が評価されて適切な値が返されているとわかるのですが、このeval_declでは何を評価して何を返しているのかうまく理解することができませんでした。
 
 eval_decl は OCaml での `;;` がついた文を表しています．あまり明示的には説明していませんが，OCaml では
-```ocaml=
+```ocaml
 # 3 + 4;;
 ```
 のように，式を評価する文を書いたり，
-```ocaml=
+```ocaml
 let x = 3;;
 ```
 のように，変数を定義する文を書いたりできます．前者の文は `eval_exp` を使って得た評価結果を画面に表示するだけなのですが，後者は REPL で使う環境に `x` の 3 への束縛を追加するという効果があり，普通の式の評価とは違っているため，`eval_exp` と `eval_decl` を分けています．
@@ -1084,7 +1084,7 @@ ocamllex や menhir は通常の OCaml とは文法の異なる .mll ファイ�
 （コードのレイアウトがちょっと面倒だったので削りました．）
 
 多分大丈夫だと思います．が，OCamlではクロージャを出力するときに，単に`<fun>`と表示されます．
-```ocaml=
+```ocaml
 # let x = fun n -> n + 1;;
 val x : int -> int = <fun>
 #
@@ -1125,7 +1125,7 @@ https://link.springer.com/chapter/10.1007/978-3-031-30044-8_8
 
 > Retrofitting a type system onto a language not designed with typechecking in mind can be tricky; ideally, language design should go hand-in-hand with type system design.
 > One reason for this is that languages without type systems—even safe, dynamically checked languages—tend to offer features or encourage programming idioms that make typechecking difficult or infeasible. Indeed, in typed languages the type system itself is often taken as the foundation of the design and the organizing principle in light of which every other aspect of the design is considered.
-> Another factor is that the concrete syntax of typed languages tends to be more complicated than that of untyped languages, since type annotations must be taken into account. It is easier to do a good job of designing a clean and comprehensible syntax when all the issues can be addressed together. 
+> Another factor is that the concrete syntax of typed languages tends to be more complicated than that of untyped languages, since type annotations must be taken into account. It is easier to do a good job of designing a clean and comprehensible syntax when all the issues can be addressed together.
 > The assertion that types should be an integral part of a programming language is separate from the question of where the programmer must physically write down type annotations and where they can instead be inferred by the compiler. A well-designed statically typed language will never require huge amounts of type information to be explicitly and tediously maintained by the programmer. There is some disagreement, though, about how much explicit type information is too much. The designers of languages in the ML family have worked hard to keep annotations to a bare minimum, using type inference methods to recover the necessary information. Languages in the C family, including Java, have chosen a somewhat more verbose style.
 
 すごく雑にまとめると
@@ -1213,7 +1213,7 @@ https://link.springer.com/chapter/10.1007/978-3-031-30044-8_8
 
 > 最近、C#の機能として参照型の参照先が存在することを保証するというのが存在するのを知ったのですが、以下のような複雑な条件式についても、出所が存在しない参照型はコンパイルエラーになるようです。
 >
-```
+```csharp
 private static ref int Error(ref int x, int n)
         {
             ref int r1 = ref x;
@@ -1284,7 +1284,7 @@ private static ref int Error(ref int x, int n)
 
 `if` 式の保守性とは違うのですが，リストに様々な型の値を格納したくなるというユースケースはあるかもしれません．OCaml では `[1;2;3] : int list` や `[true;false] : bool list` のように一つのリストには同じ型の値しか格納することができません．`[1;true;"hoge"]` はエラーになるので，こういうことをしたければ
 
-```ocaml=
+```ocaml
 type t = Int of int | Bool of bool | String of string
 
 [Int 1; Bool true; String "hoge"]
@@ -1298,7 +1298,7 @@ type t = Int of int | Bool of bool | String of string
 
 > fresh_tyvarの定義に関する質問なのですが, counterはfresh_tyvarが呼び出されるたびに0に初期化されてしまうようなことは起こらないのでしょうか。
 
-```ocaml=
+```ocaml
 let fresh_tyvar =
   let counter = ref 0 in (* 次に返すべき tyvar 型の値を参照で持っておいて， *)
   let body () =
@@ -1309,7 +1309,7 @@ let fresh_tyvar =
 
 これですね．`fresh_tyvar` の実体は `body` で定義されていますが，これは
 
-```ocaml=
+```ocaml
 fun () ->
   let v = !counter in
     counter := v + 1; v
@@ -1330,7 +1330,7 @@ fun () ->
 
 一度等式制約に戻して型推論をし直す必要性ですが，$e_1$ と $e_2$ を同時に考えないと十分に詳細な型代入が得られない場合があるためです．
 
-```ocaml=
+```ocaml
 (fun x -> (* α という型変数が生成されて x : α, y : β という型環境の下で以下を型推論 *)
   (x + 3) + (* こっちでは α を int に代入するような型代入ができる *)
   (if x = y then 3 else 4) (* こっちではβをαに代入するような型代入ができる *)
@@ -1345,7 +1345,7 @@ fun () ->
 
 型環境に自由に出現する型変数が，他のどの場所でも絶対に使われず，特定の型に具体化されないことが保証できるのであれば，その型変数には多相性を持たせても大丈夫だと思います．（多分．）現に[教科書](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap04-7.html#let-rec-%E5%BC%8F%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E8%A6%8F%E5%89%87)で取り上げた例
 
-```ocaml=
+```ocaml
 (fun y ->
   let f = fun () -> y in
   f () + 1)
@@ -1433,8 +1433,8 @@ $(\forall \alpha. \rightarrow \alpha) \rightarrow (\forall \alpha. \rightarrow \
 ```
 ➜  isle3sw--2021-interpreter-ksuenaga git:(master) ✗ dune utop
 ────────┬─────────────────────────────────────────────────────────────┬─────────
-        │ Welcome to utop version 2.6.0 (using OCaml version 4.10.0)! │         
-        └─────────────────────────────────────────────────────────────┘         
+        │ Welcome to utop version 2.6.0 (using OCaml version 4.10.0)! │
+        └─────────────────────────────────────────────────────────────┘
 Findlib has been successfully loaded. Additional directives:
   #require "package";;      to load a package
   #list;;                   to list the available packages
@@ -1453,8 +1453,8 @@ utop # open Miniml;;
 utop # Environment.extend;;
 - : string -> 'a -> 'a Environment.t -> 'a Environment.t = <fun>
 ─( 22:18:31 )─< command 2 >──────────────────────────────────────{ counter: 0 }─
-utop # 
-➜  isle3sw--2021-interpreter-ksuenaga git:(master) ✗ 
+utop #
+➜  isle3sw--2021-interpreter-ksuenaga git:(master) ✗
 ```
 
 ### オブジェクト指向言語における型推論
@@ -1478,7 +1478,7 @@ utop #
 > let counter = ref 0 in (* 次に返すべき tyvar 型の値を参照で持っておいて， *)
 > がよくわかりません。確かにこうすれば変更可能な整数を持つことができますが、それがtyvar型になるのはなぜでしょうか。"
 
-```ocaml=
+```ocaml
 let fresh_tyvar =
   let counter = ref 0 in (* 次に返すべき tyvar 型の値を参照で持っておいて， *)
   let body () =
@@ -1509,13 +1509,13 @@ let fresh_tyvar =
 
 どの程度説得的な例かはわからないですが，こんな例を作ることはできます．
 
-```ocaml=
+```ocaml
 let map_pair f (x,y) = (f x, f y);;
 ```
 
 このプログラムでの`map_pair`の型は`('a -> 'b) -> 'a * 'a -> 'b * 'b`です．したがって
 
-```ocaml=
+```ocaml
 map_pair (fun x -> x) (3,true)
 ```
 
@@ -1525,7 +1525,7 @@ map_pair (fun x -> x) (3,true)
 
 実は OCaml ではレコード型と明示的な多相型の宣言を用いて，以下のように擬似的にこの例を書くことができます．
 
-```ocaml=
+```ocaml
 type poly_f = { f : 'a 'b. 'a -> 'b };;
 let map_pair p (x,y) = (p.f x, p.f y);;
 ```
@@ -1610,20 +1610,20 @@ Implicit parameter は実際に Scala 等の実用的な言語にも採用され
 ### 型環境内の束縛の順序
 
 > 型環境内の束縛は自由に順序を入れ替えてよいということでしたが、その場合
->```
+>```ocaml
 > let x =0;
 > let x = true;
 > ```
 > といった宣言をした際に、型環境内の束縛の順序を入れ替えると、二行目時点の型環境で`x:int`という風に判断してしまう可能性があるのではないでしょうか。
 
 ああ，なるほど，確かにそうですね．ありがとうございます．見落としていました．型環境に含まれる変数は互いに異ならなくてはならないという制約を設けたり，変数が複数回現れてもよいが順序を勝手に入れ替えてはいけないという制約を設けたりしないといけませんね．前者の場合は，挙げてもらったプログラムが型付け可能にならないような気がするかもしれませんが，別途束縛変数は名前替えをしてもよいということにして（そうしても意味は変わらないので）例えば
-```
+```ocaml
 let x = 0 in
 let x = true in
     x
 ```
 を
-```
+```ocaml
 let x1 = 0 in
 let x2 = true in
     x2
@@ -1634,7 +1634,7 @@ let x2 = true in
 ### OCaml における型エラースライシング
 
 > OCamlには 型エラースライシング (type-error slicing) のような方法でエラーが分かりやすく表示されないのはなぜなのでしょうか？
-> ```ocaml=
+> ```ocaml
 > let rec f = fun x -> fun y ->
 > let w = y + 1 in
 > w :: y
@@ -1678,7 +1678,7 @@ Null safety は，僕の理解では，nullがある言語において，nullチ
 
 [http://yosefk.com/c++fqa/web-vs-c++.html#misfeature-2](このブログ)の記事がわかりやすいです．例えば，`x * y(z);`という expression を考えてみます．これは
 
-```c++=
+```c++
 int main() {
     int x, y(int), z;
     x * y(z);
@@ -1687,7 +1687,7 @@ int main() {
 
 という文脈においては `x` と `y(z)` の値を掛け算する式として構文解析されるべきですが，
 
-```c++=
+```c++
 int main() {
     struct x { x(int) {} } *z;
     x * y(z);
@@ -1702,21 +1702,21 @@ int main() {
 
 Nested comment を構文解析で対処しようとすると，構文解析のための規則がかなり煩雑になるから，というのが答えになるかなと思います．例えば，
 
-```ocaml=
+```ocaml
 (* (* let f x = x + 1;; *) *)
 ```
 
 を考えましょう．Nested comment を構文解析で扱うことにするには，`(*` と `*)` とをトークンとして扱い，その間のトークンを読み飛ばす，のような規則が必要になるので，
 
-```ocaml=
-comment: 
-  COMMNET_START __(1)__ COMMENT_END 
+```ocaml
+comment:
+  COMMNET_START __(1)__ COMMENT_END
   { __(2)__ }
 ```
 
 のような規則が必要になります．このときに (1) に入るのは，任意のトークンの列になるので，以下のような非終端記号でこれを記述することになると思われます．
 
-```ocaml=
+```ocaml
 arbitrary_token_seq:
   /* empty */ { __(2)__ }
 | comment arbitrary_token_seq { __(2)__ }
@@ -1725,7 +1725,7 @@ arbitrary_token_seq:
 
 このときに，上記の(3)には任意のトークンが入ってほしいので，実際には
 
-```ocaml=
+```ocaml
 arbitrary_token_seq:
   /* empty */ { __(2)__ }
 | TOKEN_A arbitrary_token_seq { __(2)__ }
@@ -1735,12 +1735,12 @@ arbitrary_token_seq:
 ```
 
 のように，定義されている全トークンについて書き換え規則を書く必要がありそうです．また，(2)で何を返せばよいかもなかなか微妙です．（何も特に返したくはないが，それに相当する値は何になる？）また，このような `comment` がプログラムの任意の場所に現れることを許さないといけないので，例えば
-```ocaml=
+```ocaml
 expr:
     expr PLUS expr { ... }
 ```
 みたいな文法は
-```ocaml=
+```ocaml
 expr:
     comment expr comment PLUS comment expr comment { ... }
 ```
@@ -1833,7 +1833,7 @@ LL(1)構文解析表を作ったときに，表の1ますに規則が2つ以上�
 > first matchを実際に使う場合はあるのか
 
 たとえば今の演習用の字句解析器は
-```ocaml=
+```ocaml
 {
 let reservedWords = [
   (* Keywords *)
@@ -1857,7 +1857,7 @@ rule main = parse
 ...
 ```
 こう書いてあって，これは小文字アルファベットで始まる列をキーワードか識別子として認識します．これを
-```ocaml=
+```ocaml
 rule main = parse
 ...
 | "else" { Parser.ELSE }
@@ -1907,7 +1907,7 @@ LL(1)に関しては入力がかかれたストリームの先頭の終端記号
 ### LL(k)のk
 
 > LL(k)で、実用的に使われてるkの値はどれくらいなのか気になりました"
- 
+
 [ANTLR](https://en.wikipedia.org/wiki/ANTLR)が一番よく使われているLL系のparser generatorだと思うのですが，LL(*)というのを使っているっぽいです．先読みのサイズが予めきまっていないアルゴリズムのようです．
 
 ### 左再帰除去
@@ -1935,7 +1935,7 @@ LL(1)に関しては入力がかかれたストリームの先頭の終端記号
 
 LL(k)だと左再帰を含む文法は本質的に扱えないので，LL(k)についてはそのようなことはないというのが答えになるかなと思います．LR(k)文法については調べてみないとちょっとわからないです．（ただし，スライドのP245によればいかなるLR(k)文法としても書けないあいまいでない文脈自由文法が存在するっぽい？）LR(k)言語については，任意のk>0についてLR(k)言語のクラスとSLR(1)言語のクラスが一致することが以下の論文で証明されているらしいです．
 
-* Mickunas, Lancaster, and Schneider,  “Transforming LR(k) Grammars to LR(1), SLR(1) and (1,1) Bounded Right Context Grammars”, JACM, 23(3), 
+* Mickunas, Lancaster, and Schneider,  “Transforming LR(k) Grammars to LR(1), SLR(1) and (1,1) Bounded Right Context Grammars”, JACM, 23(3),
 
 したがって，言語$L$を生成するLR(k)文法が存在するならば，それを生成するSLR(1)文法やLR(1)文法が存在するということになります．へー．
 
@@ -2031,13 +2031,13 @@ Warning: 2 shift/reduce conflicts were arbitrarily resolved.実験中、パー�
 
 どういうプログラムをどういうアーキテクチャで実行するかにもよるので一概には言えませんで，実験しないと分からんなあという感じがあります．C言語ならば `main.c` というプログラムを
 
-```
+```sh
 gcc -o main -O0 main.c
 ```
 
 でコンパイルすると最適化を一切していない実行可能ファイル `main` が，
 
-```
+```sh
 gcc -o main -O3 main.c
 ```
 
@@ -2049,7 +2049,7 @@ gcc -o main -O3 main.c
 
 スタック領域は，現在の関数呼び出しが終了すると消えてしまうので，関数呼び出しの終了とともに消えてもよい情報はスタック領域に，それ以降も残っていてほしい情報はヒープ領域に格納することになります．OCaml 等ではこの区別は自動的にやってくれますが，C 言語等では自分でコントロールする必要があり，この区別に失敗したせいでバグを仕込む可能性があります．例えば C 言語では
 
-```c=
+```c
 char* f() {
     char x = 0;
     return (&x); // 整数を格納している領域 x へのポインタを返している
@@ -2058,7 +2058,7 @@ char* f() {
 
 のような関数を書いてはいけません．関数 f 中で整数 x を格納する場所は，x が局所変数なのでスタック上に取られますが，この領域は f の呼び出しの終了とともに消えます．ところが，f が返してくるポインタは呼び出し終了後にも生き残り続けるので
 
-```c=
+```c
 char *p = f();
 *p = "hogehoge";
 ```
@@ -2085,7 +2085,7 @@ char *p = f();
 
 ああ，良い質問ですね．末尾再帰のときには，jal と jr とを用いた関数呼び出しではなく，j と jr とを用いた単純ジャンプにコンパイルするように特別扱いします．例えば，講義で扱った以下の命令列
 
-```mips=
+```mips
 	.text
 	.globl	main
 main:
@@ -2119,7 +2119,7 @@ end:
 
 は非末尾再帰の関数
 
-```ocaml=
+```ocaml
 let rec f x =
   if x = 0 then
     0
@@ -2133,7 +2133,7 @@ let rec f x =
 
 これを末尾再帰に書き換えた
 
-```ocaml=
+```ocaml
 let rec f x r =
   if x = 0 then
     r
@@ -2145,7 +2145,7 @@ let rec f x r =
 
 は，
 
-```mips=
+```mips
 	.text
 	.globl	main
 main:
@@ -2201,7 +2201,7 @@ end:
 上位アドレス
                |             |
                | ...         |
-               +-------------+         
+               +-------------+
                | ra          |        |
                | saved a0    |        | スタックの伸びる向き
                | local 4n    |        V
@@ -2218,7 +2218,7 @@ end:
 上位アドレス
                |             |
                | ...         |
-               +-------------+         
+               +-------------+
                | ra          |<- $fp
                | saved fp    |
                | saved a0    |
@@ -2284,13 +2284,13 @@ end:
 
 > GitHub Copilotが役立っているようで良かったですね。AI技術の進化はプログラミングの世界にも大きな影響を与えており、プログラマーやソフトウェアエンジニアにも新たなスキルが求められています。
 > 形式検証の専門家として、プログラマーやソフトウェアエンジニアが時代の変化に適応し、生き残っていくためのアドバイスをいくつかご紹介します。
-> 
+>
 > - 深い理解と知識の習得: AIがある程度のコーディングを補助できるようになりましたが、基本的なプログラミング知識や理解力は必要不可欠です。技術の基礎をしっかり学び、専門的な知識を習得しましょう。
 > - 問題解決能力の向上: 複雑な問題に対処し、効率的な解決策を見つけ出す能力は、AIにはなかなか真似できないスキルです。問題解決能力を磨くことで、価値あるエンジニアとなります。
 > - コミュニケーション能力: チームでの協力や、他の専門家との連携が重要になるため、コミュニケーション能力を鍛えることが大切です。
 > - 創造性と革新性: AIはあくまで人間が作ったツールです。新しいアイデアや革新的なソリューションを生み出す能力は、エンジニアにとって重要な価値を持ちます。
 > - 学ぶ意欲: 技術は常に進化しています。新しい知識や技術を学び続けることで、時代の変化に柔軟に対応できます。
-> 
+>
 > 形式検証の専門家として、これらのスキルや能力を磨くことが、プログラマーやソフトウェアエンジニアがAI時代に生き残るための鍵だと考えます。これからも努力を続け、自分自身を成長させていくことが大切です。
 
 わしの答えとどちらが正しいであろうか．
@@ -2333,7 +2333,7 @@ Pylint や Flake8 や mypy がどういうものかよくは知らなかった�
 
 一般にはこの問題は決定不能ですが，できる範囲でプログラムの停止性を検証する手法が研究されています．よく使われるのはランキング関数の生成という手法です．例えば
 
-```
+```c
 x = 10; y = 0;
 while (y < 10) { /* (A) */
     x = x - 1;
@@ -2350,12 +2350,12 @@ while (y < 10) { /* (A) */
 > 	インタプリタとコンパイラの本質的な違いは、インタプリタは自身が構文解析をして、状態に応じて異なる結果を返すもので、コンパイラの役割は単に高水準言語をアセンブリに変換するものという認識であっていますか？
 
 どちらかというと，インタプリタはプログラムの実行結果を出力として返すもの，コンパイラはプログラムと等価なプログラムを出力として返すもの，という理解の方が正しいです．例えば，OCamlインタプリタは
-```ocaml=
+```ocaml
 # let x = 3 in x + 2;;
 - : int = 5
 ```
 のように，`let x = 3 in x + 2`の実行結果である`5`を出力として返していますが，
-```bash=
+```sh
 # tmp.ml の内容を表示するコマンド
 > cat tmp.ml
 let x = 3 in x + 2;;
@@ -2384,7 +2384,7 @@ MiniML は OCaml で書かれた OCaml のサブセットのインタプリタ�
 OCaml のコンパイラには，OCaml プログラムをバイトコードに変換する `ocamlc` と，ネイティブコード（実行可能バイナリ）に変換する `ocamlopt` があります．`ocamlc`によって生成されるバイトコードは，`ocamlrun`というバイトコード用のインタプリタで実行することができるのですが，そうであればバイトコード生成と`ocamlrun`を組み合わせれば OCaml プログラム用のインタプリタが作れてしまうので，このように実装されています．
 
 `ocamlopt`と`ocamlc`+`ocamlrun`は，一応挙動の違いは内容に設計されているはずです．ただ，tupleの要素の評価順序など，意味論が未定義な部分の挙動が異なるアーキテクチャもあった気がします．例えば，
-```bash=
+```sh
 # tmp.ml の内容を表示する
 > cat tmp.ml
 (Printf.printf "a\n", Printf.printf "b\n", Printf.printf "c\n")
@@ -2415,7 +2415,7 @@ C++ の型推論は決定不能なはずです．C++ にはテンプレートと
 > Unificationの例としてはどのようなものがあるのでしょうか？型推論で扱う問題よりも一般化されたUnificationがあったりしますか？
 
 今回扱った unification は一階の unification と呼ばれるものです．型推論以外に論理プログラミング言語と呼ばれる言語の処理系でよく使われます．例えば Prolog という言語ではプログラムを推論規則の集合として記述し，与えられたクエリが導出可能かどうかを自動的に判定することでプログラムの実行としています．これを使うと，例えば
-```prolog=
+```prolog
 child(fune,sazae).
 child(namihei,sazae).
 child(fune,katsuo).
@@ -2429,11 +2429,11 @@ descendent(X,Y) :- child(X,Y).
 descendent(X,Z) :- child(X,Y), descendent(Y,Z).
 ```
 という，「`Y`は`X`の子供である」という事実を表す `child(X,Y)` と，「`Y`は`X`の子孫である」ということを表す述語 `descendent(X,Y)` の定義を与えて，
-```prolog=
+```prolog
 ?- descendent(namihei,X).
 ```
 で「波平の子孫を与えよ」というクエリを投げると
-```prolog=
+```prolog
 X = sazae
 X = katsuo
 X = wakame

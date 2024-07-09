@@ -14,7 +14,7 @@
 ### Exercise 4.3.5 [必修]
 他の型付け規則に関しても同様に型推論の手続きを与えよ(レポートの一部としてまとめよ)．そして，以下の `typing.ml` に加えるべき変更の解説を参考にして，型推論アルゴリズムの実装を完成させよ．
 
-{% highlight ocaml %}
+```ocaml
 (* New! 型代入を表す値の型 *)
 type subst = (tyvar * ty) list
 
@@ -24,15 +24,15 @@ let rec subst_type subst t = ...
 (* New! eqs_of_subst : subst -> (ty * ty) list
    型代入を型の等式集合に変換．型の等式制約 ty1 = ty2 は (ty1,ty2) という
    ペアで表現し，等式集合はペアのリストで表現． *)
-let eqs_of_subst s = ... 
+let eqs_of_subst s = ...
 
-(* New! 
+(* New!
    subst_eqs: subst -> (ty * ty) list -> (ty * ty) list
    型の等式集合に型代入を適用する関数． *)
 let subst_eqs s eqs = ...
 
 (* すでに実装済みのはず *)
-let rec unify l = ... 
+let rec unify l = ...
 
 (* New! 演算子 op が生成すべき制約集合と返り値の型を記述 *)
 let ty_prim op ty1 ty2 = match op with
@@ -66,7 +66,7 @@ let rec ty_exp tyenv exp =
         (s, TyFun (subst_type s domty, ranty))
   | AppExp (exp1, exp2) -> ...
   | _ -> err "Not Implemented!"
-{% endhighlight %}
+```
 
 ### Exercise 4.3.6 [**]
 再帰的定義のための `let rec` 式の型付け規則は以下のように与えられる．
@@ -123,5 +123,3 @@ $$
 \end{array}
 \textrm{T-Cons}
 $$
-
-

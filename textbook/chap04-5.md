@@ -8,7 +8,7 @@
 
 まず，`syntax.ml` を改造して，型の構文に型変数を追加しよう．
 
-{% highlight ocaml %}
+```ocaml
 
 type tyvar = int (* New! 型変数の識別子を整数で表現 *)
 
@@ -31,9 +31,9 @@ let fresh_tyvar =
 
 (*  New!  ty に現れる自由な型変数の識別子（つまり，tyvar 型の集合）を返す関数．実装せよ．*)
 (* 型は ty -> tyvar MySet.t にすること．MySet モジュールの実装はリポジトリに入っているはず．*)
-let rec freevar_ty ty = ... 
+let rec freevar_ty ty = ...
 
-{% endhighlight %}
+```
 
 - 型変数の名前を表す型 `tyvar` を定義する．実体は整数型とする．
 - 型 `ty` を型変数を表すコンストラクタ `TyVar` と関数型を表すコンストラクタ `TyFun` とで拡張する．`TyVar` は `tyvar` 型の値を一つとるコンストラクタで `TyVar(tv)` という形をしており，これが型変数を表す．`TyFun` は `ty` 型の引数を2つ持つ `TyFun(t1,t2)` という形をしており，これが型 $\tau_1 \rightarrow \tau_2$ を表す．
@@ -79,9 +79,9 @@ $\theta\alpha$のケースが実質的な代入を行っているケースであ
 
 型推論アルゴリズムを実装するためには，型代入を表すデータ構造を決める必要がある．様々な表現方法がありうるが，ここでは素直に型変数と型のペアのリストで表現することにしよう．すなわち，型代入を表す OCaml の型は以下のように宣言された `subst` である．
 
-{% highlight ocaml %}
+```ocaml
 type subst = (tyvar * ty) list
-{% endhighlight %}
+```
 
 `subst` 型は `[(id1,ty1); ...; (idn,tyn)]` の形をしたリストである．ここで，`id1,id2,...,idn` は型変数の名前（_つまり `tyvar` 型の値）であり，`ty1,ty2,...,tyn` は型（_つまり `ty` 型の値）である．このリストは$[\mathtt{idn} \mapsto \mathtt{tyn}] \circ \cdots \circ[\mathtt{id1} \mapsto \mathtt{ty1}]$という型代入を表すものと約束する．つまり，この型代入は
 
@@ -93,7 +93,7 @@ type subst = (tyvar * ty) list
 という操作を行う型代入である．
 
 注意すべき点がいくつかある．
- 
+
 + 空リストは何も行わない代入（恒等変換）を表す．
 + 代入を型に適用すると，リスト中の型変数と型のペアで表される操作が先頭から順番に適用される．型代入 `[(id1,ty1); ...; (idn,tyn)]` を型に適用すると，最初に `id1` に `ty1` を代入する操作が行われる．
 + リスト中の型は後続のリストが表す型代入の影響を受ける．例えば，型代入 `[(alpha, TyInt)]` が型 `TyFun(TyVar alpha, TyBool)` に作用すると，`TyFun(TyInt, TyBool)` となり，型代入 `[(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)]` が型 `(TyVar beta)` に作用すると，まずリストの先頭の `(beta, (TyFun (TyVar alpha, TyInt)))` が作用して `TyFun (TyVar alpha, TyInt)` が得られ，次にこの型にリストの二番目の要素の`(alpha, TyBool)` が作用して `TyFun(TyBool, TyInt)` が得られる．
@@ -129,26 +129,26 @@ type subst = (tyvar * ty) list
 
 型代入に関する以下の型，関数を `typing.ml` 中に実装せよ．
 
-{% highlight ocaml %}
+```ocaml
 type subst = (tyvar * ty) list
 
 	val subst_type : subst -> ty -> ty
-{% endhighlight %}
+```
 
 例えば，
 
-{% highlight ocaml %}
+```ocaml
 let alpha = fresh_tyvar () in
 subst_type [(alpha, TyInt)] (TyFun (TyVar alpha, TyBool))
-{% endhighlight %}
+```
 
 の値は `TyFun (TyInt, TyBool)` になり，
 
-{% highlight ocaml %}
+```ocaml
 let alpha = fresh_tyvar () in
 let beta = fresh_tyvar () in
 subst_type [(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)] (TyVar beta)
-{% endhighlight %}
+```
 
 の値は `TyFun (TyBool, TyInt)` になる．
 

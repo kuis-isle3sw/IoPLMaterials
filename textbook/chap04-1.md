@@ -13,15 +13,15 @@
 実行時型エラーは結構困りものである．以下の例を見てみよう．
 - あなた（23:00）「明日の12:00論文締め切りなのに，追加の実験がどうしても必要になった．．．よし，プログラムを書こう．」
 - あなた（3:00）「[ヨシ！](https://ja.wikipedia.org/wiki/%E7%8F%BE%E5%A0%B4%E7%8C%AB)できた！」
-- {% highlight ocaml %}
+- ```ocaml
 let rec f x n =
   if n <= 0 then 3 4 (* (A) *)
-  else 
+  else
     let x = (* めっちゃ重い計算 *)
     f x (n + -1)
 in
 f 0 100000000
-{% endhighlight %}
+```
 - あなた「このプログラムは，めっちゃ重い計算を1億回繰り返すのだ．明日の朝には実験結果が出るはずだな．[プログラムを走らせたまま寝て，明日の朝結果を論文に反映させよう．](https://ja.wikipedia.org/wiki/%E3%83%95%E3%83%A9%E3%82%B0_(%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AA%E3%83%BC))」
 - あなた（睡眠中）
 - あなた（11:00）「いかんいかん，寝過ごすところだった．実験結果は出ているかな．」
@@ -36,24 +36,24 @@ f 0 100000000
 
 しかし，プログラムを実行させずにプログラムの実行結果についての情報を得ることが本当に可能だろうか．実は，すでに皆さんはその技術を使っている．先程のプログラムを，めっちゃ重い計算ではないがもう少し軽い計算を繰り返すプログラムにしてみて，繰り返しのたびにメッセージを出力するようにして，`ocaml` に食べさせてみよう．
 
-{% highlight ocaml %}
+```ocaml
 let rec f x n =
   if n <= 0 then 3 4 (* (A) *)
-  else 
+  else
     let x = x mod 2 in
     Format.printf "Hoge.@\n";
     f x (n + -1)
 in
 f 0 100000000
-{% endhighlight %}
 ```
-> ocaml
-        OCaml version 4.06.1
+```console
+ocaml
+OCaml version 4.06.1
 ...
 
 # let rec f x n =
     if n <= 0 then 3 4 (* (A) *)
-    else 
+    else
       let x = x mod 2 in
       Format.printf "Hoge.@\n";
       f x (n + -1)
