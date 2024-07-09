@@ -12,15 +12,9 @@
 
 ### `eval $(opam env)`
 
-> ターミナルに毎回 "eval $(opam env)"を打ち込むのが面倒です（そうしないとutopが起動しない）。調べると、rc.localやsystemdというものを使うと起動時にプログラムを実行できると分かりました。でもLinux怖いので試してないです。
+> ターミナルに毎回 `eval $(opam env)` を打ち込むのが面倒です（そうしないとutopが起動しない）。
 
-`opam init` を実行すると，途中で `.bashrc` 等の設定ファイルを書き換えて毎回 `eval $(opam env)` を勝手に実行してよいか？と尋ねるプロンプトが出てきます．これを無視してエンターキーを押すと毎回 `eval $(opam env)` を実行しないといけなくなります．もう一度 `opam init` を実行して，出てくるプロンプトに `y` を入力すると良いかもしれません．（あるいは `opam init -y --shell-setup` でもよいはず．）
-
-### 様々なエディタ
-
-> いろいろなエディタでの OCaml 環境について知りたいです．
-
-すべての環境について書くのは難しいので，とりあえず[ここ](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/setting-up-ocaml.html#%E4%BE%BF%E5%88%A9%E6%83%85%E5%A0%B1)（「便利情報」と書いてあるところ）をチェックしてみてください．英語で検索するほうが有用な情報が得られることが多いです．特に StackOverflow は結構いろいろ書いてあります．例えば VSCode については[これ](https://stackoverflow.com/questions/65917935/how-to-get-started-with-ocaml-on-vsc)とか？
+[こちら](https://kuis-isle3sw.github.io/IoPLMaterials/HACKING.html)のdirenvに関する部分を参照。
 
 ### OCamlにおいて繰り返し構文の中身が unit 型なのはなぜ
 
@@ -194,7 +188,7 @@ let rec loop b =
 
 ### ブラウザで走る OCaml 処理系
 
-簡単なプログラムを書き捨てるのであれば[TryOCaml](https://try.ocamlpro.com/)があります．[js_of_ocaml](https://ocsigen.org/js_of_ocaml/latest/manual/overview)を使うともっといろいろできるのかもしれませんが，試したことがありません．何れにせよ，現時点ではあまりブラウザ上である程度大きいプログラムを書くのは難しいように思います．
+簡単なプログラムを書き捨てるのであれば公式の[OCaml Playground](https://ocaml.org/play)があります．[js_of_ocaml](https://ocsigen.org/js_of_ocaml/latest/manual/overview)を使うともっといろいろできるのかもしれませんが，試したことがありません．何れにせよ，現時点ではあまりブラウザ上である程度大きいプログラムを書くのは難しいように思います．
 
 [ideone](https://ideone.com/)というのもあるようで，ここで OCaml プログラムを[こんなふうに](https://ideone.com/J9up25)書けるようです．
 
@@ -292,12 +286,6 @@ val f : int -> ('a ref as 'a) -> 'a = <fun>
 > #useのコマンドを使うときに、現在のディレクトリが分からなくて困っていますが、現在のディレクトリを表示するコマンドはありますか？(＃pwd;;などがあれば嬉しいです。)
 
 答えになっているかわからないのですが，`Sys.getcwd ()`で現在のディレクトリを文字列として取得することができます．
-
-### OCamlFormat
-
-> 「また,作業ディレクトリに.ocamlformatファイルを(空でもよいので)用意するとインデント等が自動的に整理されてよい.」(https://kuis-isle3sw.github.io/IoPLMaterials/textbook/setting-up-ocaml.html)　「作業ディレクトリ」はホームディレクトリということでしょうか。
-
-想定としては「cloneしてきたソースコードの入っているディレクトリ」で大丈夫だと思います（多分）
 
 ### 未確定の単相型
 
@@ -2542,4 +2530,4 @@ Unification の一般化という点では，高階関数を表す項同士を u
 
 絶対あるよ！
 
-OCaml は結構産業界でも使われていて，OCaml のサイトでは[OCaml を使っている企業](https://ocaml.org/learn/companies.html)のリストがあったりします．[Tezos](https://tezos.com/developer-portal/) というブロックチェーンで使われたりしていて，使えると意外といい言語ですよ．（我田引水）
+OCaml は結構産業界でも使われていて，OCaml のサイトでは[OCaml を使っている企業](https://ocaml.org/industrial-users)のリストがあったりします．[Tezos](https://tezos.com/developer-portal) というブロックチェーンで使われたりしていて，使えると意外といい言語ですよ．（我田引水）
