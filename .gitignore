@@ -2,6 +2,8 @@
 /_opam/
 /_site/
 /.vscode/
+/.yarn/
+/node_modules/
 /vendor/
 /Gemfile.lock
 .DS_Store

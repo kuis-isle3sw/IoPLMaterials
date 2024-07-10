@@ -8,6 +8,7 @@
 
 - まず[「プログラミング言語」の講義ページの環境設定に関する資料](https://hackmd.io/BGPHkpvJRYCvA2j3D9KVhw)を読んで OPAM をセットアップ
 - 以下のコマンドを順に実行．ログの最後に `eval $(opam env)` を実行せよみたいなメッセージが出たら，`eval $(opam env)` を実行してから次のコマンドを実行．
+
   ```sh
   opam install -y user-setup menhir dune ounit tuareg
       # 上のコマンドが失敗する場合（OPAMのバージョンが古い場合）は以下のコマンドを試すこと。
@@ -16,6 +17,7 @@
 
   opam user-setup install
   ```
+
 - `ocaml` コマンドを実行して，インタプリタが起動すれば OK
 - うまく行かなければ以下を読む．それでもダメなら，講義用 Slack か PandA かここに issue を立てて質問．
 - OPAM のセットアップのことはさておいても，履修者は講義用 Slack に入っておいてね．
@@ -50,8 +52,7 @@ opam switch create 4.14.0
 eval $(opam env)
 ```
 
-`--disable-sandboxing` は,Windows Cygwin,もしくはWSL1にインストールするならば必須．
-WSL2はDocker for Mac/Windowsなどのように完全なLinuxカーネルなので,opamの全ての機能が利用可能.
+`--disable-sandboxing` は,Windows Cygwin,もしくはWSL1にインストールするならば必須．WSL2はDocker for Mac/Windowsなどのように完全なLinuxカーネルなので,opamの全ての機能が利用可能.
 
 ## 授業に必要なライブラリやツールのインストール
 
@@ -71,6 +72,7 @@ opam user-setup install
   - `user-setup`: `.bash_profile` や `.emacs` のような個人設定ファイルの書き換えを自動で行ってくれる．
 
 ### 古いOPAM（バージョン2.0以前）を使用している場合
+
 古いOPAM（バージョン2.0以前）を使用している場合、`opam install`コマンドが失敗することがある。これは、システム側に必要なパッケージをOPAMが自動でインストールしてくれないためである。この場合は、次のコマンドを試す。
 
 ```sh

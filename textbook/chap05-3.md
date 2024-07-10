@@ -28,6 +28,7 @@ $$
 と定義すれば良さそうである．
 
 これで$\mathcal{C}$への変換はできるのであるが，今回は後々のことを見越して，もう少し欲張った変換を与えよう．MiniML4- では，以下のように，異なる束縛変数に同じ名前を与えることができる．
+
 ```ocaml
 let x =
   let x = 2 in
@@ -36,7 +37,9 @@ let x =
 in
 x * x
 ```
+
 このように異なる束縛変数に同じ名前がついていると，後々の変換で面倒なことになる．[以前説明したように](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap03-4.html#%E6%9D%9F%E7%B8%9B%E5%A4%89%E6%95%B0%E3%81%A8%E8%87%AA%E7%94%B1%E5%A4%89%E6%95%B0%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)束縛変数を一貫して名前変えしても，プログラムの意味は変わらない．そのため，異なる束縛変数が一意な名前を持つように変換したい．例えば，上記のプログラムは，
+
 ```ocaml
 let t1 =
   let t2 = 2 in
@@ -45,6 +48,7 @@ let t1 =
 in
 t1 * t1
 ```
+
 のように変換しておけば，異なる束縛変数が異なる名前を持つことになる．
 
 まとめると，変換$\mathcal{I}$は (1) MiniML4- を$\mathcal{C}$に変換しつつ，(2) 異なる束縛変数が異なる名前を持つようにする変換である．
@@ -104,15 +108,15 @@ $$
 - $e = x$ のとき: $x$ はこの変換によって別の名前に名前替えされているはずなので，新しい名前を$\delta(x)$で取ってくる．
 - $e = e_1\ \mathit{op}\ e_2$ のとき: 上で説明した通り．Fresh な名前$x_1, x_2$を生成している．
 - $e = \mathbf{if}\ e'\ \mathbf{then}\ e_1\ \mathbf{else}\ e_2$ のとき: 変換後の式では，fresh な変数$x$を$e'$（の変換結果）の評価結果を束縛して，$\mathbf{if}$式を評価する．ここでは$e_1$と$e_2$の評価結果に変数を束縛しないことに注意しよう．そのようにして
-$$
-\begin{array}{l}
-\mathbf{let}\ x = \mathcal{I}_\delta(e)\ \mathbf{in}\\
-\mathbf{let}\ x_1 = \mathcal{I}_\delta(e_1)\ \mathbf{in}\\
-\mathbf{let}\ x_2 = \mathcal{I}_\delta(e_2)\ \mathbf{in}\\
-\quad\mathbf{if}\ x\ \mathbf{then}\ x_1\ \mathbf{else}\ x_2\\
-\end{array}
-$$
-に変換してしまうと意味が変わってしまう．（$e$が$\mathbf{true}$に評価される式で，$e_2$が無限ループする式である場合に，変換前と変換後の式の評価結果をそれぞれ考えてみよう．）
+  $$
+  \begin{array}{l}
+  \mathbf{let}\ x = \mathcal{I}_\delta(e)\ \mathbf{in}\\
+  \mathbf{let}\ x_1 = \mathcal{I}_\delta(e_1)\ \mathbf{in}\\
+  \mathbf{let}\ x_2 = \mathcal{I}_\delta(e_2)\ \mathbf{in}\\
+  \quad\mathbf{if}\ x\ \mathbf{then}\ x_1\ \mathbf{else}\ x_2\\
+  \end{array}
+  $$
+  に変換してしまうと意味が変わってしまう．（$e$が$\mathbf{true}$に評価される式で，$e_2$が無限ループする式である場合に，変換前と変換後の式の評価結果をそれぞれ考えてみよう．）
 - $e = \mathbf{let}\ x = e_1\ \mathbf{in}\ e_2$ のとき: $x$が束縛されているので，これを名前替えする必要がある．Fresh な変数$t_1$を生成して，$x$を$t_1$に名前替えする．$e_1$を変換するときには元の$\delta$を用いて，$e_2$を変換するときには，$x$が$t_1$に名前替えされたことを表すために，$\delta$に$\{x \mapsto t_1\}$を用いて変換する．
 
 続いてプログラムと再帰関数定義の変換を定義する．まず，プログラムは$\mathbf{let rec}$式による相互再帰的な関数の定義$d_1,\dots,d_n$とメインの式$e$のペア$(\{d_1,\dots,d_n\},e)$であったことを[思い出そう](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap05-2.html#%E3%82%BD%E3%83%BC%E3%82%B9%E8%A8%80%E8%AA%9E-miniml4-)．$d_1,\dots,d_n$で定義される関数の名前は，このプログラムに局所的な名前であるから，fresh な名前を割り当てることにする<sup>[トップレベルの関数名の名前替えについての注](#toplevelfun)</sup>．

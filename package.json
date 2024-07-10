@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "prettier --check .",
+    "fix": "prettier --write ."
+  },
+  "prettier": {
+    "printWidth": 120,
+    "proseWrap": "never"
+  },
+  "devDependencies": {
+    "prettier": "3.3.2"
+  },
+  "packageManager": "yarn@4.2.2"
+}

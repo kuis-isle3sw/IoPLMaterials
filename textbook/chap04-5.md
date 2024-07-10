@@ -46,18 +46,14 @@ let rec freevar_ty ty = ...
 
 ## 型代入とその実装
 
-
 [前節](chap04-4.md)で説明した通り，MiniML3 の型推論アルゴリズムは型変数をどのような型にすれば入力されたプログラムが型付け可能になるかを出力する．この型変数とその正体の対応関係を，_型代入 (type substitution)_ と呼び，メタ変数として$\theta$を使用する．
 
 型代入は型変数から型への（定義域が有限集合な）写像である．以下では，
 
-+ $\theta\tau$ で型 $\tau$ 中の型変数を型代入 $\theta$ に従って置き換えて得られる型を，
-+ $\theta\Gamma$ で，型環境 $\Gamma$ 中の全ての型に $\theta$ を適用して得られる型環境を
+- $\theta\tau$ で型 $\tau$ 中の型変数を型代入 $\theta$ に従って置き換えて得られる型を，
+- $\theta\Gamma$ で，型環境 $\Gamma$ 中の全ての型に $\theta$ を適用して得られる型環境を
 
-表すことにする．例えば$\theta$が $\{\alpha \mapsto \mathbf{int}, \beta \mapsto \mathbf{bool}\}$ という型代入であるとき，$\theta\alpha = \mathbf{int}$であり，
-$\theta(\alpha \rightarrow \beta) = \mathbf{int} \rightarrow \mathbf{bool}$であり，
-$\theta(x:\alpha, y:\beta) = (x:\mathbf{int}, y:\mathbf{bool})$である．
-$\theta\tau$，$\theta\Gamma$ はより厳密には以下のように定義される．
+表すことにする．例えば$\theta$が $\{\alpha \mapsto \mathbf{int}, \beta \mapsto \mathbf{bool}\}$ という型代入であるとき，$\theta\alpha = \mathbf{int}$であり， $\theta(\alpha \rightarrow \beta) = \mathbf{int} \rightarrow \mathbf{bool}$であり， $\theta(x:\alpha, y:\beta) = (x:\mathbf{int}, y:\mathbf{bool})$である． $\theta\tau$，$\theta\Gamma$ はより厳密には以下のように定義される．
 
 $$
 \begin{array}{rcl}
@@ -83,7 +79,7 @@ $\theta\alpha$のケースが実質的な代入を行っているケースであ
 type subst = (tyvar * ty) list
 ```
 
-`subst` 型は `[(id1,ty1); ...; (idn,tyn)]` の形をしたリストである．ここで，`id1,id2,...,idn` は型変数の名前（_つまり `tyvar` 型の値）であり，`ty1,ty2,...,tyn` は型（_つまり `ty` 型の値）である．このリストは$[\mathtt{idn} \mapsto \mathtt{tyn}] \circ \cdots \circ[\mathtt{id1} \mapsto \mathtt{ty1}]$という型代入を表すものと約束する．つまり，この型代入は
+`subst` 型は `[(id1,ty1); ...; (idn,tyn)]` の形をしたリストである．ここで，`id1,id2,...,idn` は型変数の名前（*つまり `tyvar` 型の値）であり，`ty1,ty2,...,tyn` は型（*つまり `ty` 型の値）である．このリストは$[\mathtt{idn} \mapsto \mathtt{tyn}] \circ \cdots \circ[\mathtt{id1} \mapsto \mathtt{ty1}]$という型代入を表すものと約束する．つまり，この型代入は
 
 - 受け取った型中の型変数 `id1` をすべて型 `ty1` に置き換え，
 - その後得られた型中の型変数 `id2` をすべて型 `ty2` に置き換え
@@ -94,9 +90,9 @@ type subst = (tyvar * ty) list
 
 注意すべき点がいくつかある．
 
-+ 空リストは何も行わない代入（恒等変換）を表す．
-+ 代入を型に適用すると，リスト中の型変数と型のペアで表される操作が先頭から順番に適用される．型代入 `[(id1,ty1); ...; (idn,tyn)]` を型に適用すると，最初に `id1` に `ty1` を代入する操作が行われる．
-+ リスト中の型は後続のリストが表す型代入の影響を受ける．例えば，型代入 `[(alpha, TyInt)]` が型 `TyFun(TyVar alpha, TyBool)` に作用すると，`TyFun(TyInt, TyBool)` となり，型代入 `[(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)]` が型 `(TyVar beta)` に作用すると，まずリストの先頭の `(beta, (TyFun (TyVar alpha, TyInt)))` が作用して `TyFun (TyVar alpha, TyInt)` が得られ，次にこの型にリストの二番目の要素の`(alpha, TyBool)` が作用して `TyFun(TyBool, TyInt)` が得られる．
+- 空リストは何も行わない代入（恒等変換）を表す．
+- 代入を型に適用すると，リスト中の型変数と型のペアで表される操作が先頭から順番に適用される．型代入 `[(id1,ty1); ...; (idn,tyn)]` を型に適用すると，最初に `id1` に `ty1` を代入する操作が行われる．
+- リスト中の型は後続のリストが表す型代入の影響を受ける．例えば，型代入 `[(alpha, TyInt)]` が型 `TyFun(TyVar alpha, TyBool)` に作用すると，`TyFun(TyInt, TyBool)` となり，型代入 `[(beta, (TyFun (TyVar alpha, TyInt))); (alpha, TyBool)]` が型 `(TyVar beta)` に作用すると，まずリストの先頭の `(beta, (TyFun (TyVar alpha, TyInt)))` が作用して `TyFun (TyVar alpha, TyInt)` が得られ，次にこの型にリストの二番目の要素の`(alpha, TyBool)` が作用して `TyFun(TyBool, TyInt)` が得られる．
 
 ## MiniML3 の型推論アルゴリズムの仕様
 
@@ -123,7 +119,6 @@ type subst = (tyvar * ty) list
 ### <a name="freevar_ty">Exercise 4.3.1 [必修]</a>
 
 `string_of_ty` と `freevar_ty` を完成させよ．`string_of_ty` は `ty -> string` 型の関数で，`ty` 型の値を受け取るとその文字列での表現を返す．`TyVar 0` が `"'a"`，`TyVar 1` が `"'b"` のように，OCaml での型変数の文字列表現と合わせること．`freevar_ty` は，与えられた型中に現れる型変数の集合を返す関数で，型は `ty -> tyvar MySet.t` とする．型 `'a MySet.t` は `mySet.mli` で定義されている型 `'a` の値を要素とする集合を表す値の型である．
-
 
 ### Exercise 4.3.2 [必修]
 
@@ -218,12 +213,12 @@ $$
 
 この$\mathit{Unify}$の定義は以下のように$X$を入力とする単一化アルゴリズムとして読める:
 
-+ $X$が空集合であれば空の代入を返す．
-+ そうでなければ，$X$から等式制約 $\tau_1 = \tau_2$を任意に一つ選び，それ以外の部分を $X'$ とし，制約 $\tau_1 = \tau_2$がどのような形をしているかによって，以下の各動作を行う．
-  + $\tau_1$と$\tau_2$がすでに同じ形であった場合: $X'$について再帰的に単一化を行い，その結果を返せばよい．（$\tau_1$と$\tau_2$はすでに同じ形なので，残りの制約集合$X'$に対する解がそのまま全体の解となる．）
-  + $\tau_1$ も $\tau_2$ も関数型の形をしていた場合，すなわち$\tau_1$が$\tau_{11} \rightarrow \tau_{12}$の形をしており，$\tau_2$が $\tau_{21} \rightarrow \tau_{22}$の形をしていた場合: $\tau_1$と $\tau_2$が同じ形となるためには$\tau_{11}$と$\tau_{21}$が同じ形であり，かつ$\tau_{12}$と$\tau_{22}$が同じ形であればよい．これを満たす型代入を求めるために，$\mathit{Unify}$ を $\{\tau_{11} = \tau_{21}, \tau_{12} = \tau_{22}\} \cup X'$ を入力として再帰的に呼び出し，帰ってきた結果を全体の結果とする．
-  + $\tau_1$ と $\tau_2$ の片方が型変数だった場合，すなわち選んだ制約が $\alpha = \tau$ か $\tau = \alpha$ の形をしていた場合<sup>[$\alpha = \alpha$の場合についての注](#alphaeqalpha)</sup>: この場合，型変数$\alpha$は$\tau$でなければならないことがわかる．したがって，残りの制約$X'$中の$\alpha$に$\tau$を代入した制約$[\alpha\mapsto\tau] X'$を作り，これを再帰的に解き，得られた解に$\alpha$を$\tau$に代入する写像$[\alpha \mapsto \tau]$を合成して得られる写像$\mathit{Unify}([\alpha\mapsto\tau] X') \circ [\alpha\mapsto\tau]$を解として返せばよい．ところが，ここで注意すべきことが一つある．もし$\tau$中に$\alpha$が現れていた場合<sup>[$\alpha = \alpha$の場合の注2](#alphaeqalpha2)</sup>，ここでエラーを検出しなければならない．（なぜなのかを考察する課題を以下に用意している．）この条件のチェックのことを _オカーチェック (occur check)_ と呼ぶ．
-+ これら以外の場合: エラーを報告する．
+- $X$が空集合であれば空の代入を返す．
+- そうでなければ，$X$から等式制約 $\tau_1 = \tau_2$を任意に一つ選び，それ以外の部分を $X'$ とし，制約 $\tau_1 = \tau_2$がどのような形をしているかによって，以下の各動作を行う．
+  - $\tau_1$と$\tau_2$がすでに同じ形であった場合: $X'$について再帰的に単一化を行い，その結果を返せばよい．（$\tau_1$と$\tau_2$はすでに同じ形なので，残りの制約集合$X'$に対する解がそのまま全体の解となる．）
+  - $\tau_1$ も $\tau_2$ も関数型の形をしていた場合，すなわち$\tau_1$が$\tau_{11} \rightarrow \tau_{12}$の形をしており，$\tau_2$が $\tau_{21} \rightarrow \tau_{22}$の形をしていた場合: $\tau_1$と $\tau_2$が同じ形となるためには$\tau_{11}$と$\tau_{21}$が同じ形であり，かつ$\tau_{12}$と$\tau_{22}$が同じ形であればよい．これを満たす型代入を求めるために，$\mathit{Unify}$ を $\{\tau_{11} = \tau_{21}, \tau_{12} = \tau_{22}\} \cup X'$ を入力として再帰的に呼び出し，帰ってきた結果を全体の結果とする．
+  - $\tau_1$ と $\tau_2$ の片方が型変数だった場合，すなわち選んだ制約が $\alpha = \tau$ か $\tau = \alpha$ の形をしていた場合<sup>[$\alpha = \alpha$の場合についての注](#alphaeqalpha)</sup>: この場合，型変数$\alpha$は$\tau$でなければならないことがわかる．したがって，残りの制約$X'$中の$\alpha$に$\tau$を代入した制約$[\alpha\mapsto\tau] X'$を作り，これを再帰的に解き，得られた解に$\alpha$を$\tau$に代入する写像$[\alpha \mapsto \tau]$を合成して得られる写像$\mathit{Unify}([\alpha\mapsto\tau] X') \circ [\alpha\mapsto\tau]$を解として返せばよい．ところが，ここで注意すべきことが一つある．もし$\tau$中に$\alpha$が現れていた場合<sup>[$\alpha = \alpha$の場合の注2](#alphaeqalpha2)</sup>，ここでエラーを検出しなければならない．（なぜなのかを考察する課題を以下に用意している．）この条件のチェックのことを _オカーチェック (occur check)_ と呼ぶ．
+- これら以外の場合: エラーを報告する．
 
 <a name="alphaeqalpha">$\alpha = \alpha$ の形だった場合はこのケースではなく，「$\tau_1$と$\tau_2$がすでに同じ形であった場合」のケースに当てはまる．</a>
 

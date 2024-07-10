@@ -27,10 +27,13 @@
 > OCamlにおいて繰り返し構文の中身が unit 型に限定されているなど、機能が限定されているのは何故でしょうか。
 
 正しい答えと言えるかどうか自信がないですが，繰り返し構文の本体部分を unit 型に制限することで，評価結果に意味のある繰り返しを伴う計算は再帰関数で，評価結果に意味はなく繰り返すこと自体に意味がある（つまり副作用を使って計算する）ような繰り返し計算は`for`や`while`などの繰り返し構文で書かせることを推奨できるというのはあるかもしれません．例えば1からnまでの整数の和を計算するプログラムの書き方として
+
 ```ocaml
 let rec sum n = if n = 0 then 0 else n + (sum (n-1))
 ```
+
 という書き方と
+
 ```ocaml
 let sum n =
   let i = ref n in
@@ -41,21 +44,26 @@ let sum n =
   done;
   !s
 ```
+
 という2つの書き方がありますが，1からnまでの和という計算結果に意味があるこのような計算では後者より前者の方がスッキリしています．
 
 他方，"Hello!"とn回画面に表示するようなプログラムは
+
 ```ocaml
 let hello n =
   if n = 0 then ()
   else Printf.printf "Hello!\n"; hello (n-1)
 ```
+
 という書き方と
+
 ```ocaml
 let hello n =
   for i = 0 to n - 1 do
     Printf.printf "Hello!\n"
   done
 ```
+
 がありますが，こういう画面に何かを表示するという副作用を伴うプログラムでは後者もまあまあスッキリしていますね．（僕はこういう場合も前者で結構書いちゃう気もする．．．）
 
 ### ループにするか再帰にするか
@@ -63,6 +71,7 @@ let hello n =
 > 調べてみたところ、OCamlだけでなく関数型言語一般において、あまりfor文を使わないということは分かったのですが、その理由はどのようなものでしょうか。
 
 おそらく再帰関数を使う方が for 文や while 文よりもより柔軟な繰り返しのパターンが書けるからかなあと思います．例えばアッカーマン関数という
+
 ```ocaml
 let rec ack m n =
   if m = 0 then
@@ -72,7 +81,9 @@ let rec ack m n =
   else
     ack (m-1) (ack m (n-1));;
 ```
+
 で定義される関数があるのですが，これを while や for で表現するの大変そう．（ところで，これのmを大きくしたときの振る舞いと，nを大きくしたときの振る舞いをそれぞれチェックしてみるといいですよ．）また，マッカーシーの91関数という
+
 ```ocaml
 let rec mc91 n =
   if n > 100 then
@@ -80,8 +91,8 @@ let rec mc91 n =
   else
     mc91 (mc91 (n+11));;
 ```
-こういう関数があるのですが，これも for や while で書くの大変そうですね．（さあこの関数に101以下の整数を与えてみましょう．）
 
+こういう関数があるのですが，これも for や while で書くの大変そうですね．（さあこの関数に101以下の整数を与えてみましょう．）
 
 ### 仮引数の `()`
 
@@ -102,6 +113,7 @@ OCaml では（Scala 等のように）`()` を省略することはできませ
 はい，実際に SML や SML# というML言語の一種ではコンストラクタが関数として使えますし，Haskellも使えます．OCamlでそうなっている理由はちょっと分からないです．もしコンストラクタ`S`を関数として使いたい場合は`S`の代わりに`fun x -> S x`を使うのが良いように思います．後者は値 `x` を受け取って `S x` を返す関数で，`S` を関数として扱った場合と同様に働きます．
 
 昔の Caml-list の議論 https://caml-list.inria.narkive.com/WUIPH06Z/why-can-t-i-use-constructors-as-functions で，OCaml の設計者の Xavier Leroy が Neel Krishnaswami （彼もプログラミング言語の研究者）の質問にこう答えています．
+
 ```
 Post by Krishnaswami, Neel
 > I'm curious as to the reason why I can't use a datatype constructor
@@ -138,12 +150,15 @@ convenient, I would argue it is often hard to read. Writing
 ### 末尾再帰とループ
 
 はい，末尾再帰で表現できます．
+
 ```ocaml
 for i = e1 to e2 - 1 do
   e3
 done
 ```
+
 は
+
 ```ocaml
 (* loop : int -> unit *)
 let rec loop i =
@@ -156,13 +171,17 @@ let rec loop i =
 in
 loop e1
 ```
+
 という末尾再帰な関数`loop`で表現できますし，
+
 ```ocaml
 while e1 do
   e2
 done
 ```
+
 は
+
 ```ocaml
 let rec loop b =
   if b then begin
@@ -170,6 +189,7 @@ let rec loop b =
   end else
     ()
 ```
+
 という末尾再帰な関数`loop`で表現できます．
 
 ### ブラウザで走る OCaml 処理系
@@ -187,9 +207,11 @@ let rec loop b =
 > ;;
 > let x=S Z;;
 > ```
+>
 > のように`x`を束縛した際にどのようにして`ⅹ`の`Z`にアクセスするのか教えていただきたいです。爆速入門では、定義の際に`S of {?? : nat}`という形で定義されていたので上記の例のアクセスの仕方がわかりませんでした。
 
 パターンマッチを使うのが一番良いと思います．
+
 ```ocaml
 let x = S Z in
   match x with
@@ -197,32 +219,42 @@ let x = S Z in
   | S Z -> ... (* (1) *)
   | S x' -> ...
 ```
+
 のようにすれば`(1)`と書いてある部分の式で `Z` のところにアクセスすることができます．
 
 ### 参照への参照
 
 はい，できます．参照への参照もこんなふうに作れます．
+
 ```ocaml
 # ref (ref 1);;
 - : int ref ref = {contents = {contents = 1}}
 ```
+
 中身は `contents` フィールドの中身が再び `contents` フィールドを持つレコードになっているような値になっていますね．
 
 少し余談ですが，
+
 ```ocaml
 type a = a ref
 ```
+
 は参照への参照への参照への．．．と延々と続くような型になっていそうですが，このような型の定義は OCaml では許されません．
+
 ```ocaml
 # type a = a ref;;
 Error: The type abbreviation a is cyclic
 ```
+
 が，OCaml インタプリタを `ocaml -rectypes` のように `rectypes` オプションをつけて起動すると定義することができます．
+
 ```ocaml
 # type a = a ref;;
 type a = a ref
 ```
+
 では，このような `a` 型の値を作るにはどうしたらよいでしょうか．`let rec`を使うと作ることができます．
+
 ```ocaml
 # let rec (x:a ref) = ref x;;
 val x : a = {contents = <cycle>}
@@ -235,13 +267,16 @@ val x : a = {contents = <cycle>}
 # !(!(!(!x)));;
 - : a = {contents = <cycle>}
 ```
+
 指定した回数だけ参照の中を見る関数も書けます．
+
 ```ocaml
 # let rec f n x = if n = 0 then x else f (n-1) !x;;
 val f : int -> ('a ref as 'a) -> 'a = <fun>
 # f 100 x;;
 - : a = {contents = <cycle>}
 ```
+
 `f`の型に現れている`'a ref as 'a` は「`'a = 'a ref` を満たすような `'a`」という意味で，再帰型 (recursive type) と呼ばれます．
 
 ### OCaml のための参考書
@@ -266,23 +301,29 @@ val f : int -> ('a ref as 'a) -> 'a = <fun>
 
 ### 未確定の単相型
 
-> ocamlのコードをかいている際にたまに出てくる'_weak1のような型（型なのか？）が何なのかきになった。
+> ocamlのコードをかいている際にたまに出てくる'\_weak1のような型（型なのか？）が何なのかきになった。
 
 これは単相的な型変数です．[OCaml 教科書](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/mltext.pdf)の7.1.4節に解説してあるのですが，参照と多相性が共存する言語では，どのような場合に変数に多相型を与えて良いのかを注意深く設計しなければなりません．OCaml ではこのために値多相という方針を設けています．この教科書や講義でも解説しましたが，これは
+
 ```ocaml
 let x = e in
 ...
 ```
+
 のように `let` での束縛で式 `e` が評価が起こることのない*構文的に値である場合のみ*に`x`が多相型になりうるというポリシーです．したがって
+
 ```ocaml
 let f = fun x -> x in
 (f 3, f true)
 ```
+
 は，`f`に多相型 $\forall \alpha. \alpha \rightarrow \alpha$ が与えられるため，型付け可能となります．他方
+
 ```ocaml
 let f = (fun x -> x) (fun x -> x) in
 (f 3, f true)
 ```
+
 は，`(fun x -> x) (fun x -> x)` が関数適用式であり構文上は値ではないため，`f`に多相型が与えられず型エラーとなります．
 
 このときに
@@ -324,6 +365,7 @@ OCaml の REPL には `#install_printer` というディレクティブがあっ
 > 演算子 :: の意味は知らなかったので、五十嵐先生の Objective Caml 入門を読み直して復習しようと思います。インタプリタとコンパイラが「一行ずつ解釈」／「全体を翻訳」、という相対する概念であるという考え方を修正することが出来たのが今回最大の学びでした。
 
 `::`はリストを作るときに使うコンストラクタです．
+
 ```ocaml
 # 1 :: [];;
 - : int list = [1]
@@ -332,6 +374,7 @@ OCaml の REPL には `#install_printer` というディレクティブがあっ
 # 1 :: [2; 3; 4];;
 - : int list = [1; 2; 3; 4]
 ```
+
 から大体の動きを想像してもらうとありがたいです．
 
 ### OCaml における破壊的代入
@@ -355,13 +398,14 @@ OCaml では `fun f -> f 1` は
 
 ### 中置演算子
 
-> `(+);;` に対して `- : int -> int -> int = <fun>` が返ってくるということについて、
-`let sum a b= a+b;;` に対しても同じように `- : int -> int -> int = <fun>` が返ってくるため、`+` はこのような形で２つ引数をとる関数と同じ型のものだと考えたのですが、`+ 3 2` のように関数と同じ形で使おうとするとエラーになりました。`+` というのは関数とは別にocamlの中で特別に扱われるものであって、`+` の型が `int -> int -> int = <fun>` のように表されるのは便宜上そう返すようにしているだけということなのでしょうか？また、中置演算子のように使える形で新たに関数をプログラマが定義することは可能なのでしょうか？
+> `(+);;` に対して `- : int -> int -> int = <fun>` が返ってくるということについて、 `let sum a b= a+b;;` に対しても同じように `- : int -> int -> int = <fun>` が返ってくるため、`+` はこのような形で２つ引数をとる関数と同じ型のものだと考えたのですが、`+ 3 2` のように関数と同じ形で使おうとするとエラーになりました。`+` というのは関数とは別にocamlの中で特別に扱われるものであって、`+` の型が `int -> int -> int = <fun>` のように表されるのは便宜上そう返すようにしているだけということなのでしょうか？また、中置演算子のように使える形で新たに関数をプログラマが定義することは可能なのでしょうか？
 
 というより，`(+)` や `( * )` が中置演算子を普通の関数として使うための OCaml の記法と考える方がわかり良いかもしれません． OCaml には[中置演算子や前置演算子として使えるシンボルやその結合や優先度があらかじめ定められています](https://ocaml.org/manual/lex.html#infix-symbol)．これらのシンボルは[`Stdlib` モジュールで定義](https://ocaml.org/api/Stdlib.html)されていて，`(+)`や`( * )`はここで定義されています．`Stdlib` は特別なモジュールで，この中の定義はプログラム開始時点ですべて使えることになっています．たとえば
+
 ```ocaml
 (+) 1 2
 ```
+
 と入力して評価してみましょう．
 
 （ところで，なぜ `(*)` ではなく `( * )` と書いているのでしょう．）
@@ -379,24 +423,26 @@ val ( ^^^ ) : int -> int -> int = <fun>
 
 ### `|> 演算子
 
-
 > `|>` はどういう役割を持つ演算子なのでしょうか？
 
 [`Stdlib` で定義されている演算子](https://ocaml.org/api/Stdlib.html)です．一般にはパイプライン演算子と呼ばれています．説明を見ると
 
-> `val (|>) : 'a -> ('a -> 'b) -> 'b`
-> Reverse-application operator: x |> f |> g is exactly equivalent to g (f (x)). Left-associative operator, see Ocaml_operators for more information.
+> `val (|>) : 'a -> ('a -> 'b) -> 'b` Reverse-application operator: x |> f |> g is exactly equivalent to g (f (x)). Left-associative operator, see Ocaml_operators for more information.
 
 と書いてあります．つまり `x |> f |> g` のように書くと `g (f x)` と同じ意味です． `|>` の方がカッコが少ないのと，`x` という値が処理 `f` と処理 `g` をこの順番に通過するという感じがあって，こっちの方が読みやすい場合があったりします．組み込み等で注目されている[Elixir](https://elixir-lang.org/)という言語でもこの演算子がフィーチャーされていますね．
 
 例えば，以下のコード
+
 ```ocaml
 String.split_on_char ' ' (String.uppercase_ascii (String.trim "Hello, world"))
 ```
+
 は，パイプライン演算子を使うと
+
 ```ocaml
 Hello, world  " |> String.trim |> String.uppercase_ascii |> String.split_on_char ' '
 ```
+
 と書き換えられます．この書き方だと処理の流れが文字の流れと同じ方向になって読みやすくなっていますね．
 
 ### 参照型
@@ -413,8 +459,7 @@ Hello, world  " |> String.trim |> String.uppercase_ascii |> String.split_on_char
 
 ### Unused variable
 
-> ・Warningが出ててもテストがうまくいけば良いのでしょうか？
-`[unused-var-strict]: unused variable` ~ がかなりでます。
+> ・Warningが出ててもテストがうまくいけば良いのでしょうか？ `[unused-var-strict]: unused variable` ~ がかなりでます。
 
 本来は Warning はバグがある兆候なので無視すべきではありませんが，今回はテストが通ればいいです．Unused variable 例外は定義した変数が一度も使用されていないときに出ます．変数は普通使うから定義するものなので，これが出るということはなにか間違っている場合があります．（間違ってない場合も相当あるのですが．）
 
@@ -423,10 +468,12 @@ Hello, world  " |> String.trim |> String.uppercase_ascii |> String.split_on_char
 > MiniML4: 再帰的関数定義の導入のページに，「単純化のため再帰的定義の対象を関数に限定する」とあるが，関数以外の再帰とはどのようなものがあるのか．
 
 例えば
+
 ```ocaml
 type t = { head: int; tail: t}
 let rec x = { head = 1; tail = x}
 ```
+
 のようなのがあります．ところでこの`x`をインタプリタで評価するとちょっとおもしろいですよ．
 
 ### 言語処理系のバージョンアップについて
@@ -454,17 +501,18 @@ int *p = a;
 
 のように `p` を配列 `a` の先頭を指すポインタにすると，`p+5`のようにして配列の途中を指すポインタを作ることができますが，参照はそのようなポインタ演算はできないようになっています．（これで答えになっているだろうか．）
 
-
 ### なぜ `rec`?
 
 > "再帰関数の実装について、説明を読む限りは大まかなイメージができたと思ったのですが、実際にOCamlで実装するとなるとややこしいと思いました。OCamlと違ってC#やHaskellなどは再帰関数を定義するときにrecで区別することがないので実装が少し違うのか気になりました。"
 
 `rec` で区別する理由は，OCaml で以下のようなイディオムを使うことが多いためです．
+
 ```ocaml
 let rec fact n res = if n = 0 then res else fact (n-1) (n*res) in
 let fact n = fact n 1 in
 fact 5
 ```
+
 1行目で定義している`fact`は末尾再帰版の階乗関数です．2行目の右辺の`fact`は一行目で定義された`fact`を指しています．これはシャドウイングによって，`fact`を再定義しているわけです．もし`let`と`let rec`の区別がなく，全部再帰的定義とする場合，こういうイディオムを使うのは難しくなります．
 
 なお，この辺の事情は[古瀬淳さんのブログによくまとまっています．](https://camlspotter.hatenablog.com/entry/20110509/1304933919)
@@ -521,7 +569,7 @@ let fact n =
 
 ### `open`
 
-> 	問題5のコードの最初の部分にある"open List "は何をしているのですか。
+>     問題5のコードの最初の部分にある"open List "は何をしているのですか。
 
 これは `List` モジュールで定義されている関数を，これ以降 `List.` をつけて呼び出さなくても良いという記法です．`List` モジュールの中には，例えばリストの長さを計算する関数 `length` が定義されていますが，これを呼び出すためには `List.length` のようにモジール名を関数の前につける必要があります．これを `length` と単に書くだけで呼び出せるようにするのが `open List` のやっていることです．便利なのですが，複数のモジュールで `length` という関数が定義されていたときにどの関数が呼び出されるかがわかりにくくなるので，使用は最小限に留めるのが吉．
 
@@ -538,10 +586,12 @@ let fact n =
 ### 関数適用と結合
 
 > repr S(S(S(S(Z))))とすると
+>
 > ```ocaml
 > this function has type nat-> int
 > it is applied to too many arguments; maybe you forgot a';'
 > ```
+>
 > とでてきたのですがどういうことですか。
 
 これは OCaml のハマりどころの一つです．`repr (S(S(S(S(Z)))))` のようにカッコを引数の周りにつけると解決するはずです．
@@ -551,24 +601,31 @@ let fact n =
 ### `else`
 
 > 例えば，
+>
 > ```ocaml
 > let x = ref 0;;
 > let set v = x := v;;
 > ```
+>
 > という関数があったとき，`set v`の結果は`unit`型なので`else`文を省略して
+>
 > ```ocaml
 > if (!x = 0) then set 1;;
 > ```
+>
 > と書けますが，
+>
 > ```ocaml
 > let set_ v = x := v; v;;
 > ```
+>
 > と，値を代入したついでにその値を返すような関数の場合，`set_ v` の結果は`int`型なので
+>
 > ```ocaml
 > if (!x = 0) then set_ 1;;
 > ```
-> と書くとエラーになります．
-> このような関数をelse文なしで実行する方法はありますか．
+>
+> と書くとエラーになります．このような関数をelse文なしで実行する方法はありますか．
 
 `ignore`という，値を無視する関数があります．型は`'a -> unit`です．これを使うと
 
@@ -584,7 +641,6 @@ let fact n =
 > 配布コードの内のmain.mlのlet ()の（）は関数名ですか？それとも何か特別な記法の一つなのですか。（）の部分を変化させてビルドしたら通らなかったので少し不思議に思いました。
 
 この`()`は実はパターンです．`let x = ...`の`x`の場所には，実は`match`式で使うようなパターンを書くことができます．（例えば`let (x,y) = ...` とか `let Hoge y = ...` とか書くことができます．）`()`は`unit`型の値にのみマッチするパターンです．したがって，`let () = ...`は`...`のところを評価して，その評価結果が`()`であることをチェックする，という挙動になります．`...`の場所が`unit`型であることが分かっているときには，このように明示的に`let () = ...`と書く方が堅牢です．（`let _ = ...`と書いても多分コンパイルは通るのですが，`...`の場所を間違って編集して`unit`型以外の式にしてしまったとしてもエラーを知らせてくれなくなります．）
-
 
 ### OCaml における配列
 
@@ -622,17 +678,21 @@ ghci> (fact 0, fact 5)
 ### バッチインタプリタ
 
 > Exercise3.3.3について、バッチインタプリンタが何かわかりません。例えば、以下のプログラム
+>
 > ```ocaml
 > let x = 2 ;;
 > x;;
 > true;;
 > ```
+>
 > が書かれたファイルmain.mlがあったとして、これを `miniml main.ml`により、実行したときに
+>
 > ```ocaml
 > val x : int = 2
 > - : int = 2
 > - : bool = true
 > ```
+>
 > を出力し、環境にxを束縛すればよいということでしょうか？
 
 はい，そういうことです．「バッチ」とは「塊」という意味で．いくつかの宣言が塊になってやってきても処理できるように改造してくださいという意味です．
@@ -681,7 +741,7 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
 
 #### 構文の定義について
 
-> "Parser.mlyの文法規則の記述の部分の質問です。構文解析器はトークン列から抽象構文木に変換するものだと認識しているのですが、その場合規則の最初はトークン列のTRUE SEMISEMIが来ると思ったのですが、なぜ_Expr_ SEMISEMIから開始しているのでしょうか"
+> "Parser.mlyの文法規則の記述の部分の質問です。構文解析器はトークン列から抽象構文木に変換するものだと認識しているのですが、その場合規則の最初はトークン列のTRUE SEMISEMIが来ると思ったのですが、なぜ*Expr* SEMISEMIから開始しているのでしょうか"
 
 `TRUE SEMISEMI` だと，`true;;` というプログラムしか構文解析できなくなってしまいます．`Expr SEMISEMI` にしていれば，非終端記号 `Expr` から導出されるものが `SEMISEMI` の前に来れます．`parser.mly` の定義を丁寧に追うと，`Expr` から `TRUE` が導出できるのがわかると思います．
 
@@ -693,6 +753,7 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
 
 1. `dune-project` ファイルの `(lang dune 1.6)` を `(lang dune 3.0)` に，`(using menhir 2.0)` を `(using menhir 2.1)` に置き換える．
 2. `dune` ファイルの
+
 ```
 (env
  (dev
@@ -700,7 +761,9 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
    (:standard -warn-error -A -w -39)
 )))
 ```
+
 を
+
 ```
 (env
  (dev
@@ -709,9 +772,8 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
    (:standard -warn-error -A -w -39)
 )))
 ```
-に変更
-3. `dune runtest` を実行．
-4. `_build/default/src/parser.automaton` をエディタで開く．
+
+に変更3. `dune runtest` を実行．4. `_build/default/src/parser.automaton` をエディタで開く．
 
 （うまく行かなったら Slack で知らせてください．）
 
@@ -732,18 +794,20 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
 > main.ml の各行末に ;; を入れ、 let () = を削除しても普通に動いたのですが、なぜここで let () = のような書き方をしているのでしょうか。
 
 いくつか理由はあると思いますが
-+ 式の評価結果の型が unit であることを強制するため．
-+ どこが main の式であるかを見た目わかりやすくするため．
-が大きいかなと思います．
+
+- 式の評価結果の型が unit であることを強制するため．
+- どこが main の式であるかを見た目わかりやすくするため．が大きいかなと思います．
 
 ### 複数の定義
 
 > MiniMLで今後"i"や"v"などを変数として宣言することはできないのでしょうか？
 
 `let`宣言を実装すれば可能です．普通の OCaml と同様に，
+
 ```ocaml
 # let i = 100;;
 ```
+
 のように入力すると`i`が`100`に再定義されます．
 
 ### MiniML インタプリタのモジュール構成について
@@ -775,12 +839,14 @@ ocamllex がどの程度の文法クラスまでを表現できるかは，あ�
 ### 再帰関数の実装方法
 
 > 静的束縛関する質問です。関数を表す値に環境を入れるという方法を取るのではなく、関数を定義したときにその定義式に現れる自由変数を評価し、即値として関数に入れておく、という考え方はよくないのでしょうか。例えば問題 2 で例として使ったコードにおいて:
+>
 > ```ocaml
 > let f =
 >     let x = 2 in
 >     fun y -> x
 > in f false;;
 > ```
+>
 > 関数 f は (id, body, env) = (""f"", FunExp(""y"", Var ""x""), [(""x"", 2), ......]) というように表されていると思うのですが、定義の時点で関数の本体式 y -> x を、束縛変数 y を除いた部分だけ評価してしまって y -> 2 として、(id, body) = (""f"", FunExp(""y"", ILit 2)) と保存してしまっても問題ないかと思っております。
 
 はい，これはよい気づきで，再帰関数の扱いを工夫すればMiniMLくらいであればうまくいくかもしれないのですが，一般にはうまくいきません．挙げてもらった例では `x` の束縛先が `3` というすでに値になっている式なので置き換えてしまう方法で上手くいくのですが，
@@ -809,19 +875,22 @@ let f () = (print_string "hoge", print_string "hoge") in
 
 ### 関数の定義時に変数をその値に置き換えれば関数閉包はいらない？
 
-> 	関数作成時の環境をまるごとクロージャとして保存したのでは，関数で参照しない変数の情報まで保存することになり，無駄な情報が多すぎるので，関数の定義時に変数をその値に置き換えるほうが効率的ではないかと思った．例えば，
+>     関数作成時の環境をまるごとクロージャとして保存したのでは，関数で参照しない変数の情報まで保存することになり，無駄な情報が多すぎるので，関数の定義時に変数をその値に置き換えるほうが効率的ではないかと思った．例えば，
+>
 > ```ocaml
 > let x = 3 in
 > let f () = print_int x in
 > let x = 4 in
 >   f ()
 > ```
+>
 > において，fを定義した時点で，xに3を代入して
+>
 > ```ocaml
 > let f () = print_int 3 in
 > ```
-> と解釈してしまったほうが良いのではないか．
-> また，このようにした場合，何か問題が起きるのだろうか．
+>
+> と解釈してしまったほうが良いのではないか．また，このようにした場合，何か問題が起きるのだろうか．
 
 まず，環境をまるごとクロージャとして保存するのは無駄というのは正しいです．なので，実際には関数中で参照しうる変数に関する情報のみをクロージャに保存しておくと良いかもしれません．
 
@@ -847,13 +916,15 @@ let f () = (print_string "hoge", print_string "hoge") in
 
 ### `Environment.t`
 
-> 	miniml3の関数の導入のところでeval.ml内の、
+>     miniml3の関数の導入のところでeval.ml内の、
+>
 > ```ocaml
 > type exval =
 > IntV of int
 > | BoolV of bool
 > | ProcV of id * exp * dnval Environment.t
 > ```
+>
 > の dnval Environment.tがクロージャが作成された時点の環境をデータ構造に含めるためのものだということは分かるのですが、この文がどういう意味合いを持っているのかが分からないです。
 
 > 型exvalの定義にProVを加える際に、単にid*exp*Environment.tとするのではなくid*exp* dnval Environment.t のようにdnvalを書く必要がある理由がよく分かりませんでした。
@@ -869,6 +940,7 @@ let f () = (print_string "hoge", print_string "hoge") in
 これは denoted value の略です．変数が指す (denote する) 値ということです．[教科書](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/chap03-2.html)を見てもらうとよいかなと思います．講義中にも少し言及したので，必要であればそちらも．（どの回だったっけ...）
 
 OCaml では一旦変数を束縛すると，その束縛先を変更することはできません．他方，C言語では変更することができます．
+
 ```c
 int main(int argc, char **argv) {
     int x = 0;
@@ -876,6 +948,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 ```
+
 したがって，`x`は変更可能なデータ，すなわち OCaml で言うところの参照っぽいものに束縛されているはずです．他方，上記ソースコードの `(A)` の行では，`=`の右辺で`x`が評価されていますが，その評価結果は（参照ではなく）現在参照に入っている値です．すなわち，`x`が束縛されている先の値 (denoted value) は参照であるのに，`x`を評価して出てくる値 (expressed value) は参照ではないということが起こっています．言語によってはこのような区別をする必要があるので，今回のソースコードでは分けています．
 
 実際に，今回のソースコードでは環境は変数の `dnval` への束縛であるのに対して，`eval_exp`で返ってくる評価結果は`exval`になっています．
@@ -889,6 +962,7 @@ int main(int argc, char **argv) {
 ### `^[[C` とは
 
 > minimlの標準入力で左ボタンおしたら下記のような文字が入力されます。これはなんなんでしょうか。
+
 ```
 # ^[[C"
 ```
@@ -937,22 +1011,21 @@ Procedure value のつもりです．
 
 ### OCaml の REPL
 
-> Ubuntu上でocamlを実行しているのですが、1個上の実行をもう一回実行したいときに上ボタンを押しても
-> `# ^[[A`
-> のような文字列が表示されます。
-> 意図通りになるようにすることは可能ですか？
+> Ubuntu上でocamlを実行しているのですが、1個上の実行をもう一回実行したいときに上ボタンを押しても `# ^[[A` のような文字列が表示されます。意図通りになるようにすることは可能ですか？
 
 いくつか方法があるのですが，一番簡単なのは [utop](https://github.com/ocaml-community/utop) という高機能な OCaml の REPL を使うことです． `opam install utop` をして， `ocaml` を実行する代わりに `utop` を実行してみてください．使い方は普通の REPL と同じですが，上キーとかが使えます．
 
 #### パターン
 
 > パターンマッチングを用いた関数の引数は型そのものなのかそういう型を持った値なのかどちらでしょうか。また、パターンマッチングで使えるのはヴァリアント型だけなのでしょうか。つまり、例えば `int` や `bool` などの基本型を用いて
+>
 > ```ocaml
 > match x with
 > | int -> 0
 > | bool -> int -> 1
 > ;;
 > ```
+>
 > のような書き方も可能なのでしょうか（これではパターンが尽くせていなくてエラーが出そうですが、そもそもパターンを尽くしているとはどういうことなのかもついでに教えていただけると嬉しいです）
 
 [OCaml入門](https://kuis-isle3sw.github.io/IoPLMaterials/textbook/mltext.pdf)の3.2.2節と5.2節に目をまず通してみてください．
@@ -989,9 +1062,7 @@ let plus x y =
 
 ### コンストラクタ
 
-> また、上の質問と繋がりますがヴァリアント型の定義の例えば
-> type furikake = Shake | Katsuo | Nori;;
-> における「Nori」や「Shake」の部分はこれはそもそも何なのでしょうか。これらは「型」なのか「値」なのか「式」なのか、それとも全く新しい別の何かなのでしょうか。
+> また、上の質問と繋がりますがヴァリアント型の定義の例えばtype furikake = Shake | Katsuo | Nori;; における「Nori」や「Shake」の部分はこれはそもそも何なのでしょうか。これらは「型」なのか「値」なのか「式」なのか、それとも全く新しい別の何かなのでしょうか。
 
 多分こっちの例の方がわかりやすいかもです．
 
@@ -1038,10 +1109,10 @@ OCaml コンパイラは（そしていろんな言語のコンパイラは）�
 
 OCaml ではアドホック多相のサポートがありません．一般にアドホック多相を安全に言語に導入するためには，(1) 実行時の値の表現を工夫するか，(2) 実行時の値の表現は変えずに型推論アルゴリズムを工夫するかのいずれかが必要となります．(1) は実行時のオーバーヘッドの問題があり，(2) は型推論アルゴリズムが複雑になるという問題があります．例えば (2) の設計方針に従って `+` を `int -> int -> int` と `float -> float -> float` の両方としてオーバーロードする（すなわち，型に応じて整数の加算と浮動小数の加算のいずれかを `+` の適切な実装として選ぶ）ためには，`e1 + e2` という式の型推論を行ったときに
 
-* `e1`も`e2`も`int`であれば`int -> int -> int`の`+`を使う
-* `e1`も`e2`も`float`であれば`float -> float -> float`の`+`を使う
-* `e1`が`int`で`e2`が`float`であれば，`e1`を`float`に変換した上で，`float -> float -> float`の`+`を使う
-* `e2`が`int`で`e1`が`float`であれば，`e2`を`float`に変換した上で，`float -> float -> float`の`+`を使う
+- `e1`も`e2`も`int`であれば`int -> int -> int`の`+`を使う
+- `e1`も`e2`も`float`であれば`float -> float -> float`の`+`を使う
+- `e1`が`int`で`e2`が`float`であれば，`e1`を`float`に変換した上で，`float -> float -> float`の`+`を使う
+- `e2`が`int`で`e1`が`float`であれば，`e2`を`float`に変換した上で，`float -> float -> float`の`+`を使う
 
 のように型推論時にコード変換を行うことになります．（多分．）普通の型推論に比べてだいぶめんどくさそうですね．
 
@@ -1056,13 +1127,17 @@ OCaml ではアドホック多相のサポートがありません．一般に�
 > eval.ml のeval_declの役割がよくわかりません。eval_expなどでは、式が評価されて適切な値が返されているとわかるのですが、このeval_declでは何を評価して何を返しているのかうまく理解することができませんでした。
 
 eval_decl は OCaml での `;;` がついた文を表しています．あまり明示的には説明していませんが，OCaml では
+
 ```ocaml
 # 3 + 4;;
 ```
+
 のように，式を評価する文を書いたり，
+
 ```ocaml
 let x = 3;;
 ```
+
 のように，変数を定義する文を書いたりできます．前者の文は `eval_exp` を使って得た評価結果を画面に表示するだけなのですが，後者は REPL で使う環境に `x` の 3 への束縛を追加するという効果があり，普通の式の評価とは違っているため，`eval_exp` と `eval_decl` を分けています．
 
 ### parser.mly や lexer.mll はどういう言語で書いてある？
@@ -1084,11 +1159,13 @@ ocamllex や menhir は通常の OCaml とは文法の異なる .mll ファイ�
 （コードのレイアウトがちょっと面倒だったので削りました．）
 
 多分大丈夫だと思います．が，OCamlではクロージャを出力するときに，単に`<fun>`と表示されます．
+
 ```ocaml
 # let x = fun n -> n + 1;;
 val x : int -> int = <fun>
 #
 ```
+
 必ずしもコードの文字列表現が手に入るわけではないためこのようになっているんだと思います．多分．
 
 ### meta-circular interpreter
@@ -1113,9 +1190,7 @@ eval.ml は，現在我々が実装しているインタプリタを実現する
 
 例えばテンソルの形の不一致などは検出が困難ですね．これについて，最近の国際会議でこんな研究が発表されました．興味があれば読んでみてください．
 
-Momoko Hattori, Naoki Kobayashi, Ryosuke Sato:
-Gradual Tensor Shape Checking. ESOP 2023: 197-224
-https://link.springer.com/chapter/10.1007/978-3-031-30044-8_8
+Momoko Hattori, Naoki Kobayashi, Ryosuke Sato: Gradual Tensor Shape Checking. ESOP 2023: 197-224 https://link.springer.com/chapter/10.1007/978-3-031-30044-8_8
 
 ### 動的型付け言語に後付で型ヒントを追加する難しさ
 
@@ -1123,10 +1198,7 @@ https://link.springer.com/chapter/10.1007/978-3-031-30044-8_8
 
 一般に後付けで型を入れるのは結構たいへんと言われています．今日ちょっと話をした[Types and Programming Language](https://m.kulib.kyoto-u.ac.jp/webopac/EB05985904)の第一章でも以下のように書いてあります．
 
-> Retrofitting a type system onto a language not designed with typechecking in mind can be tricky; ideally, language design should go hand-in-hand with type system design.
-> One reason for this is that languages without type systems—even safe, dynamically checked languages—tend to offer features or encourage programming idioms that make typechecking difficult or infeasible. Indeed, in typed languages the type system itself is often taken as the foundation of the design and the organizing principle in light of which every other aspect of the design is considered.
-> Another factor is that the concrete syntax of typed languages tends to be more complicated than that of untyped languages, since type annotations must be taken into account. It is easier to do a good job of designing a clean and comprehensible syntax when all the issues can be addressed together.
-> The assertion that types should be an integral part of a programming language is separate from the question of where the programmer must physically write down type annotations and where they can instead be inferred by the compiler. A well-designed statically typed language will never require huge amounts of type information to be explicitly and tediously maintained by the programmer. There is some disagreement, though, about how much explicit type information is too much. The designers of languages in the ML family have worked hard to keep annotations to a bare minimum, using type inference methods to recover the necessary information. Languages in the C family, including Java, have chosen a somewhat more verbose style.
+> Retrofitting a type system onto a language not designed with typechecking in mind can be tricky; ideally, language design should go hand-in-hand with type system design. One reason for this is that languages without type systems—even safe, dynamically checked languages—tend to offer features or encourage programming idioms that make typechecking difficult or infeasible. Indeed, in typed languages the type system itself is often taken as the foundation of the design and the organizing principle in light of which every other aspect of the design is considered. Another factor is that the concrete syntax of typed languages tends to be more complicated than that of untyped languages, since type annotations must be taken into account. It is easier to do a good job of designing a clean and comprehensible syntax when all the issues can be addressed together. The assertion that types should be an integral part of a programming language is separate from the question of where the programmer must physically write down type annotations and where they can instead be inferred by the compiler. A well-designed statically typed language will never require huge amounts of type information to be explicitly and tediously maintained by the programmer. There is some disagreement, though, about how much explicit type information is too much. The designers of languages in the ML family have worked hard to keep annotations to a bare minimum, using type inference methods to recover the necessary information. Languages in the C family, including Java, have chosen a somewhat more verbose style.
 
 すごく雑にまとめると
 
@@ -1171,7 +1243,7 @@ https://link.springer.com/chapter/10.1007/978-3-031-30044-8_8
 
 ### 決定不能な型システム
 
-> 決定不能な型システムで実用的なものは何かありますか？ 
+> 決定不能な型システムで実用的なものは何かありますか？
 
 授業中で触れた篩型 (refinement types) を用いた型システムは，refinement に用いる述語の表現力がある程度高い場合に決定不能です．しかしながら，[LiquidHaskell](https://ucsd-progsys.github.io/liquidhaskell/)のように実用的な処理系が存在します．
 
@@ -1212,7 +1284,7 @@ https://link.springer.com/chapter/10.1007/978-3-031-30044-8_8
 ### C# におけるエスケープ解析
 
 > 最近、C#の機能として参照型の参照先が存在することを保証するというのが存在するのを知ったのですが、以下のような複雑な条件式についても、出所が存在しない参照型はコンパイルエラーになるようです。
->
+
 ```csharp
 private static ref int Error(ref int x, int n)
         {
@@ -1223,6 +1295,7 @@ private static ref int Error(ref int x, int n)
             return ref n >= 5 ? r1 : r2;
         }
 ```
+
 > この実装にも型推論と同様の仕組みが働いているように思うので、かなり便利なアルゴリズムなのだと感じました。"
 
 おお，これは面白いですね．これはいわゆるエスケープ解析というやつで，関数内で定義された値が関数定義の外に出ていきうるかというのを解析する手法です．型を用いたエスケープ解析としては[こんな論文](https://www.cambridge.org/core/journals/journal-of-functional-programming/article/typebased-escape-analysis-for-functional-languages/04423A17BA9A127ADE9BDD149ABF79B2)があります．
@@ -1279,8 +1352,7 @@ private static ref int Error(ref int x, int n)
 
 ### MiniML の型システムの保守性を排することの有用性
 
-> 「型システムは保守的である」の議論についてですが、このような保守性を言語から排することで表現力が上がる例があまり思い浮かびません。これは型システムの有る言語になれてしまっているからでしょうか。
-> もちろん全体としてあまり実害が無いので保守的なシステムが多くの言語で選択されているのだとは思いますが、この保守性を排する(より広範な表現を認める)ことが部分的にでも有用な例がありますでしょうか。
+> 「型システムは保守的である」の議論についてですが、このような保守性を言語から排することで表現力が上がる例があまり思い浮かびません。これは型システムの有る言語になれてしまっているからでしょうか。もちろん全体としてあまり実害が無いので保守的なシステムが多くの言語で選択されているのだとは思いますが、この保守性を排する(より広範な表現を認める)ことが部分的にでも有用な例がありますでしょうか。
 
 `if` 式の保守性とは違うのですが，リストに様々な型の値を格納したくなるというユースケースはあるかもしれません．OCaml では `[1;2;3] : int list` や `[true;false] : bool list` のように一つのリストには同じ型の値しか格納することができません．`[1;true;"hoge"]` はエラーになるので，こういうことをしたければ
 
@@ -1319,8 +1391,7 @@ fun () ->
 
 ### なんで一回等式集合にもどす？
 
-> 講義資料のe1+e2 式に対する型推論について「型代入 θ1,θ2 を α=τ という形の方程式の集まりとみなして，θ1∪θ2∪τ1=int,(τ2,int) を単一化し，型代入θ3を得る．
-> θ3と int を出力として返す．」とあったが、なぜ一度型代入を等式制約に戻し、θ1∪θ2∪τ1を単一化するのかわからなかったです。また、τ1というのは型だが等式制約として扱うθ1やθ2と和集合をとっても良い理由もよくわかりませんでした。
+> 講義資料のe1+e2 式に対する型推論について「型代入 θ1,θ2 を α=τ という形の方程式の集まりとみなして，θ1∪θ2∪τ1=int,(τ2,int) を単一化し，型代入θ3を得る．θ3と int を出力として返す．」とあったが、なぜ一度型代入を等式制約に戻し、θ1∪θ2∪τ1を単一化するのかわからなかったです。また、τ1というのは型だが等式制約として扱うθ1やθ2と和集合をとっても良い理由もよくわかりませんでした。
 
 まず
 
@@ -1354,7 +1425,6 @@ true
 
 は，`y` の型として割り当てられた型変数 $\beta$ が別の場所で `true` の型 $\mathbf{bool}$ に具体化されるせいで，多相性を与えてはいけないのでした．もし何らかのプログラム解析で，例えば `fun y -> let f = fun () -> y in f ()  + 1` が絶対に関数適用されないということがわかるならば，$\beta$ がなにかの型に具体化されることもないので，多分多相性を与えても大丈夫です．（が，その場合は `f` を多相的に使うメリットもなさそう．）
 
-
 ### 最も保守的な型システム
 
 > 授業内容には直接関係ないですが、MinMLの型判断システムが保守的であるということを聞いて、最も保守的なシステムを持つ言語とは何か気になりました。またその言語が持つ保守的な特徴についても知りたいです。
@@ -1371,18 +1441,16 @@ true
 
 なお，静的な型付けと動的な型付けを一つの言語の中で併用できる漸進的型付け (gradual typing) と呼ばれる Siek と Taha に始まる研究があって，五十嵐先生も研究しています．興味があれば[このブログ](https://wphomes.soic.indiana.edu/jsiek/what-is-gradual-typing/)を読むと良いです．
 
-
 ### Soft typing
 
 > 保守的でない型推論を実際に行なっている言語の例はありますか？実用的にどの程度複雑なプログラムまで型推論が行われるのか知りたいです。
 
 条件分岐が起きるところで then 節と else 節の型が異なっていても良いような型システムとしては Soft Typing とかがあるかなと思います．
+
 - [Robert Cartwright, Mike Fagan: Soft Typing. PLDI 1991: 278-292](https://dl.acm.org/doi/10.1145/113445.113469)
-- [Andrew K. Wright, Robert Cartwright:
-A Practical Soft Type System for Scheme. ACM Trans. Program. Lang. Syst. 19(1): 87-152 (1997)](https://dblp.org/pid/84/5522.html)
+- [Andrew K. Wright, Robert Cartwright: A Practical Soft Type System for Scheme. ACM Trans. Program. Lang. Syst. 19(1): 87-152 (1997)](https://dblp.org/pid/84/5522.html)
 
 今広く使われている言語でこういう感じの型システムをサポートしているものがあるかどうかはちょっとわかりません．見つけたらおしえてください．
-
 
 ### 型システムと抽象解釈
 
@@ -1415,7 +1483,7 @@ $(\forall \alpha. \rightarrow \alpha) \rightarrow (\forall \alpha. \rightarrow \
 とりあえず順を追って評価がどう起こるかを説明してみます．
 
 - `(fun f -> (f 1, f true)) (fun x -> x)` をトップレベルで評価すると，`(fun f -> (f 1, f true))`を評価することによってクロージャが生成されます．
-    - このクロージャ中には空の型環境が保持されます．
+  - このクロージャ中には空の型環境が保持されます．
 - `f`の`(fun x -> x)`の評価結果への束縛で，この（空の）型環境を拡張した上で，`(f 1, f true)`が評価されます．
 - したがって，`(f 1, f true)`の評価中には`f`は恒等関数に束縛されており，結果として`(1,true)`が返ってくるというわけです．
 
@@ -1467,16 +1535,13 @@ utop #
 
 また，参考文献として
 
-- Daniel P. Friedman and Mitchell Wand: Essentials of Programming Languages, third edition.  MIT Press, 2008.
+- Daniel P. Friedman and Mitchell Wand: Essentials of Programming Languages, third edition. MIT Press, 2008.
 
 を挙げておきます．EOPL という略称で知られる教科書です．Schemeという言語でインタプリタを作っていきます．KULINEにも電子版があります．9章にオブジェクト指向言語の章があります．オブジェクト指向言語の特徴としては，継承等のオブジェクト指向特有の機構に加えて，メソッド呼び出しで実際に呼び出されるメソッドが実行時にならないと決まらない点があって，ここをどう解決するかが詳しく書かれています．
 
-
 ### `fresh_tyvar`
 
-> "Syntax.fresh_tyvarの中の一行、
-> let counter = ref 0 in (* 次に返すべき tyvar 型の値を参照で持っておいて， *)
-> がよくわかりません。確かにこうすれば変更可能な整数を持つことができますが、それがtyvar型になるのはなぜでしょうか。"
+> "Syntax.fresh*tyvarの中の一行、let counter = ref 0 in (* 次に返すべき tyvar 型の値を参照で持っておいて， \_) がよくわかりません。確かにこうすれば変更可能な整数を持つことができますが、それがtyvar型になるのはなぜでしょうか。"
 
 ```ocaml
 let fresh_tyvar =
@@ -1578,7 +1643,7 @@ let map_pair p (x,y) = (p.f x, p.f y);;
 
 ここにあります．やってみると面白いかもしれません．
 
-もう少しマニアックなのがお好みであれば，[F*](https://github.com/FStarLang/FStar) という言語をやってみると面白いかもしれません．（地獄を見るかもしれません．）副作用を持ちうるプログラムの性質を保証するための証明支援系で，OCaml に似た文法ですが，篩型や副作用を表す型などを用いていろいろな性質が検証できます．うちの研究室ではこの言語を用いてブロックチェーン Tezos で用いられるデータ構造の実装の正しさの証明をつけたりしています．これもチュートリアルが
+もう少しマニアックなのがお好みであれば，[F\*](https://github.com/FStarLang/FStar) という言語をやってみると面白いかもしれません．（地獄を見るかもしれません．）副作用を持ちうるプログラムの性質を保証するための証明支援系で，OCaml に似た文法ですが，篩型や副作用を表す型などを用いていろいろな性質が検証できます．うちの研究室ではこの言語を用いてブロックチェーン Tezos で用いられるデータ構造の実装の正しさの証明をつけたりしています．これもチュートリアルが
 
 - https://fstar-lang.org/tutorial/tutorial.html
 
@@ -1586,11 +1651,7 @@ let map_pair p (x,y) = (p.f x, p.f y);;
 
 ### 動的束縛のメリット？
 
-> 動的束縛の例として以下の例が授業で説明されていました．
-> let g f = let b = 5 in f 5;;
-> let f = fan a -> a + b in g f;;
-> この場合，fの引数をa,bの２つにすれば良いと感じます．そのうえで，引数を１つずつ固定したいならばカリー化すれば良いように思います．
-> つまるところ，私には動的束縛のメリットが感じられないです．ただ，コードが読みにくくなるだけのような気がします(単に静的束縛になれてしまっているからかもしれませんが)．動的束縛が静的束縛よりも有用である例があれば，教えて欲しいです．
+> 動的束縛の例として以下の例が授業で説明されていました．let g f = let b = 5 in f 5;; let f = fan a -> a + b in g f;; この場合，fの引数をa,bの２つにすれば良いと感じます．そのうえで，引数を１つずつ固定したいならばカリー化すれば良いように思います．つまるところ，私には動的束縛のメリットが感じられないです．ただ，コードが読みにくくなるだけのような気がします(単に静的束縛になれてしまっているからかもしれませんが)．動的束縛が静的束縛よりも有用である例があれば，教えて欲しいです．
 
 はい，個人的には同意です．ただ，環境変数やファイルから読み込んだ設定情報など，すべての関数から参照する必要があるが，それをいちいち全ての関数に引数として渡したくないようなときは，動的スコープも使い所があるかなと思います．（この例だとそういう用途はちょっと見えにくいですが．）
 
@@ -1603,6 +1664,7 @@ let map_pair p (x,y) = (p.f x, p.f y);;
 Implicit parameter は実際に Scala 等の実用的な言語にも採用されているそうです．
 
 うちの研究室メンバーから，以下のコメントがありました．
+
 > あと，静的束縛ではクロージャが定義時点での環境を保持するためによりメモリを消費します．これはメモリが貴重だったコンピュータ黎明期では大きなコストで，それを避けるために動的束縛が好まれたという歴史的な経緯があるようです．しかしメモリが潤沢にある現在では，そのようなコストを理由に動的束縛を採用することはほぼないでしょう．（要出典）
 
 もう一つ以下のコメントも貰いました．Emacs Lisp は Emacs でライブラリを書いたり設定ファイルを書いたりするのに使われる言語ですが，動的束縛が使われています．Emacs Lisp が動的束縛を採用している利点としては https://www.gnu.org/software/emacs/emacs-paper.html#SEC17 や https://www.emacswiki.org/emacs/DynamicBindingVsLexicalBinding を見てみるとよいです．また，和賀先生が[ちょっとしたデモ](https://gist.github.com/MasWag/337f91bfe149ad2e1083f142dd3f124a) と [二引数(?)足し算のデモ](https://gist.github.com/MasWag/d01fea7173994259304f50fe86102b0b) を書いています．
@@ -1610,35 +1672,42 @@ Implicit parameter は実際に Scala 等の実用的な言語にも採用され
 ### 型環境内の束縛の順序
 
 > 型環境内の束縛は自由に順序を入れ替えてよいということでしたが、その場合
->```ocaml
+>
+> ```ocaml
 > let x =0;
 > let x = true;
 > ```
+>
 > といった宣言をした際に、型環境内の束縛の順序を入れ替えると、二行目時点の型環境で`x:int`という風に判断してしまう可能性があるのではないでしょうか。
 
 ああ，なるほど，確かにそうですね．ありがとうございます．見落としていました．型環境に含まれる変数は互いに異ならなくてはならないという制約を設けたり，変数が複数回現れてもよいが順序を勝手に入れ替えてはいけないという制約を設けたりしないといけませんね．前者の場合は，挙げてもらったプログラムが型付け可能にならないような気がするかもしれませんが，別途束縛変数は名前替えをしてもよいということにして（そうしても意味は変わらないので）例えば
+
 ```ocaml
 let x = 0 in
 let x = true in
     x
 ```
+
 を
+
 ```ocaml
 let x1 = 0 in
 let x2 = true in
     x2
 ```
-というプログラムに implicit に名前替えをした上で型付けをする，ということになるかなと思います．
 
+というプログラムに implicit に名前替えをした上で型付けをする，ということになるかなと思います．
 
 ### OCaml における型エラースライシング
 
 > OCamlには 型エラースライシング (type-error slicing) のような方法でエラーが分かりやすく表示されないのはなぜなのでしょうか？
+>
 > ```ocaml
 > let rec f = fun x -> fun y ->
 > let w = y + 1 in
 > w :: y
 > ```
+>
 > を入れてみてもyはint listじゃなくてintだよというエラーが出てきてどこでintと判断されたかまでは出てきませんでした。
 
 型エラースライシングはシンプルな言語ではまあまあうまくいくのですが，OCaml のようにいろいろな言語機構が入っていると，どのようにスライシングすればよいかがあまり自明ではなく，かつ計算量も増大するから，なんじゃないかなと思っています．（が，試したことはないので，実際にはどうなのかはわかりません．実装してうまくいったらすごい．）
@@ -1660,7 +1729,6 @@ let x2 = true in
 > null安全という言葉を聞いたことがあるのですが，これは実行時にエラーが起こるため安全ということで合ってますか？それに対して静的に安全性を保証しようとしているのがOCamlの設計理念ということでしょうか？
 
 Null safety は，僕の理解では，nullがある言語において，nullチェックをせずに変数にアクセスしているようなプログラムを検出して**実行前に**エラーを報告するしくみです．したがって，これは静的な検証の一種です．型システムでこれを強制することも多いと思います．実際に型に「nullになりうる値か」「nullチェックを通過した値か」を表す情報を追加して，nullになりうるのにnullチェックを通過していない可能性のある変数へのアクセスがないことを保証することができます．
-
 
 ## 構文解析について
 
@@ -1735,22 +1803,24 @@ arbitrary_token_seq:
 ```
 
 のように，定義されている全トークンについて書き換え規則を書く必要がありそうです．また，(2)で何を返せばよいかもなかなか微妙です．（何も特に返したくはないが，それに相当する値は何になる？）また，このような `comment` がプログラムの任意の場所に現れることを許さないといけないので，例えば
+
 ```ocaml
 expr:
     expr PLUS expr { ... }
 ```
+
 みたいな文法は
+
 ```ocaml
 expr:
     comment expr comment PLUS comment expr comment { ... }
 ```
+
 のように書くことになってしまいそうです．というわけで，字句解析でなんとかするほうが楽という感じがします．
 
 ### Reduce 前後のアイテムの更新
 
-> reduce前後のアイテムの更新が分かりません。
-reduce前にアイテムを更新し、reduce後の記号を新たにシフトすると考えるのでしょうか。
-reduce後にスタックの状態に合致する規則を追加するのでしょうか。
+> reduce前後のアイテムの更新が分かりません。reduce前にアイテムを更新し、reduce後の記号を新たにシフトすると考えるのでしょうか。reduce後にスタックの状態に合致する規則を追加するのでしょうか。
 
 ![](https://i.imgur.com/2n5MuBT.png)
 
@@ -1771,12 +1841,11 @@ reduce後にスタックの状態に合致する規則を追加するのでし�
 
 この結果の集合をよく見ると，
 
-+ {S -> (.L)} は closure(S -> (.L)) に含まれており，
-+ かつ closure(S -> (.L)) 中に含まれる A -> α.Cβ の形のアイテムについて，C -> γ という生成規則があれば C -> .γというアイテムも含まれている
-+ closure(S -> (.L)) 中のアイテムを一つでも削除すると，これらの条件を満たさない
+- {S -> (.L)} は closure(S -> (.L)) に含まれており，
+- かつ closure(S -> (.L)) 中に含まれる A -> α.Cβ の形のアイテムについて，C -> γ という生成規則があれば C -> .γというアイテムも含まれている
+- closure(S -> (.L)) 中のアイテムを一つでも削除すると，これらの条件を満たさない
 
 という集合になっています．これが上記のスライドの数学的定義の意味です．
-
 
 ### LL(k) の k
 
@@ -1784,9 +1853,9 @@ reduce後にスタックの状態に合致する規則を追加するのでし�
 
 すみません，ちょっと調べたのですがわかりませんでした．停止しなくとも良いならば
 
-+ LL(1)構文解析表を作る
-+ 衝突が非終端記号 X と終端記号 a である場合は，そこだけ先読みを伸ばして（例えば aa と ab を先読み記号にしてみるなど）衝突が解消するかチェックする
-+ 衝突がなくなるまでこれを繰り返す
+- LL(1)構文解析表を作る
+- 衝突が非終端記号 X と終端記号 a である場合は，そこだけ先読みを伸ばして（例えば aa と ab を先読み記号にしてみるなど）衝突が解消するかチェックする
+- 衝突がなくなるまでこれを繰り返す
 
 とかで行けそうな気がするのですが，LL(k) であるならば k は高々いくつかということがわかってないと，この戦略では有限時間になりませんね．なにかわかったら教えて下さい．
 
@@ -1795,10 +1864,9 @@ reduce後にスタックの状態に合致する規則を追加するのでし�
 > LL(k)とLR(k)を比べると、どちらの方が早く解析できますか。
 
 同じ文法を同じ入力列で速度比較した場合ですよね．実際には実装して比較してみるしかないように思いますが，
-+ LR はスタックの管理があるので LL に比べて速度が遅くなりがちそう
-+ ただし LL はナイーブに実装するとスタックが深くなりすぎて stack overflow とか起こしそう
-という感覚があります．が，真面目に比較したものではないので話半分で聞いてください．
 
+- LR はスタックの管理があるので LL に比べて速度が遅くなりがちそう
+- ただし LL はナイーブに実装するとスタックが深くなりすぎて stack overflow とか起こしそうという感覚があります．が，真面目に比較したものではないので話半分で聞いてください．
 
 ### 文法の曖昧性
 
@@ -1824,7 +1892,7 @@ LL(1)構文解析表を作ったときに，表の1ますに規則が2つ以上�
 
 ### menhir における構文解析アルゴリズム
 
-> menhirで起こられていたconflictの意味が分かりました。menhirではどのような構文解析アルゴリズムが用いられているのでしょうか？ 
+> menhirで起こられていたconflictの意味が分かりました。menhirではどのような構文解析アルゴリズムが用いられているのでしょうか？
 
 [ここ](http://gallium.inria.fr/~fpottier/menhir/)にあるように，LR(1)アルゴリズムです．
 
@@ -1833,6 +1901,7 @@ LL(1)構文解析表を作ったときに，表の1ますに規則が2つ以上�
 > first matchを実際に使う場合はあるのか
 
 たとえば今の演習用の字句解析器は
+
 ```ocaml
 {
 let reservedWords = [
@@ -1856,7 +1925,9 @@ rule main = parse
      }
 ...
 ```
+
 こう書いてあって，これは小文字アルファベットで始まる列をキーワードか識別子として認識します．これを
+
 ```ocaml
 rule main = parse
 ...
@@ -1908,12 +1979,11 @@ LL(1)に関しては入力がかかれたストリームの先頭の終端記号
 
 > LL(k)で、実用的に使われてるkの値はどれくらいなのか気になりました"
 
-[ANTLR](https://en.wikipedia.org/wiki/ANTLR)が一番よく使われているLL系のparser generatorだと思うのですが，LL(*)というのを使っているっぽいです．先読みのサイズが予めきまっていないアルゴリズムのようです．
+[ANTLR](https://en.wikipedia.org/wiki/ANTLR)が一番よく使われているLL系のparser generatorだと思うのですが，LL(\*)というのを使っているっぽいです．先読みのサイズが予めきまっていないアルゴリズムのようです．
 
 ### 左再帰除去
 
-> 左再帰除去について、これを行うと元の文の論理的構造が反映されないとのことでしたが、これは各演算子の結合性や優先度などの情報も保存されないという理解で正しいでしょうか。
-> まただとすれば、左再帰除去を行った文法を用いて構文解析木を構築してしまうと、文法的に正しいプログラムか否かの判定はできてもその後の実際の処理には役に立たないように思えるのですが、この除去後の文法に基づく構文解析木を元の文法に即した形に翻訳することはできるのでしょうか。
+> 左再帰除去について、これを行うと元の文の論理的構造が反映されないとのことでしたが、これは各演算子の結合性や優先度などの情報も保存されないという理解で正しいでしょうか。まただとすれば、左再帰除去を行った文法を用いて構文解析木を構築してしまうと、文法的に正しいプログラムか否かの判定はできてもその後の実際の処理には役に立たないように思えるのですが、この除去後の文法に基づく構文解析木を元の文法に即した形に翻訳することはできるのでしょうか。
 
 左再帰除去をした文法は，生成される言語としてはもとの文法と同じです．演算子の優先順序等についてですが，これは具体的に抽象構文木にどう変換するのかを見てみたほうが良いかもしれません．講義で説明した下図の右の文法で考えてみましょう．
 
@@ -1935,23 +2005,22 @@ LL(1)に関しては入力がかかれたストリームの先頭の終端記号
 
 LL(k)だと左再帰を含む文法は本質的に扱えないので，LL(k)についてはそのようなことはないというのが答えになるかなと思います．LR(k)文法については調べてみないとちょっとわからないです．（ただし，スライドのP245によればいかなるLR(k)文法としても書けないあいまいでない文脈自由文法が存在するっぽい？）LR(k)言語については，任意のk>0についてLR(k)言語のクラスとSLR(1)言語のクラスが一致することが以下の論文で証明されているらしいです．
 
-* Mickunas, Lancaster, and Schneider,  “Transforming LR(k) Grammars to LR(1), SLR(1) and (1,1) Bounded Right Context Grammars”, JACM, 23(3),
+- Mickunas, Lancaster, and Schneider, “Transforming LR(k) Grammars to LR(1), SLR(1) and (1,1) Bounded Right Context Grammars”, JACM, 23(3),
 
 したがって，言語$L$を生成するLR(k)文法が存在するならば，それを生成するSLR(1)文法やLR(1)文法が存在するということになります．へー．
 
 ところで，構文解析に関するほとんどの質問の答えは，以下の本に載っているっぽいですね．
 
-* Alfred V. Aho, Jeffrey D. Ullman: The theory of parsing, translation, and compiling
-https://dl.acm.org/doi/book/10.5555/578789
+- Alfred V. Aho, Jeffrey D. Ullman: The theory of parsing, translation, and compiling https://dl.acm.org/doi/book/10.5555/578789
 
 ### FIRST や FOLLOW を計算するツール
 
-> 構文解析結果を実験したいときに有用なツール等があれば教えていただけますと幸いです。
-> (人力でやるとミスしそうです。)
+> 構文解析結果を実験したいときに有用なツール等があれば教えていただけますと幸いです。(人力でやるとミスしそうです。)
 
 僕は実は知らなくて，問題作るたびに毎回ひいひい言いながら手計算しています．誰か見つけたら教えて下さい．（一回自分で書けばよいのですが．）
 
 と言いながら適当に調べて出てきたものを書いておきます．無保証です．
+
 - https://www.npmjs.com/package/first-follow?activeTab=dependencies
 
 あと，以前の TA の方からは，以下のコメントをもらいました．
@@ -1972,8 +2041,7 @@ https://dl.acm.org/doi/book/10.5555/578789
 
 ### 衝突が起きたときの parser
 
-> "Warning: 2 states have shift/reduce conflicts.
-Warning: 2 shift/reduce conflicts were arbitrarily resolved.実験中、パーサに誤った変更を加えてshift-reduce conflictが起きたが、""arbitararily""に解消されたといい、実行はなされた。これは何が起きているのでしょうか。"
+> "Warning: 2 states have shift/reduce conflicts. Warning: 2 shift/reduce conflicts were arbitrarily resolved.実験中、パーサに誤った変更を加えてshift-reduce conflictが起きたが、""arbitararily""に解消されたといい、実行はなされた。これは何が起きているのでしょうか。"
 
 通常 shift-reduce conflict が先読み記号 a で起きた状態では，a を読むと shift がなされる実装になっていることが多いです．これを arbitrarily に解消された，と書いているものと思われます．[Menhirマニュアル](https://gallium.inria.fr/~fpottier/menhir/manual.pdf)の6.3節を参照してみましょう．
 
@@ -2009,8 +2077,7 @@ Warning: 2 shift/reduce conflicts were arbitrarily resolved.実験中、パー�
 
 ### 静的型検査のメリット
 
-> 静的型検査について、教科書に上がっていた1億回のループを含むようなプログラムに対してだと、実行前に静的型検査を行うのはとても有意義だと思いましたが、それほど長くないプログラムの場合だと、むしろ型検査なしで実行を始めてしまって、実行していく中でエラーがあれば落ちる方式のほうが効率が上がるのではないかと思いました
-> （つまり、静的型検査にかかる時間が長いのであれば、必要な時だけ静的型検査を実行して、他の場合は検査なしで実行した方が、短時間で実行できそう）
+> 静的型検査について、教科書に上がっていた1億回のループを含むようなプログラムに対してだと、実行前に静的型検査を行うのはとても有意義だと思いましたが、それほど長くないプログラムの場合だと、むしろ型検査なしで実行を始めてしまって、実行していく中でエラーがあれば落ちる方式のほうが効率が上がるのではないかと思いました（つまり、静的型検査にかかる時間が長いのであれば、必要な時だけ静的型検査を実行して、他の場合は検査なしで実行した方が、短時間で実行できそう）
 
 良い質問ですね．静的型検査にかかる時間とプログラムの実行にかかる時間とのトレードオフは確かにあります．語り始めると講義時間では足りないので，僕が静的型検査推しな理由をいくつか書いておきます．反論を歓迎します．
 
@@ -2021,7 +2088,7 @@ Warning: 2 shift/reduce conflicts were arbitrarily resolved.実験中、パー�
 
 ### OCaml で使われている中間言語
 
-> 	Ocamlのコードをコンパイルする際に、実際に中間言語Cのようなものを人間がエディタで確認したり編集したりすることは可能なのでしょうか？
+>     Ocamlのコードをコンパイルする際に、実際に中間言語Cのようなものを人間がエディタで確認したり編集したりすることは可能なのでしょうか？
 
 `ocaml -dinstr` と起動して何か OCaml のプログラムを書いてみてください．内部で使われているバイトコードが出力されます．他にも `ocamlopt` コマンドには `-d...` というオプションがたくさんあって，このあたりがいろいろと内部情報を出力してくれます．試してみると面白そう．
 
@@ -2179,15 +2246,14 @@ end:
 
 ### GC か手動か
 
-> ガーベジコレクションの話について、JavaやOCamlのように自動でメモリを解放してくれた方が扱いやすそうなのに、なぜCやC++では手動解放を採用しているのですか？
-（手動でメモリを解放する良さは何ですか？）
+> ガーベジコレクションの話について、JavaやOCamlのように自動でメモリを解放してくれた方が扱いやすそうなのに、なぜCやC++では手動解放を採用しているのですか？（手動でメモリを解放する良さは何ですか？）
 
 ガーベジコレクション (GC) に対する手動メモリ管理のメリットとしては，例えば以下のようなものがあります．
 
-+ 単一 CPU しかない計算機で GC を行う場合は，GC のたびに計算が停止する．これはインタラクティブなプログラムやロボットや組み込みシステム等では望ましくない．
-+ GC だと不要なメモリ領域を検出することが難しいようなプログラムがある．例えば，プログラム開始時に大きなメモリ領域を確保して，その領域を実行中にちまちま使用するような場合とか．
-+ 並列プログラムで効率的にかつ正しく GC するのは，GC 中に他のプロセスがメモリの状態を書き換える場合があり，かなり大変．一旦すべての計算を止めて GC をして良いのであればまだ良いが，それでは効率が辛い．
-+ 手動メモリ管理であれば，不要になったメモリ領域を即その瞬間に解放することが可能．また，その際の後始末のための処理もその瞬間に行うことが可能．GC ではメモリが回収されるタイミングは予言できないので，こういうことは困難．
+- 単一 CPU しかない計算機で GC を行う場合は，GC のたびに計算が停止する．これはインタラクティブなプログラムやロボットや組み込みシステム等では望ましくない．
+- GC だと不要なメモリ領域を検出することが難しいようなプログラムがある．例えば，プログラム開始時に大きなメモリ領域を確保して，その領域を実行中にちまちま使用するような場合とか．
+- 並列プログラムで効率的にかつ正しく GC するのは，GC 中に他のプロセスがメモリの状態を書き換える場合があり，かなり大変．一旦すべての計算を止めて GC をして良いのであればまだ良いが，それでは効率が辛い．
+- 手動メモリ管理であれば，不要になったメモリ領域を即その瞬間に解放することが可能．また，その際の後始末のための処理もその瞬間に行うことが可能．GC ではメモリが回収されるタイミングは予言できないので，こういうことは困難．
 
 というわけで，何事もトレードオフがあるよね．
 
@@ -2232,7 +2298,6 @@ end:
 
 のように，フレームの上位側のメモリアドレスを常に保持するフレームポインタと呼ばれるレジスタを用意しておいて，`ra` や `saved ...` はアクセスするという意味でした．`$fp` からだとこれらの記憶場所は局所変数のサイズによらず定数になるので，アドレス計算のオーバーヘッドがなくなります．このとき，フレーム中には fp を退避するための領域をおいておくことが多いです．
 
-
 ### 危険なCプログラム
 
 > 講義内でアブナイCの挙動のお話がありましたが、このような危険な操作はどのレベルでどのように検知・阻止されるのでしょうか。
@@ -2251,20 +2316,17 @@ end:
 
 また，より網羅的な教科書としては Dragon book とも呼ばれる[有名な教科書](https://www.amazon.co.jp/dp/478191229X/)があります．構文解析の話がかなり詳しく書いてあり，また GC やデータフロー解析等による最適化や，コード生成における命令選択の話等も詳しく書いてあります．通読するのはしんどいかもですが，気になったところを拾い読みすると楽しいと思います．
 
-
 ### 本格的な言語のコンパイラではどのくらいの中間言語を経由するのか
 
 > 本格的な言語のコンパイラでは何段階ぐらいの中間言語を経由するのか気になりました。
 
 [CompCert](https://compcert.org/)という Coq という証明支援系で正しさの証明をつけた C コンパイラがあるのですが，[この図](https://compcert.org/diagram.png)を見てみると8個の中間言語を経ていますね．多分コンパイラによってこの辺はだいぶ変わると思います．
 
-
 ### アセンブリ言語は読めないといけない？
 
 > 上記のような問題のアセンブリ言語読解は、そらで全部できるようにしておいた方がよいのでしょうか。
 
 進もうとする専門分野にもよりますが，現時点では不要かなと思います．もちろんだいたいのアセンブリ言語にこんな感じの命令が存在する的な知識は有用だと思いますが，あまり must ではないです．
-
 
 ### スライドにコンパイラのターゲット言語は「通常」低級言語であると書かれていますが、高級言語から高級言語への（例えばC言語からJavaへ）変換が可能なコンパイラもあるのでしょうか。
 
@@ -2282,8 +2344,7 @@ end:
 
 ところで，GPT-4は以下のようにお考えのようです．
 
-> GitHub Copilotが役立っているようで良かったですね。AI技術の進化はプログラミングの世界にも大きな影響を与えており、プログラマーやソフトウェアエンジニアにも新たなスキルが求められています。
-> 形式検証の専門家として、プログラマーやソフトウェアエンジニアが時代の変化に適応し、生き残っていくためのアドバイスをいくつかご紹介します。
+> GitHub Copilotが役立っているようで良かったですね。AI技術の進化はプログラミングの世界にも大きな影響を与えており、プログラマーやソフトウェアエンジニアにも新たなスキルが求められています。形式検証の専門家として、プログラマーやソフトウェアエンジニアが時代の変化に適応し、生き残っていくためのアドバイスをいくつかご紹介します。
 >
 > - 深い理解と知識の習得: AIがある程度のコーディングを補助できるようになりましたが、基本的なプログラミング知識や理解力は必要不可欠です。技術の基礎をしっかり学び、専門的な知識を習得しましょう。
 > - 問題解決能力の向上: 複雑な問題に対処し、効率的な解決策を見つけ出す能力は、AIにはなかなか真似できないスキルです。問題解決能力を磨くことで、価値あるエンジニアとなります。
@@ -2347,14 +2408,17 @@ while (y < 10) { /* (A) */
 
 ### インタプリタとコンパイラの違い
 
-> 	インタプリタとコンパイラの本質的な違いは、インタプリタは自身が構文解析をして、状態に応じて異なる結果を返すもので、コンパイラの役割は単に高水準言語をアセンブリに変換するものという認識であっていますか？
+>     インタプリタとコンパイラの本質的な違いは、インタプリタは自身が構文解析をして、状態に応じて異なる結果を返すもので、コンパイラの役割は単に高水準言語をアセンブリに変換するものという認識であっていますか？
 
 どちらかというと，インタプリタはプログラムの実行結果を出力として返すもの，コンパイラはプログラムと等価なプログラムを出力として返すもの，という理解の方が正しいです．例えば，OCamlインタプリタは
+
 ```ocaml
 # let x = 3 in x + 2;;
 - : int = 5
 ```
+
 のように，`let x = 3 in x + 2`の実行結果である`5`を出力として返していますが，
+
 ```sh
 # tmp.ml の内容を表示するコマンド
 > cat tmp.ml
@@ -2365,6 +2429,7 @@ let x = 3 in x + 2;;
 > file tmp
 tmp: Mach-O 64-bit executable arm64
 ```
+
 のように OCaml コンパイラは OCaml プログラムを実行可能形式の別のプログラムに変換しています．
 
 ### 原初のプログラミング言語について
@@ -2384,6 +2449,7 @@ MiniML は OCaml で書かれた OCaml のサブセットのインタプリタ�
 OCaml のコンパイラには，OCaml プログラムをバイトコードに変換する `ocamlc` と，ネイティブコード（実行可能バイナリ）に変換する `ocamlopt` があります．`ocamlc`によって生成されるバイトコードは，`ocamlrun`というバイトコード用のインタプリタで実行することができるのですが，そうであればバイトコード生成と`ocamlrun`を組み合わせれば OCaml プログラム用のインタプリタが作れてしまうので，このように実装されています．
 
 `ocamlopt`と`ocamlc`+`ocamlrun`は，一応挙動の違いは内容に設計されているはずです．ただ，tupleの要素の評価順序など，意味論が未定義な部分の挙動が異なるアーキテクチャもあった気がします．例えば，
+
 ```sh
 # tmp.ml の内容を表示する
 > cat tmp.ml
@@ -2402,6 +2468,7 @@ c
 b
 a
 ```
+
 上記の `tmp` と `tmp.bin` で文字列の表示順序が異なる場合が昔はありました．今はどうか分からん．
 
 ### 決定不能な型推論をしている言語
@@ -2415,6 +2482,7 @@ C++ の型推論は決定不能なはずです．C++ にはテンプレートと
 > Unificationの例としてはどのようなものがあるのでしょうか？型推論で扱う問題よりも一般化されたUnificationがあったりしますか？
 
 今回扱った unification は一階の unification と呼ばれるものです．型推論以外に論理プログラミング言語と呼ばれる言語の処理系でよく使われます．例えば Prolog という言語ではプログラムを推論規則の集合として記述し，与えられたクエリが導出可能かどうかを自動的に判定することでプログラムの実行としています．これを使うと，例えば
+
 ```prolog
 child(fune,sazae).
 child(namihei,sazae).
@@ -2428,17 +2496,22 @@ child(sazae,tara).
 descendent(X,Y) :- child(X,Y).
 descendent(X,Z) :- child(X,Y), descendent(Y,Z).
 ```
+
 という，「`Y`は`X`の子供である」という事実を表す `child(X,Y)` と，「`Y`は`X`の子孫である」ということを表す述語 `descendent(X,Y)` の定義を与えて，
+
 ```prolog
 ?- descendent(namihei,X).
 ```
+
 で「波平の子孫を与えよ」というクエリを投げると
+
 ```prolog
 X = sazae
 X = katsuo
 X = wakame
 X = tara
 ```
+
 のように候補を自動的に全部出してくれる，みたいなことができます．以前の AI ブームのときには，これを中心に据えて AI を作るという動きがあったらしいです．現在では Prolog は演繹を行うデータベースで使われる datalog と呼ばれる言語の基礎になっています．また，プログラム検証ツールのための中間言語としても Prolog みたいな言語が使われています．
 
 Unification の一般化という点では，高階関数を表す項同士を unify する高階 unification (higher-order unification) と呼ばれる問題が知られています．確か決定不能なのですが，停止しないことも許容するような手続きは存在して，$\lambda$Prolog という処理系に使われているはずです．（この辺の話，僕はあまり詳しくないです．）
@@ -2449,12 +2522,11 @@ Unification の一般化という点では，高階関数を表す項同士を u
 
 うーむ，深い問題ですね．型の応用について，いくつかランダムに挙げてみます．
 
-+ コンパイラでは値を格納するのに必要な記憶領域のサイズを型を使って決めることができます．
-+ 再帰を含まない型がつく関数型プログラム (この講義の MiniML3) は必ず停止することが示されています．
-+ MiniML3 では，型からプログラムの性質が決まることがあります．例えば，$\forall \alpha. \alpha \rightarrow \alpha$という多相型を持つプログラムは恒等関数しかありません．
-+ 値の使用回数に制限のある型システム（線形型; linear types）があります．この型システムはいろいろな応用がありますが，計算量との関係もよく知られています．
-+ プログラミング言語と論理体系の対応関係として Curry-Howard 同型対応というものがあります．これは，プログラミング言語における型が論理体系における命題と対応しており，プログラムが証明に対応する，という対応です．このような対応の下で論理体系の側から見るとむしろ型(= 命題)が先にあってプログラム(= 証明)が後に来るものととらえることもできます．
-
+- コンパイラでは値を格納するのに必要な記憶領域のサイズを型を使って決めることができます．
+- 再帰を含まない型がつく関数型プログラム (この講義の MiniML3) は必ず停止することが示されています．
+- MiniML3 では，型からプログラムの性質が決まることがあります．例えば，$\forall \alpha. \alpha \rightarrow \alpha$という多相型を持つプログラムは恒等関数しかありません．
+- 値の使用回数に制限のある型システム（線形型; linear types）があります．この型システムはいろいろな応用がありますが，計算量との関係もよく知られています．
+- プログラミング言語と論理体系の対応関係として Curry-Howard 同型対応というものがあります．これは，プログラミング言語における型が論理体系における命題と対応しており，プログラムが証明に対応する，という対応です．このような対応の下で論理体系の側から見るとむしろ型(= 命題)が先にあってプログラム(= 証明)が後に来るものととらえることもできます．
 
 ### `hoge` とか `fuga` とか `foo` とか `bar` とか
 
