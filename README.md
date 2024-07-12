@@ -32,9 +32,7 @@
 
 _計算機科学コースの学生には講義中に別途やり方を指示します．（実験3SWもやるので．）_
 
-- [この講義資料の GitHub のページ](https://github.com/kuis-isle3sw/IoPLMaterials)からリポジトリを clone しましょう．
-- [OCaml が使えるように環境を設定](textbook/setting-up-ocaml.md)しましょう．
-- 落ちてきたソースコード中の `textbook/interpreter/` ディレクトリの中にインタプリタのソースコードが入っているので，`dune`コマンドでビルドしましょう．
+- [OCaml が使えるように環境を設定](HACKING.md)しましょう．
 - [教科書](https://kuis-isle3sw.github.io/IoPLMaterials/)を読みながらもりもり演習問題を解きましょう．
   - 教科書にバグを見つけたら [issue](https://github.com/kuis-isle3sw/IoPLMaterials/issues) で報告しましょう．
   - 講義の履修者は講義用 Slack で質問してもよいですね．
@@ -43,20 +41,11 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
   - もしくは，プログラミング言語理論やプログラム検証を勉強してみましょう．
   - TODO: 参考文献
 
-## 教科書 <a name="textbook"></a>
-
-（鋭意 Markdown 化中．）
-
-### リンク
-
-<https://kuis-isle3sw.github.io/IoPLMaterials/>
-
-### 目次
+## 目次
 
 <!-- - [オリエンテーション資料](misc/orientation.md) -->
 
-- [OCaml の環境設定](textbook/setting-up-ocaml.md) [(講義スライド)](textbook/slides/ocaml.pdf)
-<!--  - [opamのインストール方法](textbook/install_opam.jp.md) -->
+- [OCaml の環境設定](HACKING.md) - [(講義スライド)](textbook/slides/ocaml.pdf)
 - OCaml あまり知らない人向け: 前提となる OCaml の知識を身に付ける．
   - [OCaml 爆速入門 by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/03-ocaml.html)
   - [OCaml で二分探索木を書く by 五十嵐淳](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/04-bst-ocaml.html)
@@ -136,14 +125,3 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 - [京都大学修学支援基金](https://www.kikin.kyoto-u.ac.jp/contribution/student/): 意欲と能力のある学生が経済的理由で修学・進学を断念することなく，希望する教育を受けられるようにすることを目的とした基金です．
 - [男女共同参画支援たちばな基金](https://www.kikin.kyoto-u.ac.jp/contribution/tachibana/): 男女共同参画支援を推進するための基金で，育児等支援の充実，保育施策の充実，男女共同参画推進事業の充実を目的とした基金です．
 - [情報学研究科基金](https://www.kikin.kyoto-u.ac.jp/contribution/informatics/): 情報学研究科における大学院生の学修・研究支援，若手研究者支援，研究支援を目的とした基金です．
-
-## ローカル環境でのビルド方法
-
-この資料は [Jekyll](http://jekyllrb-ja.github.io/) を使用して構築されています．動作確認などのためにこの資料をローカル環境で表示させる場合は，[Ruby](https://www.ruby-lang.org/ja/) を導入した上で，次の通りコマンドを実行してください．
-
-```sh
-bundle install
-bundle exec -- jekyll serve
-```
-
-その後 [http://127.0.0.1:4000](http://127.0.0.1:4000) にアクセスしてください。

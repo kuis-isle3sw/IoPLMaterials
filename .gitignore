@@ -1,7 +1,6 @@
 /_build/
 /_opam/
 /_site/
-/.vscode/
 /.yarn/
 /node_modules/
 /vendor/
