@@ -26,7 +26,9 @@ type 'a result = { before : (Vm.instr, 'a) Map.t; after : (Vm.instr, 'a) Map.t }
 let get_property rslt stmt side =
   match
     Map.get stmt
-      (match side with Cfg.BEFORE -> rslt.before | Cfg.AFTER -> rslt.after)
+      (match side with
+      | Cfg.BEFORE -> rslt.before
+      | Cfg.AFTER -> rslt.after)
   with
   | Some p -> p
   | None -> err ("property not found: " ^ Vm.string_of_instr "" "\t" stmt)
@@ -35,7 +37,9 @@ let get_property rslt stmt side =
 let solve anlys cfg =
   (* プロパティ辞書から文sに対応するプロパティを取得．なければbottomを返す *)
   let get_prop m s =
-    match Map.get s m with None -> anlys.bottom | Some x -> x
+    match Map.get s m with
+    | None -> anlys.bottom
+    | Some x -> x
   in
   (* キューwlが空になるまでプロパティ辞書entries, exitsの更新を繰り返す．
      directionがFORWARDの場合，entriesは直前(BEFORE)，exitsは直後(AFTER)．

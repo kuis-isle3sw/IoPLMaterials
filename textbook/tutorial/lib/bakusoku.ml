@@ -149,14 +149,21 @@ Shake
 
 (* パターンマッチ *)
 
-let isVeggie f = match f with Shake -> false | Katsuo -> false | Nori -> true
+let isVeggie f =
+  match f with
+  | Shake -> false
+  | Katsuo -> false
+  | Nori -> true
 ;;
 
 isVeggie Shake
 
 (* パターンの網羅性チェック *)
 
-let isVeggie f = match f with Shake -> false | Nori -> true
+let isVeggie f =
+  match f with
+  | Shake -> false
+  | Nori -> true
 
 (* いろいろなパターン *)
 
@@ -175,7 +182,9 @@ let is_prime_less_than_twenty n =
 
 let is_prime_less_than_twenty n =
   (*  or パターン *)
-  match n with 2 | 3 | 5 | 7 | 11 | 13 | 17 | 19 -> true | _ -> false
+  match n with
+  | 2 | 3 | 5 | 7 | 11 | 13 | 17 | 19 -> true
+  | _ -> false
 
 (* 引数のついたヴァリアント *)
 
@@ -201,13 +210,20 @@ Rice Shake
 (* Rice;; *)
 
 let isSolid d =
-  match d with PorkCutlet -> true | Soup m_and_g -> false | Rice f -> true
+  match d with
+  | PorkCutlet -> true
+  | Soup m_and_g -> false
+  | Rice f -> true
 
 let price_of_dish d =
   match d with
   | PorkCutlet -> 350
   | Soup m_and_g -> 90
-  | Rice f -> ( match f with Shake -> 90 | Katsuo -> 90 | Nori -> 80)
+  | Rice f -> (
+      match f with
+      | Shake -> 90
+      | Katsuo -> 90
+      | Nori -> 80)
 
 let price_of_dish d =
   match d with
@@ -258,8 +274,16 @@ let rec price_of_menu m =
 
 type 'a mylist = Nil | Cons of 'a * 'a mylist
 
-let rec sum ml = match ml with Nil -> 0 | Cons (n, tl) -> n + sum tl
-let rec concat ml = match ml with Nil -> "" | Cons (s, tl) -> s ^ concat tl;;
+let rec sum ml =
+  match ml with
+  | Nil -> 0
+  | Cons (n, tl) -> n + sum tl
+
+let rec concat ml =
+  match ml with
+  | Nil -> ""
+  | Cons (s, tl) -> s ^ concat tl
+;;
 
 concat (Cons ("a", Cons ("b", Nil)))
 
@@ -493,20 +517,26 @@ fun (x, y) -> (x +. y) /. 2.0;;
    ;;
 *)
 
-function Nil -> 0 | Cons (n, tl) -> 1
+function
+| Nil -> 0
+| Cons (n, tl) -> 1
 
 (* カリー化 *)
 
 type gender = Male | Female
 
 let greeting (gen, name) =
-  match gen with Male -> "Hello, Mr. " ^ name | Female -> "Hello, Ms. " ^ name
+  match gen with
+  | Male -> "Hello, Mr. " ^ name
+  | Female -> "Hello, Ms. " ^ name
 
 let g1 = greeting (Male, "Poirot")
 let g2 = greeting (Female, "Marple")
 
 let curried_greeting gen name =
-  match gen with Male -> "Hello, Mr. " ^ name | Female -> "Hello, Ms. " ^ name
+  match gen with
+  | Male -> "Hello, Mr. " ^ name
+  | Female -> "Hello, Ms. " ^ name
 
 let greeting_for_men = curried_greeting Male
 let greeting_for_women = curried_greeting Female
@@ -514,7 +544,9 @@ let g1 = greeting_for_men "Poirot"
 let g2 = greeting_for_women "Marple"
 
 let curried_greeting gen name =
-  match gen with Male -> "Hello, Mr. " ^ name | Female -> "Hello, Ms. " ^ name
+  match gen with
+  | Male -> "Hello, Mr. " ^ name
+  | Female -> "Hello, Ms. " ^ name
 
 let g1 = (curried_greeting Male) "Poirot"
 let g2 = curried_greeting Female "Marple";;
@@ -574,7 +606,11 @@ let create_list n len = create_list_tail n len []
    5 :: 5 :: 5 :: []
 *)
 
-let rec sum l = match l with [] -> 0 | hd :: tl -> hd + sum tl;;
+let rec sum l =
+  match l with
+  | [] -> 0
+  | hd :: tl -> hd + sum tl
+;;
 
 sum (create_list 1 10);;
 create_list 1 10 |> sum;;
@@ -582,7 +618,9 @@ sum (create_list 1 100);;
 sum (create_list 1 100000000)
 
 let rec sum_tail l sum =
-  match l with [] -> sum | hd :: tl -> sum_tail tl (sum + hd)
+  match l with
+  | [] -> sum
+  | hd :: tl -> sum_tail tl (sum + hd)
 ;;
 
 sum_tail (create_list_tail 1 10 []) 0;;
@@ -599,7 +637,11 @@ f true;;
 f (5, true);;
 f [ 1; 2; 3; 4; 5 ]
 
-let rec map f l = match l with [] -> [] | hd :: tl -> f hd :: map f tl;;
+let rec map f l =
+  match l with
+  | [] -> []
+  | hd :: tl -> f hd :: map f tl
+;;
 
 map (fun x -> x + 1) [ 1; 2; 3; 4; 5 ];;
 map (fun x -> x && true) [ true; false; true; false ];;
@@ -607,7 +649,10 @@ map (fun x -> fst x) [ (1, true); (3, false); (7, true) ]
 
 (* パターンマッチと匿名関数を組み合わせた構文 *)
 
-let rec map f = function [] -> [] | hd :: tl -> f hd :: map f tl;;
+let rec map f = function
+  | [] -> []
+  | hd :: tl -> f hd :: map f tl
+;;
 
 map (fun x -> x + 1) [ 1; 2; 3; 4; 5 ];;
 map (fun x -> x && true) [ true; false; true; false ];;

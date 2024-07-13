@@ -99,7 +99,8 @@ let string_of_norm e =
 
 let rec norm_exp (e : Syntax.exp) (f : cexp -> exp) =
   (* TODO *)
-  match e with _ -> f (ValExp (IntV 1))
+  match e with
+  | _ -> f (ValExp (IntV 1))
 
 and normalize e = norm_exp e (fun ce -> CompExp ce)
 

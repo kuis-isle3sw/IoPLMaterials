@@ -1,7 +1,11 @@
 type 'a t = 'a list
 
 let empty = []
-let is_empty = function [] -> true | x :: xs -> false
+
+let is_empty = function
+  | [] -> true
+  | x :: xs -> false
+
 let singleton x = [ x ]
 let from_list x = x
 let to_list x = x
@@ -18,7 +22,10 @@ let rec remove x = function
 
 let diff xs ys = List.fold_left (fun zs x -> remove x zs) xs ys
 let member = List.mem
-let rec map f = function [] -> [] | x :: rest -> insert (f x) (map f rest)
+
+let rec map f = function
+  | [] -> []
+  | x :: rest -> insert (f x) (map f rest)
 
 let rec bigunion = function
   | [] -> []

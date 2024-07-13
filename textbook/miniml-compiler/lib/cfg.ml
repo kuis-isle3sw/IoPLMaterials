@@ -31,7 +31,9 @@ let string_of_labels sep lbls =
 let string_of_cfg str_of_prop cfg =
   let fmt_stmt s = Vm.string_of_instr "  " "\t" s ^ "\n" in
   let fmt_prop s p =
-    match str_of_prop with None -> "" | Some f -> "  {" ^ f s p ^ "}\n"
+    match str_of_prop with
+    | None -> ""
+    | Some f -> "  {" ^ f s p ^ "}\n"
   in
   String.concat "\n"
     (List.map
@@ -70,7 +72,9 @@ let dot_of_cfg lbl str_of_prop cfg =
   let escape s = flatmap_of_string escape_char s in
   let fmt_stmt s = escape (Vm.string_of_instr "" "  " s ^ "\\l") in
   let fmt_prop s p =
-    match str_of_prop with None -> "" | Some f -> escape ("{" ^ f s p ^ "}\\l")
+    match str_of_prop with
+    | None -> ""
+    | Some f -> escape ("{" ^ f s p ^ "}\\l")
   in
   let bblock_to_node i bb =
     let lbl_str =
@@ -219,7 +223,10 @@ let coalesce_label lbl instrs =
    ラベル付き文のリスト -> leader集合 *)
 let find_leaders lstmts =
   let find_target lbl =
-    List.find (function lbls, _ -> Set.member lbl lbls) lstmts
+    List.find
+      (function
+        | lbls, _ -> Set.member lbl lbls)
+      lstmts
   in
   let _, r =
     List.fold_left

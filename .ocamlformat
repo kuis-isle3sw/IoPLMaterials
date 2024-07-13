@@ -1,4 +1,7 @@
 version=0.26.2
 profile=conventional
+break-cases=fit-or-vertical
 break-infix=fit-or-vertical
+break-sequences=true
+doc-comments=before
 parse-docstrings=true

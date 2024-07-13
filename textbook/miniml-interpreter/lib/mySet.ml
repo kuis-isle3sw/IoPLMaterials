@@ -17,7 +17,10 @@ let rec remove x = function
 
 let diff xs ys = List.fold_left (fun zs x -> remove x zs) xs ys
 let member = List.memq
-let rec map f = function [] -> [] | x :: rest -> insert (f x) (map f rest)
+
+let rec map f = function
+  | [] -> []
+  | x :: rest -> insert (f x) (map f rest)
 
 let rec bigunion = function
   | [] -> []
