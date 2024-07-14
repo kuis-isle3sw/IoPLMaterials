@@ -25,7 +25,9 @@ let filter_vars vs =
   Set.from_list
     (List.filter
        (fun v ->
-         match v with Param _ | Local _ -> true | Proc _ | IntV _ -> false)
+         match v with
+         | Param _ | Local _ -> true
+         | Proc _ | IntV _ -> false)
        (Set.to_list vs))
 
 let transfer entry_vars stmt =
@@ -49,8 +51,7 @@ let transfer entry_vars stmt =
     | BinOp (dst, _, _, _)
     | Call (dst, _, _)
     | Malloc (dst, _)
-    | Read (dst, _, _) ->
-        Set.remove (Local dst) vs
+    | Read (dst, _, _) -> Set.remove (Local dst) vs
     | _ -> vs
   in
   gen (kill entry_vars)

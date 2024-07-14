@@ -1,7 +1,11 @@
 type ('a, 'b) t = ('a * 'b) list
 
 let empty = []
-let is_empty = function [] -> true | x :: xs -> false
+
+let is_empty = function
+  | [] -> true
+  | x :: xs -> false
+
 let singleton k v = [ (k, v) ]
 let from_list x = x
 let to_list x = x
@@ -30,5 +34,8 @@ let rec map f = function
       assoc k' v' (map f rest)
 
 let bigmerge ms =
-  let rec bm = function [] -> [] | map1 :: rest -> merge map1 (bm rest) in
+  let rec bm = function
+    | [] -> []
+    | map1 :: rest -> merge map1 (bm rest)
+  in
   bm (MySet.to_list ms)

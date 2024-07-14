@@ -93,7 +93,11 @@ let string_of_instr instr =
   | Bx r -> emit_instr "bx" [ string_of_reg r ]
   | Cmp (r, a) -> emit_instr "cmp" [ string_of_reg r; string_of_addr a ]
   | Ldr (r, a) ->
-      let str_of_addr = match a with L l -> "=" ^ l | _ -> string_of_addr a in
+      let str_of_addr =
+        match a with
+        | L l -> "=" ^ l
+        | _ -> string_of_addr a
+      in
       emit_instr "ldr" [ string_of_reg r; str_of_addr ]
   | Mov (r, a) -> emit_instr "mov" [ string_of_reg r; string_of_addr a ]
   | Mul (r1, r2, r3) ->
