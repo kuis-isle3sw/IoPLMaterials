@@ -120,5 +120,6 @@ let rec ty_exp tyenv = function
 
 let ty_decl tyenv = function
     Exp e -> ty_exp tyenv e
+      ...
   | _ -> err ("Not Implemented!")
 ```
