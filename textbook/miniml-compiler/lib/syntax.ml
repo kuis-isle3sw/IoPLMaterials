@@ -3,7 +3,11 @@ exception Error of string
 let err s = raise (Error s)
 
 type id = string
-type binOp = Plus | Mult | Lt
+
+type binOp =
+  | Plus
+  | Mult
+  | Lt
 
 type exp =
   | Var of id
