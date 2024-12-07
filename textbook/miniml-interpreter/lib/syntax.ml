@@ -1,6 +1,10 @@
 (* ML interpreter / type reconstruction *)
 type id = string
-type binOp = Plus | Mult | Lt
+
+type binOp =
+  | Plus
+  | Mult
+  | Lt
 
 type exp =
   | Var of id
@@ -11,4 +15,10 @@ type exp =
 
 type program = Exp of exp
 type tyvar = int
-type ty = TyInt | TyBool | TyVar of tyvar | TyFun of ty * ty | TyList of ty
+
+type ty =
+  | TyInt
+  | TyBool
+  | TyVar of tyvar
+  | TyFun of ty * ty
+  | TyList of ty

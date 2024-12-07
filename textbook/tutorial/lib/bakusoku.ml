@@ -113,7 +113,10 @@ cube 1 + cube 2 + cube 3
 (* レコード *)
 
 (* レコード型の定義 *)
-type point = { x : int; y : int }
+type point =
+  { x : int
+  ; y : int
+  }
 
 let origin = { x = 0; y = 0 };;
 
@@ -135,15 +138,21 @@ let middle (p1, p2) =
   let { x = p1x; y = p1y } = p1 in
   let { x = p2x; y = p2y } = p2 in
   { x = average (p1x, p2x); y = average (p1y, p2y) }
+;;
 
 let middle ({ x = p1x; y = p1y }, { x = p2x; y = p2y }) =
   { x = average (p1x, p2x); y = average (p1y, p2y) }
+;;
 
 let get_x { x; _ } = x
 
 (* ヴァリアント型 *)
 
-type furikake = Shake | Katsuo | Nori;;
+type furikake =
+  | Shake
+  | Katsuo
+  | Nori
+;;
 
 Shake
 
@@ -164,6 +173,7 @@ let isVeggie f =
   match f with
   | Shake -> false
   | Nori -> true
+;;
 
 (* いろいろなパターン *)
 
@@ -179,21 +189,33 @@ let is_prime_less_than_twenty n =
   | 17 -> true
   | 19 -> true
   | _ -> false (* ワイルドカードパターン *)
+;;
 
 let is_prime_less_than_twenty n =
   (*  or パターン *)
   match n with
   | 2 | 3 | 5 | 7 | 11 | 13 | 17 | 19 -> true
   | _ -> false
+;;
 
 (* 引数のついたヴァリアント *)
 
-type miso = Aka | Shiro | Awase
-type gu = Wakame | Tofu | Radish
+type miso =
+  | Aka
+  | Shiro
+  | Awase
+
+type gu =
+  | Wakame
+  | Tofu
+  | Radish
 
 type dish =
   | PorkCutlet (* コンストラクタ *)
-  | Soup of { m : miso; g : gu }
+  | Soup of
+      { m : miso
+      ; g : gu
+      }
   | Rice of furikake
 ;;
 
@@ -214,16 +236,18 @@ let isSolid d =
   | PorkCutlet -> true
   | Soup m_and_g -> false
   | Rice f -> true
+;;
 
 let price_of_dish d =
   match d with
   | PorkCutlet -> 350
   | Soup m_and_g -> 90
-  | Rice f -> (
-      match f with
-      | Shake -> 90
-      | Katsuo -> 90
-      | Nori -> 80)
+  | Rice f ->
+    (match f with
+     | Shake -> 90
+     | Katsuo -> 90
+     | Nori -> 80)
+;;
 
 let price_of_dish d =
   match d with
@@ -232,6 +256,7 @@ let price_of_dish d =
   | Rice Shake -> 90
   | Rice Katsuo -> 90
   | Rice Nori -> 80
+;;
 
 let price_of_dish d =
   match d with
@@ -239,10 +264,16 @@ let price_of_dish d =
   | Soup m_and_g -> 90
   | Rice (Shake | Katsuo) -> 90
   | Rice Nori -> 80
+;;
 
 (* 再帰ヴァリアント *)
 
-type menu = Smile | Add of { d : dish; next : menu }
+type menu =
+  | Smile
+  | Add of
+      { d : dish
+      ; next : menu
+      }
 
 let m1 = Smile
 
@@ -269,15 +300,19 @@ let rec price_of_menu m =
   match m with
   | Smile -> 0
   | Add { d = d1; next = m' } -> price_of_dish d1 + price_of_menu m'
+;;
 
 (* *)
 
-type 'a mylist = Nil | Cons of 'a * 'a mylist
+type 'a mylist =
+  | Nil
+  | Cons of 'a * 'a mylist
 
 let rec sum ml =
   match ml with
   | Nil -> 0
   | Cons (n, tl) -> n + sum tl
+;;
 
 let rec concat ml =
   match ml with
@@ -299,7 +334,10 @@ concat (Cons ("a", Cons ("b", Nil)))
 (* 変数への破壊的代入ができないことを変数が
    immutable であるという． *)
 
-type mutable_point = { mutable x : int; mutable y : int }
+type mutable_point =
+  { mutable x : int
+  ; mutable y : int
+  }
 
 let m_origin = { x = 0; y = 0 }
 let f y = m_origin.x + y;;
@@ -413,8 +451,7 @@ ignore (1 + 1);
 5
 
 let is_positive n =
-  if n > 0 then print_string "n is positive\n"
-  else print_string "n is not positive\n"
+  if n > 0 then print_string "n is positive\n" else print_string "n is not positive\n"
 ;;
 
 is_positive 100
@@ -435,7 +472,8 @@ is_positive' (-100)
 
 (* はまらないように修正するには *)
 let is_positive n =
-  if n > 0 then (
+  if n > 0
+  then (
     print_int n;
     print_string " is positive")
   else (
@@ -447,7 +485,8 @@ let is_positive n =
 (2 + 3) * 10
 
 let is_positive n =
-  if n > 0 then (
+  if n > 0
+  then (
     print_int n;
     print_string " is positive")
   else (
@@ -523,12 +562,15 @@ function
 
 (* カリー化 *)
 
-type gender = Male | Female
+type gender =
+  | Male
+  | Female
 
 let greeting (gen, name) =
   match gen with
   | Male -> "Hello, Mr. " ^ name
   | Female -> "Hello, Ms. " ^ name
+;;
 
 let g1 = greeting (Male, "Poirot")
 let g2 = greeting (Female, "Marple")
@@ -537,6 +579,7 @@ let curried_greeting gen name =
   match gen with
   | Male -> "Hello, Mr. " ^ name
   | Female -> "Hello, Ms. " ^ name
+;;
 
 let greeting_for_men = curried_greeting Male
 let greeting_for_women = curried_greeting Female
@@ -547,6 +590,7 @@ let curried_greeting gen name =
   match gen with
   | Male -> "Hello, Mr. " ^ name
   | Female -> "Hello, Ms. " ^ name
+;;
 
 let g1 = (curried_greeting Male) "Poirot"
 let g2 = curried_greeting Female "Marple";;
@@ -569,8 +613,7 @@ let g2 = curried_greeting Female "Marple";;
 [ 0; 1; 2 ];;
 [ 0; 1; 2; 3; 4 ]
 
-let rec create_list n len = if len = 0 then [] else n :: create_list n (len - 1)
-;;
+let rec create_list n len = if len = 0 then [] else n :: create_list n (len - 1);;
 
 (*
    create_list 5 3
@@ -589,6 +632,7 @@ create_list 1 10000
 
 let rec create_list_tail n len res =
   if len = 0 then res else create_list_tail n (len - 1) (n :: res)
+;;
 
 let create_list n len = create_list_tail n len []
 
@@ -645,7 +689,7 @@ let rec map f l =
 
 map (fun x -> x + 1) [ 1; 2; 3; 4; 5 ];;
 map (fun x -> x && true) [ true; false; true; false ];;
-map (fun x -> fst x) [ (1, true); (3, false); (7, true) ]
+map (fun x -> fst x) [ 1, true; 3, false; 7, true ]
 
 (* パターンマッチと匿名関数を組み合わせた構文 *)
 
@@ -656,4 +700,4 @@ let rec map f = function
 
 map (fun x -> x + 1) [ 1; 2; 3; 4; 5 ];;
 map (fun x -> x && true) [ true; false; true; false ];;
-map (fun x -> fst x) [ (1, true); (3, false); (7, true) ]
+map (fun x -> fst x) [ 1, true; 3, false; 7, true ]

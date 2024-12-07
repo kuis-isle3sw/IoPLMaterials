@@ -11,7 +11,7 @@ depends: [
   "ocaml"
   "menhir"
   "ocaml-lsp-server" {with-dev-setup}
-  "ocamlformat" {with-dev-setup & = "0.26.2"}
+  "ocamlformat" {with-dev-setup & = "0.27.0"}
   "odoc" {with-doc}
 ]
 build: [

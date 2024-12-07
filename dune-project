@@ -25,7 +25,7 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (= 0.26.2)))))
+    (= 0.27.0)))))
 
 (package
  (name miniml-interpreter)
@@ -37,7 +37,7 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (= 0.26.2)))))
+    (= 0.27.0)))))
 
 (package
  (name tutorial)
@@ -48,4 +48,4 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (= 0.26.2)))))
+    (= 0.27.0)))))

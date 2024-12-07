@@ -1,9 +1,11 @@
 let debug = ref false
 
 let dprint s =
-  if !debug then (
+  if !debug
+  then (
     print_string (s ());
     flush stdout)
+;;
 
 let display_cfg = ref false
 let optimize = ref false
@@ -12,7 +14,6 @@ let outfile = ref "-"
 let compile prompt ichan cont =
   print_string prompt;
   flush stdout;
-
   (* このmain.ml自体の説明(コンパイラの全体構成) (1章後半) *)
 
   (* Parsing (2章) *)
@@ -32,7 +33,8 @@ let compile prompt ichan cont =
   (* 制御フローグラフを表示 *)
   if !display_cfg && not !optimize then Cfg.display_cfg (Cfg.build vmcode) None;
   let armcode =
-    if !optimize then (
+    if !optimize
+    then (
       (* Low-level opt. (7章 DFA & 最適化) *)
       let regcode = Opt.optimize !display_cfg Arm_spec.nreg vmcode in
       dprint (fun () -> "(* [Reg code] *)\n" ^ Reg.string_of_reg regcode ^ "\n");
@@ -47,6 +49,7 @@ let compile prompt ichan cont =
   if !outfile <> "-" then close_out ochan;
   (* continued... *)
   cont ()
+;;
 
 (* ==== main ==== *)
 
@@ -55,28 +58,30 @@ let usage = "Usage: " ^ Sys.argv.(0) ^ " [-vOG] [-o ofile] [file]"
 
 let aspec =
   Arg.align
-    [
-      ("-o", Arg.Set_string outfile, " Set output file (default: stdout)");
-      ( "-O",
-        Arg.Unit (fun () -> optimize := true),
-        " Perform optimization (default: " ^ string_of_bool !optimize ^ ")" );
-      ( "-G",
-        Arg.Unit (fun () -> display_cfg := true),
-        " Display CFG (default: " ^ string_of_bool !display_cfg ^ ")" );
-      ( "-v",
-        Arg.Unit (fun () -> debug := true),
-        " Print debug info (default: " ^ string_of_bool !debug ^ ")" );
+    [ "-o", Arg.Set_string outfile, " Set output file (default: stdout)"
+    ; ( "-O"
+      , Arg.Unit (fun () -> optimize := true)
+      , " Perform optimization (default: " ^ string_of_bool !optimize ^ ")" )
+    ; ( "-G"
+      , Arg.Unit (fun () -> display_cfg := true)
+      , " Display CFG (default: " ^ string_of_bool !display_cfg ^ ")" )
+    ; ( "-v"
+      , Arg.Unit (fun () -> debug := true)
+      , " Print debug info (default: " ^ string_of_bool !debug ^ ")" )
     ]
+;;
 
 let main () =
   Arg.parse aspec (fun s -> srcfile := s) usage;
-  if !srcfile = "-" then
+  if !srcfile = "-"
+  then (
     let c = stdin in
     let rec k () = compile "# " c k in
-    compile "# " c k
-  else
+    compile "# " c k)
+  else (
     let c = open_in !srcfile in
     let k () = close_in c in
-    compile "" c k
+    compile "" c k)
+;;
 
 let () = main ()
