@@ -13,8 +13,11 @@ let rec read_eval_print env =
   pp_val v;
   print_newline ();
   read_eval_print newenv
+;;
 
 let initial_env =
-  Environment.extend "i" (IntV 1)
-    (Environment.extend "v" (IntV 5)
-       (Environment.extend "x" (IntV 10) Environment.empty))
+  Environment.extend
+    "i"
+    (IntV 1)
+    (Environment.extend "v" (IntV 5) (Environment.extend "x" (IntV 10) Environment.empty))
+;;
