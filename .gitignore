@@ -1,8 +1,13 @@
+/.yarn/
 /_build/
 /_opam/
 /_site/
-/.yarn/
+/dev-tools.locks/
+/dune.lock/
 /node_modules/
 /vendor/
+
+/.vscode/settings.json
 /Gemfile.lock
+
 .DS_Store

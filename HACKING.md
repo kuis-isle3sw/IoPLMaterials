@@ -129,6 +129,17 @@ opam exec -- dune build
 
 クローンしたリポジトリに移動し、次のコマンドを実行すると [VSCode] が起動される。
 
+> 事前に `.vscode/settings.json` に次のような設定ファイルを置いておく必要がある。
+>
+> ```json
+> {
+>   "ocaml.sandbox": {
+>     "kind": "opam",
+>     "switch": "${workspaceFolder:IoPLMaterials}"
+>   }
+> }
+> ```
+
 ```sh
 code .
 ```
