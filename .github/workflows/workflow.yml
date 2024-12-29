@@ -13,12 +13,12 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - macos-latest
           - ubuntu-latest
+          - macos-latest
           - windows-latest
         ocaml-compiler:
-          - "4.14"
-          - "5.2"
+          - 5
+          - 4
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout tree
@@ -51,7 +51,7 @@ jobs:
       - name: Set-up OCaml
         uses: ocaml/setup-ocaml@v3
         with:
-          ocaml-compiler: "5.2"
+          ocaml-compiler: 5
       - uses: ocaml/setup-ocaml/lint-fmt@v3
 
   lint-opam:
@@ -62,5 +62,5 @@ jobs:
       - name: Set-up OCaml
         uses: ocaml/setup-ocaml@v3
         with:
-          ocaml-compiler: "5.2"
+          ocaml-compiler: 5
       - uses: ocaml/setup-ocaml/lint-opam@v3
