@@ -6,31 +6,30 @@
 
 ## お知らせ
 
-- 4月1日: [(F)AQ](textbook/FAQ.md) を追加しました．
-- 4月1日: 2024年度版ページにしました．
+- 4月1日: 2025年度版ページにしました．
 
-## 2024年度 講義スケジュール
+## 2024年度 講義予定
 
-| 回 | 日付 | 内容（予定） | 資料 | その他 |
+| 回 | 日付 (mm/dd) | 内容（予定） | 資料 | その他 |
 | --- | --- | --- | --- | --- |
-| 01 | 4/8 | イントロダクション | [1章: イントロダクション](textbook/chap01.md) [2章: 概論的な話](textbook/chap02.md) |  |
-| 02 | 4/15 | インタプリタ 1 | [3.1: MiniML1 のシンタックスとセマンティックス](textbook/chap03-1.md) [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md) [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md) |  |
-| 03 | 4/22 | インタプリタ 2 | [3.4: MiniML2: 定義の導入](textbook/chap03-4.md) |  |
-| 04 | 5/2 | インタプリタ 3 | [3.5: MiniML3: 関数の導入](textbook/chap03-5.md) [3.6: MiniML4: 再帰関数](textbook/chap03-6.md) |  |
-| 05 | 5/13 | 型システム 1 | [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md) [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md) |  |
-| 06 | 5/20 | 型システム 2 | [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md) [4.4: MiniML3,4 のための型推論 (1): Prelude](textbook/chap04-4.md) |  |
-| 07 | 5/27 | 型システム 3 | [4.5: MiniML3,4 のための型推論 (2): 型の等式制約と単一化](textbook/chap04-5.md) [4.6: MiniML3,4 のための型推論 (3): 型推論アルゴリズムの実装](textbook/chap04-6.md) |  |
-| 08 | 6/3 | 型システム 4 | [4.7: 多相的 `let` の型推論](textbook/chap04-7.md) |  |
-| 09 | 6/10 | 字句解析 |  | （字句解析と構文解析パートの資料は PandA で配布する） |
-| 10 | 6/17 | LL(1)構文解析 |  |  |
-| 11 | 6/24 | LR(0)構文解析 |  |  |
-| 12 | 7/1 | LR(0), SLR(1), LR(1)構文解析 |  |  |
-| 13 | 7/8 | コンパイラ 1 | [5.1: 能書き](textbook/chap05-1.md) [5.2: ソース言語 MiniML4- と中間言語$\mathcal{C}$](textbook/chap05-2.md) [5.3: MiniML4- から$\mathcal{C}$への変換$\mathcal{I}$](textbook/chap05-3.md) [5.6: アセンブリ生成](textbook/chap05-6.md) | [5.4: MIPS アセンブリ言語入門](textbook/chap05-4.md) を事前に理解しておくこと |
-| 14 | 7/22 | [MinCaml コンパイラ](https://esumii.github.io/min-caml/)概説 |  | [ソースコード](https://github.com/esumii/min-caml)をダウンロードして手元で試しておくとよい |
+| 01 | 4/14 | イントロダクション | [1章: イントロダクション](textbook/chap01.md) [2章: 概論的な話](textbook/chap02.md) |  |
+| 02 | 04/21 | インタプリタ 1 | [3.1: MiniML1 のシンタックスとセマンティックス](textbook/chap03-1.md) [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md) [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md) |  |
+| 03 | 04/28 | インタプリタ 2 | [3.4: MiniML2: 定義の導入](textbook/chap03-4.md) |  |
+| 04 | 05/12 | インタプリタ 3 | [3.5: MiniML3: 関数の導入](textbook/chap03-5.md) [3.6: MiniML4: 再帰関数](textbook/chap03-6.md) |  |
+| 05 | 05/19 | 型システム 1 | [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md) [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md) |  |
+| 06 | 05/26 | 型システム 2 | [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md) [4.4: MiniML3,4 のための型推論 (1): Prelude](textbook/chap04-4.md) |  |
+| 07 | 06/02 | 型システム 3 | [4.5: MiniML3,4 のための型推論 (2): 型の等式制約と単一化](textbook/chap04-5.md) [4.6: MiniML3,4 のための型推論 (3): 型推論アルゴリズムの実装](textbook/chap04-6.md) |  |
+| 08 | 06/09 | 型システム 4 | [4.7: 多相的 `let` の型推論](textbook/chap04-7.md) |  |
+| 09 | 06/16 | 字句解析 |  | （字句解析と構文解析パートの資料は PandA で配布する） |
+| 10 | 06/23 | LL(1)構文解析 |  |  |
+| 11 | 06/30 | LR(0)構文解析 |  |  |
+| 12 | 07/07 | LR(0), SLR(1), LR(1)構文解析 |  |  |
+| 13 | 07/14 | コンパイラ 1 | [5.1: 能書き](textbook/chap05-1.md) [5.2: ソース言語 MiniML4- と中間言語$\mathcal{C}$](textbook/chap05-2.md) [5.3: MiniML4- から$\mathcal{C}$への変換$\mathcal{I}$](textbook/chap05-3.md) [5.6: アセンブリ生成](textbook/chap05-6.md) | [5.4: MIPS アセンブリ言語入門](textbook/chap05-4.md) を事前に理解しておくこと |
+| 14 | 07/17 | [MinCaml コンパイラ](https://esumii.github.io/min-caml/)概説 |  | [ソースコード](https://github.com/esumii/min-caml)をダウンロードして手元で試しておくとよい |
 
 ## 学習の仕方
 
-_計算機科学コースの学生には講義中に別途やり方を指示します．（実験3SWもやるので．）_
+_以下の記述は履修者でない方々向けです。履修者には課題にとりくむためのリポジトリを作成して、そこで課題に取り組んでもらいますので、授業で指示するまで実装には手をつけないでおいてください。_
 
 - [OCaml が使えるように環境を設定](HACKING.md)しましょう．
 - [教科書](https://kuis-isle3sw.github.io/IoPLMaterials/)を読みながらもりもり演習問題を解きましょう．
@@ -38,8 +37,13 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
   - 講義の履修者は講義用 Slack で質問してもよいですね．
 - プログラミング言語強者になりましょう．そのためには．．．
   - なにか自分で言語を作って処理系を作ってみましょう．作った処理系を自慢しましょう．世界中で自作の言語が使われるようになったらいいですね．
-  - もしくは，プログラミング言語理論やプログラム検証を勉強してみましょう．
-  - TODO: 参考文献
+  - もしくは，プログラミング言語理論やプログラム検証を勉強してみましょう．たとえば以下の文献が参考になります。
+    - Benjamin C. Pierce: [Types and Programming Languages](https://kuline.kulib.kyoto-u.ac.jp/opac/opac_link/bibid/EB13374688)
+      - 本講義で与えた型システムの理論的背景を学ぶための教科書。プログラミング言語の形式的意味論の導入から関数型言語
+      - 和訳: 遠藤 侑介; 住井 英二郎; 酒井 政裕; 今井 敬吾; 黒木 裕介; 今井 宜洋; 才川 隆文; 今井 健男 訳: [型システム入門 : プログラミング言語と型の理論](https://kuline.kulib.kyoto-u.ac.jp/opac/opac_link/bibid/EB07914363)
+    - Glynn Winskel: [The Formal Semantics of Programming Languages---An Introduction](https://kuline.kulib.kyoto-u.ac.jp/opac/opac_link/bibid/EB13371609)
+      - 本講義では自然言語でインフォーマルに与えているプログラミング言語の意味論を数学的に与え、プログラムの性質について厳密に議論する手法に関する教科書。
+      - 和訳: 勝股 審也; 中澤 巧爾; 西村 進; 前田 敦司; 末永 幸平 訳: [プログラミング言語の形式的意味論入門](https://kuline.kulib.kyoto-u.ac.jp/opac/opac_link/bibid/BB08694195)
 
 ## 目次
 
@@ -124,4 +128,5 @@ _計算機科学コースの学生には講義中に別途やり方を指示し�
 
 - [京都大学修学支援基金](https://www.kikin.kyoto-u.ac.jp/contribution/student/): 意欲と能力のある学生が経済的理由で修学・進学を断念することなく，希望する教育を受けられるようにすることを目的とした基金です．
 - [男女共同参画支援たちばな基金](https://www.kikin.kyoto-u.ac.jp/contribution/tachibana/): 男女共同参画支援を推進するための基金で，育児等支援の充実，保育施策の充実，男女共同参画推進事業の充実を目的とした基金です．
+- [次世代白眉等若手研究者はぐくみ基金](https://www.kikin.kyoto-u.ac.jp/contribution/hagukumi/): 京都大学における、次世代の若手研究者の活動を支援するための基金です。
 - [情報学研究科基金](https://www.kikin.kyoto-u.ac.jp/contribution/informatics/): 情報学研究科における大学院生の学修・研究支援，若手研究者支援，研究支援を目的とした基金です．
