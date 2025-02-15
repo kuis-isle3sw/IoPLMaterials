@@ -63,6 +63,7 @@ _以下の記述は履修者でない方々向けです。履修者には課題�
   - [高階関数 (OCamlに関するところのみ)](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/10-hofuns.html)
   - [多相性についてもう少し & 例外処理 (OCamlに関するところのみ)](http://www.fos.kuis.kyoto-u.ac.jp/~igarashi/class/pl/11-polyBST.html)
 - もう少しちゃんとした OCaml のテキスト: [OCaml入門テキスト by 五十嵐淳](textbook/mltext.pdf)
+  - この PDF は五十嵐淳[「プログラミング in OCaml～関数型プログラミングの基礎からGUI構築まで～」](https://www.fos.kuis.kyoto-u.ac.jp/~igarashi/OCaml/)の元ネタになっている教材であり、出版社の好意で公開している。内容に古いところがある (OCaml が Objective Caml という古い名前で呼ばれている、五十嵐先生が知能情報学専攻にいる、環境設定が大昔の計算機科学コースシステム用になっている等）があしからず。
   - _1章は古くなっているので，2章から読むこと_
 - プログラミング言語処理系テキスト by 五十嵐淳，馬谷誠二，末永幸平
   - [1章: イントロダクション](textbook/chap01.md)
