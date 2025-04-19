@@ -7,7 +7,7 @@ license: "CC-BY-NC-ND-4.0"
 homepage: "https://github.com/kuis-isle3sw/IoPLMaterials"
 bug-reports: "https://github.com/kuis-isle3sw/IoPLMaterials/issues"
 depends: [
-  "dune" {>= "3.17"}
+  "dune" {>= "3.18"}
   "ocaml"
   "menhir"
   "ocaml-lsp-server" {with-dev-setup}
@@ -29,3 +29,4 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/kuis-isle3sw/IoPLMaterials.git"
+x-maintenance-intent: ["(latest)"]
