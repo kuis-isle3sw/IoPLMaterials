@@ -8,7 +8,7 @@ on:
     - cron: 0 1 * * MON
 
 jobs:
-  build:
+  opam:
     strategy:
       fail-fast: false
       matrix:
@@ -29,6 +29,16 @@ jobs:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
       - run: opam install . --deps-only
       - run: opam exec -- dune build
+
+  dune:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v4
+      - name: Set-up dune
+        uses: ocaml-dune/setup-dune@v0.0.1
+        with:
+          automagic: true
 
   prettier:
     runs-on: ubuntu-latest
