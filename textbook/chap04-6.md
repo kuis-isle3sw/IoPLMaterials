@@ -121,5 +121,5 @@ $$
 \rule{20cm}{1pt}\\
 	\Gamma \vdash \mathbf{match}\ e\ \mathbf{with}\ [] \rightarrow e_1 \mid x :: y \rightarrow e_2 : \tau_2
 \end{array}
-\textrm{T-Cons}
+\textrm{T-Match}
 $$
