@@ -6,7 +6,7 @@
 5 < 8;;
 
 (* OCaml の equality は (=) でチェック *)
-5 = 2 || 9 > -5
+5 = 2 || 9 > -5;;
 
 (* x という名前を 1 + 2 * 3 の評価結果につける．*)
 (* x を 1 + 2 * 3 の評価結果に束縛する *)
@@ -15,7 +15,7 @@
 (* type inference *)
 let x = 1 + (2 * 3);;
 
-x - 10
+x - 10;;
 
 let x : int = 1 + (2 * 3)
 let x = 4 < 5
@@ -28,16 +28,16 @@ let average (x, y) = (x + y) / 2;;
 (* 関数適用 *)
 average (5, 7);;
 average (10, 3);;
-average @@ (5, 7)
+average @@ (5, 7);;
 
 let double n = n + n;;
 
-double 256
+double 256;;
 
 let abs n = if n < 0 then -n else n;;
 
 abs (-100);;
-abs 20
+abs 20;;
 
 (* 再帰関数 *)
 
@@ -49,7 +49,7 @@ abs 20
 (* opam install zarith *)
 let rec fact n = if n = 1 then 1 else n * fact (n - 1);;
 
-fact 5
+fact 5;;
 
 (* fact 0;; *)
 
@@ -63,7 +63,7 @@ let circle_area radius = pi *. radius *. radius;;
 
 (* circle_area 内の pi はさっき定義した pi *)
 
-circle_area 4.0
+circle_area 4.0;;
 
 let pi = 3.00;;
 
@@ -73,7 +73,7 @@ circle_area 4.0;;
 
 (* circle_area で使われる pi の値が変化するわけではない．すなわち let による pi の再定義は代入とは違う *)
 
-circle_area pi
+circle_area pi;;
 
 let circle_area2 radius = pi *. radius *. radius;;
 
@@ -97,6 +97,7 @@ let x1 = 1 + 1 in
 let x2 = x1 + x1 in
 let x3 = x2 + x2 in
 x3 + x3
+;;
 
 (* 関数定義内で let ... in を使えるし *)
 let cylinder_vol (r, h) =
@@ -107,6 +108,7 @@ let cylinder_vol (r, h) =
 (* let ... in で関数定義をすることもできる *)
 let cube n = n * n * n in
 cube 1 + cube 2 + cube 3
+;;
 
 (* cube 3;; *)
 
@@ -122,13 +124,13 @@ let origin = { x = 0; y = 0 };;
 
 (* レコードの作成 *)
 
-origin.x
+origin.x;;
 
 (* レコードから値を取り出す *)
 
 let middle (p1, p2) = { x = average (p1.x, p2.x); y = average (p1.y, p2.y) };;
 
-middle (origin, { x = 4; y = 5 })
+middle (origin, { x = 4; y = 5 });;
 
 let { x = ox; y = oy } = origin
 
@@ -154,7 +156,7 @@ type furikake =
   | Nori
 ;;
 
-Shake
+Shake;;
 
 (* パターンマッチ *)
 
@@ -165,7 +167,7 @@ let isVeggie f =
   | Nori -> true
 ;;
 
-isVeggie Shake
+isVeggie Shake;;
 
 (* パターンの網羅性チェック *)
 
@@ -225,7 +227,7 @@ PorkCutlet;;
 Soup { m = Aka; g = Tofu };;
 
 (* 豆腐赤だし *)
-Rice Shake
+Rice Shake;;
 
 (* 鮭ふりかけごはん *)
 
@@ -320,7 +322,7 @@ let rec concat ml =
   | Cons (s, tl) -> s ^ concat tl
 ;;
 
-concat (Cons ("a", Cons ("b", Nil)))
+concat (Cons ("a", Cons ("b", Nil)));;
 
 (* 破壊的に変更が可能なレコードの話 *)
 
@@ -351,7 +353,7 @@ m_origin;;
 print_int;;
 
 (* 返り値が unit なのは副作用が重要であるため *)
-print_int (5 + 15)
+print_int (5 + 15);;
 
 (* メモリ上で何がおこっているかを説明する *)
 let p1 = { x = 0; y = 1 };;
@@ -360,7 +362,7 @@ let p1 = { x = 0; y = 1 };;
    p1 ----> {x=0; y=1}
 *)
 
-p1.x <- 2
+p1.x <- 2;;
 
 (*
    p1 ----> {x=2; y=1}
@@ -382,7 +384,7 @@ p2.y <- 3;;
    p2 ----+
 *)
 
-p1.y
+p1.y;;
 
 (* aliasing *)
 (* 同じメモリ上の情報を指す複数の名前が存在すること *)
@@ -405,7 +407,7 @@ origin;;
 *)
 
 p3.y <- 5;;
-p2
+p2;;
 
 (* 参照（ref 型） *)
 
@@ -420,7 +422,7 @@ x := 2;;
 
 (* x.contents と同じ / boolean の否定ではない *)
 x := !x + 1;;
-!x
+!x;;
 
 (* fresh_int : unit -> int *)
 let next = ref 0
@@ -449,18 +451,19 @@ print_int p1.y;
 
 ignore (1 + 1);
 5
+;;
 
 let is_positive n =
   if n > 0 then print_string "n is positive\n" else print_string "n is not positive\n"
 ;;
 
-is_positive 100
+is_positive 100;;
 
 let is_positive' n = if n > 0 then print_string "n is positive\n";;
 
 (* then を省略できるのは，unit型の式の場合に限る．*)
 is_positive' 100;;
-is_positive' (-100)
+is_positive' (-100);;
 
 (* ハマりどころ: セミコロンと if-then-else の結合 *)
 (*
@@ -482,7 +485,7 @@ let is_positive n =
 ;;
 
 (* begin-end はカッコと同じ *)
-(2 + 3) * 10
+(2 + 3) * 10;;
 
 let is_positive n =
   if n > 0
@@ -513,6 +516,7 @@ while !i <= 10 do
   print_newline ();
   i := !i + 1 (* incr i と書いても良い *)
 done
+;;
 
 (*** 積み残し ***)
 
@@ -559,6 +563,7 @@ fun (x, y) -> (x +. y) /. 2.0;;
 function
 | Nil -> 0
 | Cons (n, tl) -> 1
+;;
 
 (* カリー化 *)
 
@@ -611,7 +616,7 @@ let g2 = curried_greeting Female "Marple";;
 [ 0 ];;
 [ 0; 1 ];;
 [ 0; 1; 2 ];;
-[ 0; 1; 2; 3; 4 ]
+[ 0; 1; 2; 3; 4 ];;
 
 let rec create_list n len = if len = 0 then [] else n :: create_list n (len - 1);;
 
@@ -628,7 +633,7 @@ let rec create_list n len = if len = 0 then [] else n :: create_list n (len - 1)
 *)
 
 create_list 1 10;;
-create_list 1 10000
+create_list 1 10000;;
 
 let rec create_list_tail n len res =
   if len = 0 then res else create_list_tail n (len - 1) (n :: res)
@@ -659,7 +664,7 @@ let rec sum l =
 sum (create_list 1 10);;
 create_list 1 10 |> sum;;
 sum (create_list 1 100);;
-sum (create_list 1 100000000)
+sum (create_list 1 100000000);;
 
 let rec sum_tail l sum =
   match l with
@@ -670,7 +675,7 @@ let rec sum_tail l sum =
 sum_tail (create_list_tail 1 10 []) 0;;
 sum_tail (create_list_tail 1 100 []) 0;;
 sum_tail (create_list_tail 1 100000000 []) 0;;
-create_list_tail 1 100000000 [] |> fun l -> sum_tail l 0
+create_list_tail 1 100000000 [] |> fun l -> sum_tail l 0;;
 
 (* 多相性 *)
 
@@ -679,7 +684,7 @@ let f x = x;;
 f 5;;
 f true;;
 f (5, true);;
-f [ 1; 2; 3; 4; 5 ]
+f [ 1; 2; 3; 4; 5 ];;
 
 let rec map f l =
   match l with
@@ -689,7 +694,7 @@ let rec map f l =
 
 map (fun x -> x + 1) [ 1; 2; 3; 4; 5 ];;
 map (fun x -> x && true) [ true; false; true; false ];;
-map (fun x -> fst x) [ 1, true; 3, false; 7, true ]
+map (fun x -> fst x) [ 1, true; 3, false; 7, true ];;
 
 (* パターンマッチと匿名関数を組み合わせた構文 *)
 
