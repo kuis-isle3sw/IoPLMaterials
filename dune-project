@@ -1,4 +1,4 @@
-(lang dune 3.18)
+(lang dune 3.20)
 
 (using menhir 3.0)
 
@@ -25,7 +25,7 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (= 0.27.0)))))
+    (= 0.28.1)))))
 
 (package
  (name miniml-interpreter)
@@ -37,7 +37,7 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (= 0.27.0)))))
+    (= 0.28.1)))))
 
 (package
  (name tutorial)
@@ -48,4 +48,4 @@
   (ocamlformat
    (and
     :with-dev-setup
-    (= 0.27.0)))))
+    (= 0.28.1)))))
