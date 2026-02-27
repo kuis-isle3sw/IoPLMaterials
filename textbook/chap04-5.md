@@ -118,7 +118,9 @@ type subst = (tyvar * ty) list
 
 ### <a name="freevar_ty">Exercise 4.3.1 [必修]</a>
 
-`string_of_ty` と `freevar_ty` を完成させよ．`string_of_ty` は `ty -> string` 型の関数で，`ty` 型の値を受け取るとその文字列での表現を返す．`TyVar 0` が `"'a"`，`TyVar 1` が `"'b"` のように，OCaml での型変数の文字列表現と合わせること．`freevar_ty` は，与えられた型中に現れる型変数の集合を返す関数で，型は `ty -> tyvar MySet.t` とする．型 `'a MySet.t` は `mySet.mli` で定義されている型 `'a` の値を要素とする集合を表す値の型である．
+Ex4.2.1 で TyInt, TyBool のみ対応した `string_of_ty` を既に実装しているはずである。ここでは ML3 の型（型変数 TyVar, 関数型 TyFun など）に対応するよう `string_of_ty` を拡張し，また `freevar_ty` を実装せよ。
+
+`string_of_ty` は `ty -> string` 型の関数で，`ty` 型の値を受け取るとその文字列での表現を返す．`TyVar 0` が `"'a"`，`TyVar 1` が `"'b"` のように，OCaml での型変数の文字列表現と合わせること．`freevar_ty` は，与えられた型中に現れる型変数の集合を返す関数で，型は `ty -> tyvar MySet.t` とする．型 `'a MySet.t` は `mySet.mli` で定義されている型 `'a` の値を要素とする集合を表す値の型である．
 
 ### Exercise 4.3.2 [必修]
 

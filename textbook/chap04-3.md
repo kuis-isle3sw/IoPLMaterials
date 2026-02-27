@@ -33,7 +33,9 @@ $$
 
 ### Exercise 4.2.1 [必修]
 
-MiniML2 のための型推論アルゴリズムを実装するためにコードに加えるべき変更を以下に示す．これを参考にしつつ，上記の$\textrm{T-Int}$と$\textrm{T-Plus}$のケースにならって，すべての場合について型推論アルゴリズムを完成させよ．また，インタプリタに変更を加え，型推論ができるようにせよ．
+MiniML2 のための型推論アルゴリズムを実装するためにコードに加えるべき変更を以下に示す．これを参考にしつつ，上記の$\textrm{T-Int}$と$\textrm{T-Plus}$のケースにならって，すべての場合について型推論アルゴリズムを完成させよ．また，インタプリタに変更を加え，型推論ができるようにせよ。
+
+また，型を文字列として出力するための `string_of_ty` 関数を実装し，`pp_ty` はそれを用いて実装せよ。
 
 #### `syntax.ml` への変更
 
@@ -43,11 +45,15 @@ type ty =
   TyInt
 | TyBool
 
+(* ty 型の値を文字列に変換する関数 *)
+let string_of_ty typ =
+  match typ with
+    TyInt -> "int"
+  | TyBool -> "bool"
+
 (* ty 型の値のための pretty printer *)
 let pp_ty typ =
-  match typ with
-    TyInt -> print_string "int"
-  | TyBool -> print_string "bool"
+  print_string (string_of_ty typ)
 ```
 
 #### `cui.ml` への変更
