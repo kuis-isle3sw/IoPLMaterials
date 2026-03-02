@@ -36,7 +36,7 @@ jobs:
       - name: Checkout tree
         uses: actions/checkout@v4
       - name: Set-up dune
-        uses: ocaml-dune/setup-dune@v0.0.1
+        uses: ocaml-dune/setup-dune@v2.0.0
         with:
           automagic: true
 
