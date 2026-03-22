@@ -6,7 +6,7 @@
 
 ### 1. [opam] をインストール
 
-> このガイドでは [opam] 2.2以上を前提としている。2.2よりも古い [opam] バージョンをインストールしている場合は更新する必要がある。
+> このガイドでは [opam](https://github.com/ocaml/opam) 2.2以上を前提としている（現在の最新安定版: 2.5.0）。2.2よりも古い [opam](https://github.com/ocaml/opam) バージョンをインストールしている場合は更新する必要がある。
 
 #### Unix
 
@@ -15,6 +15,8 @@ bash -c "sh <(curl -fsSL https://raw.githubusercontent.com/ocaml/opam/master/she
 ```
 
 #### Windows
+
+> **注意:** Windows では OCaml 5.3.0 以上（MSVC ポート対応済み）を使用することを推奨する。
 
 ```powershell
 Invoke-Expression "& { $(Invoke-RestMethod https://raw.githubusercontent.com/ocaml/opam/master/shell/install.ps1) }"
@@ -79,7 +81,7 @@ cd IoPLMaterials
 ### 5. ローカルスイッチを作成
 
 ```sh
-opam switch create . 5.2.0 --no-install
+opam switch create . 5.6.0 --no-install
 ```
 
 `opam switch create [スイッチ名] [コンパイラ]` コマンドを実行し、[opam] ローカルスイッチを作成する。この時、スイッチ名に絶対または相対のディレクトリを指定すると [opam] ローカルスイッチが作成される。
