@@ -14,8 +14,8 @@
 | --- | --- | --- | --- | --- |
 | 01 | 4/13 | イントロダクション | [1章: イントロダクション](textbook/chap01.md) [2章: 概論的な話](textbook/chap02.md) |  |
 | 02 | 04/20 | インタプリタ 1 | [3.1: MiniML1 のシンタックスとセマンティックス](textbook/chap03-1.md) [3.2: 各モジュールの機能 (1): `Syntax`, `Eval`, `Environment`, `Cui`](textbook/chap03-2.md) |  |
-| 03 | 04/27 | インタプリタ 2 | [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md) [3.4: MiniML2: 定義の導入](textbook/chap03-4.md) [3.5: MiniML3: 関数の導入](textbook/chap03-5.md) |  |
-| 04 | 05/01 | インタプリタ 3 | [3.6: MiniML4: 再帰関数](textbook/chap03-6.md) [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md) |  |
+| 03 | 04/27 | インタプリタ 2 | [3.3: 各モジュールの機能 (2): `Parser`, `Lexer`](textbook/chap03-3.md) [3.4: MiniML2: 定義の導入](textbook/chap03-4.md)  |  |
+| 04 | 05/01 | インタプリタ 3 |[3.5: MiniML3: 関数の導入](textbook/chap03-5.md) [3.6: MiniML4: 再帰関数](textbook/chap03-6.md) [4.1: 静的プログラム検証へのイントロダクション](textbook/chap04-1.md) |  |
 | 05 | 05/11 | 型システム 1 | [4.2: MiniML2 のための型推論 (1): MiniML2 の型システム](textbook/chap04-2.md) |  |
 | 06 | 05/18 | 型システム 2 | [4.3: MiniML2 のための型推論 (2): 型推論アルゴリズム](textbook/chap04-3.md) [4.4: MiniML3,4 のための型推論 (1): Prelude](textbook/chap04-4.md) |  |
 | 07 | 05/25 | 型システム 3 | [4.5: MiniML3,4 のための型推論 (2): 型の等式制約と単一化](textbook/chap04-5.md) [4.6: MiniML3,4 のための型推論 (3): 型推論アルゴリズムの実装](textbook/chap04-6.md) |  |
