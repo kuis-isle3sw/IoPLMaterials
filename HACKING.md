@@ -81,7 +81,7 @@ cd IoPLMaterials
 ### 5. ローカルスイッチを作成
 
 ```sh
-opam switch create . 5.5.0 --no-install
+opam switch create . 5.4.1 --no-install
 ```
 
 `opam switch create [スイッチ名] [コンパイラ]` コマンドを実行し、[opam] ローカルスイッチを作成する。この時、スイッチ名に絶対または相対のディレクトリを指定すると [opam] ローカルスイッチが作成される。
