@@ -2,6 +2,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "node scripts/install-git-hooks.mjs",
+    "hooks:install": "node scripts/install-git-hooks.mjs",
+    "format:check:staged": "node scripts/check-prettier.mjs --staged",
+    "format:check:push": "node scripts/check-prettier.mjs --push",
+    "format:check:all": "node scripts/check-prettier.mjs --all",
     "lint": "prettier --check .",
     "fix": "prettier --write ."
   },

@@ -8,6 +8,17 @@
 
 - 4月1日: 2026年度版ページにしました．
 
+## 開発時の Prettier チェック
+
+依存関係をインストールすると、このリポジトリ用の `pre-commit` / `pre-push` hook が自動的に有効になります。
+
+```sh
+corepack enable
+corepack yarn install --immutable
+```
+
+既に依存関係をインストール済みの場合は、`corepack yarn hooks:install` だけでも hook を有効にできます。`pre-commit` はコミットされるステージ済みスナップショットを、`pre-push` は実際に push される各 ref の先端スナップショットを検査します。Prettier の差分または構文エラーがある場合は、対象ファイル、詳細な差分、修正コマンドを表示して commit / push を中止します。
+
 ## 2024年度 講義予定
 
 | 回 | 日付 (mm/dd) | 内容（予定） | 資料 | その他 |
