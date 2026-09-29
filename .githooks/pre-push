@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+if ! command -v corepack >/dev/null 2>&1; then
+  echo "Push blocked: Corepack is required to run the repository's Prettier check." >&2
+  echo "Install a current Node.js release with Corepack, run 'corepack enable', and retry." >&2
+  exit 2
+fi
+
+exec corepack yarn format:check:push
