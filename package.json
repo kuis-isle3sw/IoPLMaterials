@@ -15,7 +15,7 @@
     "proseWrap": "never"
   },
   "devDependencies": {
-    "prettier": "3.9.9"
+    "prettier": "3.9.10"
   },
   "packageManager": "yarn@4.10.3"
 }
